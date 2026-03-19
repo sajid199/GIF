@@ -3,177 +3,409 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Maker — Word by Word 9:16</title>
+<title>✨ Pro Video Maker — 9:16</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&family=Baloo+2:wght@400;700;800&family=Tiro+Devanagari+Hindi&family=Poppins:wght@400;700;900&family=Playfair+Display:wght@700;900&family=Oswald:wght@400;700&family=Dancing+Script:wght@700&family=Rajdhani:wght@400;700&family=Montserrat:wght@400;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:#0f0f0f; color:#fff; font-family:sans-serif; display:flex; flex-direction:column; align-items:center; padding-bottom:40px; }
+:root {
+  --bg:#0c0c0e; --panel:#161618; --panel2:#1e1e22;
+  --border:#2a2a30; --accent:#e63946; --accent2:#7209b7;
+  --txt:#f0f0f0; --muted:#666; --green:#2d9e5f;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Poppins',sans-serif;font-size:13px;display:flex;flex-direction:column;align-items:center;padding-bottom:50px;}
 
-.panel { width:100%; max-width:680px; background:#1a1a1a; border-bottom:1px solid #2a2a2a; padding:10px 14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-.ptitle { width:100%; font-size:10px; color:#e63946; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:2px; }
-label { color:#bbb; font-size:12px; display:flex; align-items:center; gap:4px; }
-select, input[type=text] { background:#252525; color:#fff; border:1px solid #3a3a3a; padding:4px 8px; border-radius:4px; font-size:12px; }
-textarea { background:#252525; color:#fff; border:1px solid #3a3a3a; padding:8px; border-radius:4px; font-size:13px; resize:vertical; font-family:'Noto Sans Devanagari',sans-serif; line-height:1.5; }
-input[type=color] { width:34px; height:26px; border:none; background:none; cursor:pointer; }
-input[type=range] { width:85px; accent-color:#e63946; cursor:pointer; }
-input[type=checkbox] { accent-color:#e63946; width:14px; height:14px; }
+/* ── HEADER ── */
+.hdr{width:100%;max-width:700px;padding:14px 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.hdr h1{font-size:17px;font-weight:700;background:linear-gradient(90deg,#e63946,#7209b7,#3a86ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hdr span{font-size:10px;color:var(--muted);margin-left:auto;}
 
-.btn { border:none; padding:7px 16px; border-radius:5px; cursor:pointer; font-size:13px; font-weight:bold; transition:all .15s; }
-.btn-red  { background:#e63946; color:#fff; } .btn-red:hover  { background:#c1121f; }
-.btn-grn  { background:#2d6a4f; color:#fff; } .btn-grn:hover  { background:#1b4332; }
-.btn-grn:disabled { background:#333; color:#555; cursor:not-allowed; }
+/* ── SECTION ── */
+.sec{width:100%;max-width:700px;background:var(--panel);border-bottom:1px solid var(--border);padding:12px 14px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;}
+.sec-title{width:100%;font-size:10px;color:var(--accent);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
 
-/* BG tabs */
-.bg-tabs { display:flex; gap:5px; width:100%; margin-bottom:4px; }
-.bgtab { flex:1; text-align:center; padding:5px 3px; border-radius:5px; cursor:pointer; font-size:11px; font-weight:bold; border:2px solid #333; color:#666; background:#1f1f1f; transition:all .15s; }
-.bgtab.on { border-color:#e63946; color:#fff; background:#2d0a0a; }
-.bgopt { display:none; flex-wrap:wrap; gap:8px; align-items:center; width:100%; }
-.bgopt.show { display:flex; }
+/* ── CONTROLS ── */
+label{color:#aaa;font-size:12px;display:flex;align-items:center;gap:5px;}
+select{background:#222;color:var(--txt);border:1px solid var(--border);padding:4px 8px;border-radius:5px;font-size:12px;cursor:pointer;}
+select:focus{outline:1px solid var(--accent);}
+textarea{background:#1a1a1e;color:var(--txt);border:1px solid var(--border);padding:9px 11px;border-radius:6px;font-size:14px;resize:vertical;line-height:1.6;width:100%;min-height:68px;font-family:inherit;}
+textarea:focus{outline:1px solid var(--accent);border-color:var(--accent);}
+input[type=color]{width:36px;height:28px;border:none;background:none;cursor:pointer;border-radius:4px;}
+input[type=range]{width:88px;accent-color:var(--accent);cursor:pointer;}
+input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;}
 
-/* Upload */
-.upbox { border:2px dashed #3a3a3a; border-radius:7px; padding:10px 14px; cursor:pointer; color:#666; font-size:12px; position:relative; min-width:150px; text-align:center; transition:all .2s; }
-.upbox:hover { border-color:#e63946; color:#e63946; }
-.upbox input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-.upbox img { width:42px; height:42px; border-radius:4px; object-fit:cover; display:none; margin:0 auto 4px; }
+/* ── BUTTONS ── */
+.btn{border:none;padding:7px 15px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;transition:all .15s;letter-spacing:.3px;}
+.btn-red{background:var(--accent);color:#fff;} .btn-red:hover{background:#c1121f;transform:translateY(-1px);}
+.btn-grn{background:var(--green);color:#fff;} .btn-grn:hover{background:#1f7a47;transform:translateY(-1px);}
+.btn-grn:disabled{background:#2a2a2a;color:#555;cursor:not-allowed;transform:none;}
+.btn-outline{background:transparent;color:#aaa;border:1px solid var(--border);} .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
 
-/* Gradient presets */
-.gps { display:flex; gap:4px; flex-wrap:wrap; }
-.gp { width:26px; height:26px; border-radius:4px; cursor:pointer; border:2px solid transparent; transition:border-color .15s; }
-.gp:hover,.gp.sel { border-color:#fff; }
+/* ── BG TABS ── */
+.tabs{display:flex;gap:5px;width:100%;margin-bottom:6px;}
+.tab{flex:1;text-align:center;padding:6px 3px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;border:1.5px solid var(--border);color:var(--muted);background:var(--panel2);transition:all .15s;}
+.tab.on{border-color:var(--accent);color:#fff;background:#2a0a0e;}
+.tabp{display:none;flex-wrap:wrap;gap:8px;align-items:center;width:100%;}
+.tabp.show{display:flex;}
 
-/* Solid quick */
-.sqc { width:22px; height:22px; border-radius:3px; cursor:pointer; border:1px solid #444; transition:transform .1s; }
-.sqc:hover { transform:scale(1.2); }
+/* ── UPLOAD ── */
+.upbox{border:2px dashed var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;color:var(--muted);font-size:12px;position:relative;min-width:150px;text-align:center;transition:all .2s;}
+.upbox:hover{border-color:var(--accent);color:var(--accent);}
+.upbox input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upbox img{width:44px;height:44px;border-radius:4px;object-fit:cover;display:none;margin:0 auto 4px;}
 
-/* Canvas preview */
-.preview-outer { position:relative; width:270px; height:480px; margin-top:14px; border:2px solid #2a2a2a; border-radius:12px; overflow:hidden; background:#000; }
-#cv { position:absolute; top:0; left:0; width:100%; height:100%; }
+/* ── GRADIENT PRESETS ── */
+.gps{display:flex;gap:4px;flex-wrap:wrap;}
+.gp{width:28px;height:28px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:all .15s;}
+.gp:hover,.gp.sel{border-color:#fff;transform:scale(1.1);}
+.sqc{width:22px;height:22px;border-radius:4px;cursor:pointer;border:1px solid #333;transition:transform .1s;}
+.sqc:hover{transform:scale(1.2);}
 
-/* Recording overlay */
-.rec-dot { position:absolute; top:8px; left:10px; width:10px; height:10px; border-radius:50%; background:#e63946; display:none; box-shadow:0 0 8px #e63946; }
-.rec-dot.show { display:block; animation:blink 1s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
-.rec-timer { position:absolute; top:6px; right:8px; background:rgba(0,0,0,.6); color:#fff; font-size:10px; padding:2px 6px; border-radius:8px; font-family:monospace; }
+/* ── FONT GRID ── */
+.font-grid{display:flex;gap:6px;flex-wrap:wrap;width:100%;}
+.font-btn{padding:5px 10px;border-radius:5px;cursor:pointer;border:1.5px solid var(--border);color:#aaa;background:var(--panel2);font-size:12px;transition:all .15s;white-space:nowrap;}
+.font-btn:hover{border-color:var(--accent);color:#fff;}
+.font-btn.sel{border-color:var(--accent);color:#fff;background:#2a0a0e;}
 
-/* Progress */
-.progwrap { width:270px; height:6px; background:#1a1a1a; border-radius:3px; margin-top:8px; overflow:hidden; display:none; }
-.progbar { height:100%; width:0%; background:linear-gradient(90deg,#e63946,#7209b7,#3a86ff); border-radius:3px; transition:width .15s; }
+/* ── ANIMATION MODE CARDS ── */
+.anim-grid{display:flex;gap:6px;flex-wrap:wrap;width:100%;}
+.anim-card{flex:1;min-width:80px;padding:8px 6px;border-radius:7px;cursor:pointer;border:1.5px solid var(--border);color:#aaa;background:var(--panel2);text-align:center;transition:all .15s;}
+.anim-card:hover{border-color:var(--accent2);color:#fff;}
+.anim-card.sel{border-color:var(--accent2);color:#fff;background:#1a0a2a;}
+.anim-card .icon{font-size:18px;display:block;margin-bottom:3px;}
+.anim-card .lbl{font-size:10px;font-weight:700;display:block;}
 
-.status { font-size:11px; color:#888; margin-top:6px; text-align:center; min-height:16px; padding:0 8px; }
-.note   { font-size:10px; color:#444; margin-top:3px; text-align:center; }
+/* ── TEXT ALIGN ── */
+.align-row{display:flex;gap:5px;}
+.align-btn{width:32px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:5px;cursor:pointer;border:1.5px solid var(--border);color:var(--muted);background:var(--panel2);font-size:14px;transition:all .15s;}
+.align-btn:hover{border-color:var(--accent);color:#fff;}
+.align-btn.sel{border-color:var(--accent);color:#fff;background:#2a0a0e;}
+
+/* ── COLOR SWATCHES ── */
+.swatch-row{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+.swatch{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;}
+.swatch:hover,.swatch.sel{border-color:#fff;transform:scale(1.15);}
+
+/* ── SLIDER ROW ── */
+.slider-row{display:flex;align-items:center;gap:6px;width:100%;}
+.slider-row label{min-width:90px;flex-shrink:0;}
+.slider-row input[type=range]{flex:1;max-width:160px;}
+.slider-val{min-width:36px;color:var(--accent);font-size:12px;font-weight:700;}
+
+/* ── GRADIENT TEXT PREVIEW ── */
+.txt-grad-preview{height:28px;border-radius:4px;padding:0 10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:1px solid var(--border);min-width:80px;}
+
+/* ── PREVIEW ── */
+.preview-outer{position:relative;width:270px;height:480px;margin-top:14px;border:2px solid var(--border);border-radius:14px;overflow:hidden;background:#000;box-shadow:0 0 40px rgba(230,57,70,.15);}
+#cv{position:absolute;top:0;left:0;width:100%;height:100%;}
+.rec-dot{position:absolute;top:9px;left:11px;width:9px;height:9px;border-radius:50%;background:var(--accent);display:none;box-shadow:0 0 8px var(--accent);}
+.rec-dot.show{display:block;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.rec-lbl{position:absolute;top:6px;left:24px;color:#fff;font-size:9px;font-weight:700;display:none;}
+.rec-lbl.show{display:block;}
+.rec-timer{position:absolute;top:6px;right:9px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;padding:2px 6px;border-radius:8px;font-family:monospace;}
+
+/* ── PROGRESS ── */
+.prog-outer{width:270px;height:5px;background:#1a1a1a;border-radius:3px;margin-top:8px;overflow:hidden;display:none;}
+.prog-inner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2),#3a86ff);border-radius:3px;transition:width .12s;}
+.status{font-size:11px;color:var(--muted);margin-top:6px;text-align:center;min-height:16px;padding:0 10px;}
+.note{font-size:10px;color:#333;margin-top:3px;text-align:center;}
+
+/* ── DIVIDER ── */
+.divider{width:100%;max-width:700px;height:1px;background:var(--border);}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- BG -->
-<div class="panel" style="margin-top:10px;">
-  <div class="ptitle">🎨 Background</div>
-  <div class="bg-tabs">
-    <div class="bgtab on"  id="tab-image"    onclick="switchBG('image')">🖼 Image</div>
-    <div class="bgtab"     id="tab-gradient" onclick="switchBG('gradient')">🌈 Gradient</div>
-    <div class="bgtab"     id="tab-solid"    onclick="switchBG('solid')">⬛ Solid</div>
-    <div class="bgtab"     id="tab-theme"    onclick="switchBG('theme')">✨ Theme</div>
+<div class="hdr">
+  <h1>✨ Pro Video Maker</h1>
+  <span>9:16 HD • Word/Sentence • 7 sec</span>
+</div>
+
+<!-- ══════════════ BACKGROUND ══════════════ -->
+<div class="sec">
+  <div class="sec-title">🎨 Background</div>
+  <div class="tabs">
+    <div class="tab on"  id="tab-image"    onclick="switchBG('image')">🖼 Image</div>
+    <div class="tab"     id="tab-gradient" onclick="switchBG('gradient')">🌈 Gradient</div>
+    <div class="tab"     id="tab-solid"    onclick="switchBG('solid')">⬛ Solid</div>
+    <div class="tab"     id="tab-theme"    onclick="switchBG('theme')">✨ Theme</div>
   </div>
 
   <!-- IMAGE -->
-  <div class="bgopt show" id="opt-image">
+  <div class="tabp show" id="opt-image">
     <div class="upbox">
       <input type="file" id="imgFile" accept="image/*" onchange="loadImg(event)">
       <img id="imgThumb">
       <div id="upLbl">📁 Image upload karo</div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:5px;">
-      <label>Overlay: <input type="range" id="overlayOp" min="0" max="90" value="40" oninput="V('opLbl',this.value+'%')"> <span id="opLbl">40%</span></label>
-      <label>Color:   <input type="color"  id="overlayClr" value="#000000"></label>
-      <label>Blur:    <input type="range" id="bgBlur" min="0" max="15" value="0" oninput="V('blurLbl',this.value+'px')"> <span id="blurLbl">0px</span></label>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div class="slider-row"><label>Overlay</label><input type="range" id="overlayOp" min="0" max="90" value="40" oninput="SV('opLbl',this.value+'%')"><span class="slider-val" id="opLbl">40%</span></div>
+      <label>Overlay Color <input type="color" id="overlayClr" value="#000000"></label>
+      <div class="slider-row"><label>Blur</label><input type="range" id="bgBlur" min="0" max="15" value="0" oninput="SV('blurLbl',this.value+'px')"><span class="slider-val" id="blurLbl">0px</span></div>
     </div>
   </div>
 
   <!-- GRADIENT -->
-  <div class="bgopt" id="opt-gradient">
-    <div style="display:flex;flex-direction:column;gap:5px;width:100%;">
+  <div class="tabp" id="opt-gradient">
+    <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-        <label>Dir: <select id="gradDir"><option value="tb">↓ Top-Bottom</option><option value="lr">→ Left-Right</option><option value="diag">↘ Diagonal</option></select></label>
-        <label>C1:<input type="color" id="gc1" value="#0a0a2e"></label>
-        <label>C2:<input type="color" id="gc2" value="#6a0572"></label>
-        <label>C3:<input type="color" id="gc3" value="#1a0533"></label>
+        <label>Direction <select id="gradDir"><option value="tb">↓ Top→Bottom</option><option value="lr">→ Left→Right</option><option value="diag">↘ Diagonal</option><option value="radial">◎ Radial</option></select></label>
+        <label>C1 <input type="color" id="gc1" value="#0a0a2e"></label>
+        <label>C2 <input type="color" id="gc2" value="#6a0572"></label>
+        <label>C3 <input type="color" id="gc3" value="#1a0533"></label>
       </div>
-      <div style="color:#555;font-size:10px;margin-bottom:2px;">Quick presets:</div>
+      <div style="color:var(--muted);font-size:10px;">Presets:</div>
       <div class="gps" id="gps"></div>
     </div>
   </div>
 
   <!-- SOLID -->
-  <div class="bgopt" id="opt-solid">
-    <label>Color:<input type="color" id="solidClr" value="#0a0a2e"></label>
-    <div id="sqRow" style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;"></div>
+  <div class="tabp" id="opt-solid">
+    <label>Color <input type="color" id="solidClr" value="#0a0a2e"></label>
+    <div id="sqRow" style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-left:4px;"></div>
   </div>
 
   <!-- THEME -->
-  <div class="bgopt" id="opt-theme">
-    <label>Theme:
+  <div class="tabp" id="opt-theme">
+    <label>Theme
       <select id="thSel">
         <option value="stars">✨ Starry Night</option>
-        <option value="sunset">🌅 Sunset</option>
-        <option value="ocean">🌊 Ocean</option>
-        <option value="forest">🌿 Forest</option>
-        <option value="aurora">🌌 Aurora</option>
-        <option value="fire">🔥 Fire</option>
+        <option value="sunset">🌅 Sunset Mountains</option>
+        <option value="ocean">🌊 Deep Ocean</option>
+        <option value="forest">🌿 Forest & Fireflies</option>
+        <option value="aurora">🌌 Aurora Borealis</option>
+        <option value="fire">🔥 Fire & Embers</option>
+        <option value="galaxy">🪐 Galaxy</option>
+        <option value="rain">🌧 Neon Rain</option>
       </select>
     </label>
   </div>
 </div>
 
-<!-- TEXT -->
-<div class="panel">
-  <div class="ptitle">✍️ Text & Style</div>
-  <label>Color:<input type="color" id="txtClr" value="#FFD700"></label>
-  <label>Size:<input type="range" id="fontSize" min="12" max="36" value="22" oninput="V('fsLbl',this.value+'px')"><span id="fsLbl">22px</span></label>
-  <label>Glow:<input type="color" id="glowClr" value="#ff6b00"></label>
-  <label>Bold:<input type="checkbox" id="boldCk" checked></label>
-  <label>Outline:<input type="checkbox" id="outCk"></label>
+<!-- ══════════════ ANIMATION MODE ══════════════ -->
+<div class="sec">
+  <div class="sec-title">🎬 Animation Mode</div>
+  <div class="anim-grid">
+    <div class="anim-card sel" data-mode="word" onclick="selAnim(this)"><span class="icon">📝</span><span class="lbl">Word by Word</span></div>
+    <div class="anim-card" data-mode="sentence" onclick="selAnim(this)"><span class="icon">📄</span><span class="lbl">Sentence by Sentence</span></div>
+    <div class="anim-card" data-mode="all" onclick="selAnim(this)"><span class="icon">⚡</span><span class="lbl">All at Once</span></div>
+    <div class="anim-card" data-mode="typewriter" onclick="selAnim(this)"><span class="icon">⌨️</span><span class="lbl">Typewriter</span></div>
+    <div class="anim-card" data-mode="zoom" onclick="selAnim(this)"><span class="icon">🔍</span><span class="lbl">Zoom In</span></div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;width:100%;">
+    <label>Speed <select id="animSpeed"><option value="1">Normal</option><option value="0.6">Fast</option><option value="1.6">Slow</option></select></label>
+    <label>Entry Effect <select id="entryFx"><option value="fadeup">Fade Up</option><option value="slide">Slide In</option><option value="pop">Pop</option><option value="fade">Simple Fade</option></select></label>
+  </div>
 </div>
 
-<div class="panel">
-  <div class="ptitle">📝 Text (Hindi / English)</div>
-  <textarea id="txtIn" style="width:100%;min-height:64px;">जो सपने देखते हैं वो रात को भी जागते हैं। हर मुश्किल एक नया मोड़ है। हिम्मत रखो मंजिल दूर नहीं। मेहनत का फल मीठा होता है। बस एक कदम और सफलता तुम्हारी है।</textarea>
+<!-- ══════════════ TEXT CONTENT ══════════════ -->
+<div class="sec">
+  <div class="sec-title">📝 Text Content</div>
+  <textarea id="txtIn" placeholder="Apna text yahan likho (Hindi ya English)...">जो सपने देखते हैं वो रात को भी जागते हैं। हर मुश्किल एक नया मोड़ है। हिम्मत रखो मंजिल दूर नहीं। मेहनत का फल मीठा होता है। बस एक कदम और सफलता तुम्हारी है।</textarea>
 </div>
 
-<div class="panel" style="gap:10px;">
-  <button class="btn btn-red" onclick="applyAll()">▶ Preview</button>
-  <button class="btn btn-grn" id="recBtn" onclick="startRec()">⬇ Download Video (WebM)</button>
-  <span style="font-size:11px;color:#555;">540×960 • 9:16 • 7 sec</span>
+<!-- ══════════════ FONT & TYPOGRAPHY ══════════════ -->
+<div class="sec">
+  <div class="sec-title">🔤 Font & Typography</div>
+  <div class="font-grid" id="fontGrid"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;width:100%;margin-top:4px;">
+    <div class="slider-row" style="flex:1;min-width:200px;">
+      <label style="min-width:70px;">Size</label>
+      <input type="range" id="fontSize" min="14" max="72" value="32" oninput="SV('fsLbl',this.value+'px');applyAll()">
+      <span class="slider-val" id="fsLbl">32px</span>
+    </div>
+    <div class="slider-row" style="flex:1;min-width:200px;">
+      <label style="min-width:70px;">Line Height</label>
+      <input type="range" id="lineH" min="10" max="25" value="16" oninput="SV('lhLbl',(this.value/10).toFixed(1)+'x');applyAll()">
+      <span class="slider-val" id="lhLbl">1.6x</span>
+    </div>
+    <div class="slider-row" style="flex:1;min-width:200px;">
+      <label style="min-width:70px;">Letter Spacing</label>
+      <input type="range" id="letterSp" min="-2" max="20" value="0" oninput="SV('lsLbl',this.value+'px');applyAll()">
+      <span class="slider-val" id="lsLbl">0px</span>
+    </div>
+    <div class="slider-row" style="flex:1;min-width:200px;">
+      <label style="min-width:70px;">Words/Line</label>
+      <input type="range" id="wordsPerLine" min="1" max="6" value="3" oninput="SV('wplLbl',this.value);applyAll()">
+      <span class="slider-val" id="wplLbl">3</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:4px;">
+    <label>Weight <select id="fontWeight"><option value="400">Regular</option><option value="700">Bold</option><option value="900" selected>Black</option></select></label>
+    <label>Style <select id="fontStyle"><option value="normal" selected>Normal</option><option value="italic">Italic</option></select></label>
+    <label>Transform <select id="txtTransform"><option value="none" selected>None</option><option value="uppercase">UPPERCASE</option><option value="lowercase">lowercase</option></select></label>
+    <div class="align-row">
+      <div class="align-btn sel" data-align="left" onclick="selAlign(this)" title="Left">&#9664;</div>
+      <div class="align-btn sel" data-align="center" onclick="selAlign(this)" title="Center">&#9632;</div>
+      <div class="align-btn" data-align="right" onclick="selAlign(this)" title="Right">&#9654;</div>
+    </div>
+  </div>
 </div>
 
-<!-- PREVIEW -->
+<!-- ══════════════ TEXT COLOR ══════════════ -->
+<div class="sec">
+  <div class="sec-title">🎨 Text Color & Effects</div>
+
+  <!-- Color mode -->
+  <div style="display:flex;gap:6px;width:100%;margin-bottom:8px;">
+    <div class="tab on" id="ctab-solid" style="flex:none;padding:5px 12px;" onclick="switchColorMode('solid')">Solid</div>
+    <div class="tab" id="ctab-gradient" style="flex:none;padding:5px 12px;" onclick="switchColorMode('gradient')">Gradient</div>
+    <div class="tab" id="ctab-rainbow" style="flex:none;padding:5px 12px;" onclick="switchColorMode('rainbow')">Rainbow</div>
+  </div>
+
+  <!-- Solid color -->
+  <div id="copt-solid" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;width:100%;">
+    <label>Color <input type="color" id="txtClr" value="#FFD700"></label>
+    <div class="swatch-row" id="clrSwatches"></div>
+  </div>
+
+  <!-- Gradient text -->
+  <div id="copt-gradient" style="display:none;flex-wrap:wrap;gap:8px;align-items:center;width:100%;">
+    <label>From <input type="color" id="txtGradA" value="#FFD700"></label>
+    <label>To <input type="color" id="txtGradB" value="#ff6b00"></label>
+    <label>Direction <select id="txtGradDir"><option value="lr">→ Horizontal</option><option value="tb">↓ Vertical</option><option value="diag">↘ Diagonal</option></select></label>
+    <div class="txt-grad-preview" id="gradPrev">Preview</div>
+  </div>
+
+  <!-- Rainbow -->
+  <div id="copt-rainbow" style="display:none;width:100%;">
+    <span style="color:var(--muted);font-size:11px;">🌈 Each word gets a different color automatically!</span>
+  </div>
+
+  <!-- Glow & shadow -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;width:100%;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">
+    <label>Glow Color <input type="color" id="glowClr" value="#ff6b00"></label>
+    <div class="slider-row" style="flex:1;min-width:180px;">
+      <label style="min-width:70px;">Glow Size</label>
+      <input type="range" id="glowSize" min="0" max="40" value="15" oninput="SV('glowLbl',this.value+'px')">
+      <span class="slider-val" id="glowLbl">15px</span>
+    </div>
+    <label>Shadow <input type="checkbox" id="shadowCk" checked></label>
+    <label>Outline <input type="checkbox" id="outCk"></label>
+    <label>Outline Color <input type="color" id="outClr" value="#ff6b00"></label>
+  </div>
+
+  <!-- Text position -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;width:100%;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">
+    <div class="slider-row" style="flex:1;min-width:200px;">
+      <label style="min-width:80px;">Vertical Pos</label>
+      <input type="range" id="txtY" min="10" max="90" value="50" oninput="SV('tyLbl',this.value+'%')">
+      <span class="slider-val" id="tyLbl">50%</span>
+    </div>
+    <div class="slider-row" style="flex:1;min-width:200px;">
+      <label style="min-width:80px;">Padding</label>
+      <input type="range" id="txtPad" min="0" max="120" value="40" oninput="SV('tpLbl',this.value+'px')">
+      <span class="slider-val" id="tpLbl">40px</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ACTIONS ══════════════ -->
+<div class="sec" style="gap:10px;">
+  <button class="btn btn-red" onclick="applyAll()">▶ Update Preview</button>
+  <button class="btn btn-grn" id="recBtn" onclick="startRec()">⬇ Download Video</button>
+  <span style="color:var(--muted);font-size:11px;">540×960 • 30fps • WebM</span>
+</div>
+
+<!-- ══════════════ PREVIEW ══════════════ -->
 <div class="preview-outer">
   <canvas id="cv"></canvas>
   <div class="rec-dot" id="recDot"></div>
+  <div class="rec-lbl" id="recLbl">REC</div>
   <div class="rec-timer" id="recTimer">0.0s</div>
 </div>
-<div class="progwrap" id="pw"><div class="progbar" id="pb"></div></div>
-<div class="status" id="status">Preview dekho phir video download karo 🎬</div>
-<div class="note">Chrome / Edge mein best kaam karta hai • WebM format (WhatsApp, Instagram pe chalega)</div>
+<div class="prog-outer" id="pw"><div class="prog-inner" id="pb"></div></div>
+<div class="status" id="status">Settings set karo, phir ▶ Preview ya ⬇ Download karo ✨</div>
+<div class="note">Chrome / Edge recommended • WebM format • WhatsApp/Instagram compatible</div>
 
 <script>
-// ── helpers ──────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────
 const $=id=>document.getElementById(id);
-const V=(id,v)=>$(id).textContent=v;
+const SV=(id,v)=>$(id).textContent=v;
+const h2r=h=>({r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)});
 
-// ── Stars ────────────────────────────────────────────────────
-let stars=[];
-function mkStars(w,h){
-  stars=[];
-  for(let i=0;i<180;i++) stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.8+0.3,sp:Math.random()*0.5+0.1,ph:Math.random()*6.28,br:Math.random()});
+// ── Fonts ─────────────────────────────────────────────────────
+const FONTS=[
+  {name:'Noto Devanagari', val:"'Noto Sans Devanagari',sans-serif", lbl:'नोटो'},
+  {name:'Baloo 2',         val:"'Baloo 2',sans-serif",              lbl:'बालू'},
+  {name:'Tiro Hindi',      val:"'Tiro Devanagari Hindi',serif",     lbl:'तिरो'},
+  {name:'Poppins',         val:"'Poppins',sans-serif",              lbl:'Poppins'},
+  {name:'Playfair',        val:"'Playfair Display',serif",          lbl:'Playfair'},
+  {name:'Oswald',          val:"'Oswald',sans-serif",               lbl:'OSWALD'},
+  {name:'Montserrat',      val:"'Montserrat',sans-serif",           lbl:'Montserrat'},
+  {name:'Bebas Neue',      val:"'Bebas Neue',sans-serif",           lbl:'BEBAS'},
+  {name:'Dancing Script',  val:"'Dancing Script',cursive",          lbl:'Dancing'},
+  {name:'Rajdhani',        val:"'Rajdhani',sans-serif",             lbl:'Rajdhani'},
+];
+let selFont=FONTS[0].val;
+(()=>{
+  const g=$('fontGrid');
+  FONTS.forEach(f=>{
+    const b=document.createElement('div'); b.className='font-btn'+(f.val===selFont?' sel':'');
+    b.style.fontFamily=f.val; b.textContent=f.lbl;
+    b.onclick=()=>{selFont=f.val; g.querySelectorAll('.font-btn').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); applyAll();};
+    g.appendChild(b);
+  });
+})();
+
+// ── Animation cards ───────────────────────────────────────────
+let animMode='word';
+function selAnim(el){
+  animMode=el.dataset.mode;
+  document.querySelectorAll('.anim-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  applyAll();
 }
 
-// ── Gradient presets ─────────────────────────────────────────
+// ── Text align ────────────────────────────────────────────────
+let txtAlign='center';
+function selAlign(el){
+  txtAlign=el.dataset.align;
+  document.querySelectorAll('.align-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  applyAll();
+}
+// fix: keep center selected by default
+document.querySelectorAll('.align-btn').forEach(b=>{ if(b.dataset.align==='center') b.classList.add('sel'); else b.classList.remove('sel'); });
+
+// ── Color mode ────────────────────────────────────────────────
+let colorMode='solid';
+function switchColorMode(m){
+  colorMode=m;
+  ['solid','gradient','rainbow'].forEach(k=>{
+    $('ctab-'+k).classList.toggle('on',k===m);
+    $('copt-'+k).style.display=k===m?'flex':'none';
+  });
+  updateGradPrev(); applyAll();
+}
+function updateGradPrev(){
+  const a=$('txtGradA').value, b=$('txtGradB').value;
+  $('gradPrev').style.background=`linear-gradient(to right,${a},${b})`;
+  $('gradPrev').style.webkitBackgroundClip='text';
+  $('gradPrev').style.webkitTextFillColor='transparent';
+}
+$('txtGradA').oninput=$('txtGradB').oninput=updateGradPrev;
+
+// ── Color swatches ────────────────────────────────────────────
+const SWATCHES=['#FFD700','#ffffff','#ff6b6b','#ff9f43','#48dbfb','#ff9ff3','#54a0ff','#5f27cd','#00d2d3','#1dd1a1','#feca57','#ee5a24'];
+(()=>{
+  const row=$('clrSwatches');
+  SWATCHES.forEach(c=>{
+    const s=document.createElement('div'); s.className='swatch'; s.style.background=c; s.title=c;
+    s.onclick=()=>{ $('txtClr').value=c; row.querySelectorAll('.swatch').forEach(x=>x.classList.remove('sel')); s.classList.add('sel'); applyAll(); };
+    row.appendChild(s);
+  });
+  row.children[0].classList.add('sel');
+})();
+
+// ── Gradient presets ──────────────────────────────────────────
 const GP=[
   ['#0a0a2e','#6a0572','#1a0533'],['#1a0000','#8b0000','#ff4500'],
   ['#0d1f0f','#1a5c2a','#4caf50'],['#020b18','#0a3d62','#74b9ff'],
   ['#2d1b69','#11998e','#38ef7d'],['#fc5c7d','#6a3093','#1a1a2e'],
-  ['#000','#434343','#ccc'],     ['#f7971e','#ffd200','#fc4a1a'],
+  ['#000','#434343','#ccc'],      ['#f7971e','#ffd200','#fc4a1a'],
   ['#1a1a2e','#16213e','#0f3460'],['#240046','#7b2d8b','#e040fb'],
+  ['#0f2027','#203a43','#2c5364'],['#11001c','#4a0072','#aa00ff'],
 ];
 (()=>{
   const el=$('gps');
@@ -184,12 +416,15 @@ const GP=[
     el.appendChild(d);
   });
 })();
+
+// ── Solid color quick picks ───────────────────────────────────
 (()=>{
-  const sc=['#000','#0a0a2e','#1a0533','#0d1f0f','#1a0000','#fff','#1a1a1a','#0d2137','#1c0a00','#001a33'];
+  const sc=['#000','#0a0a2e','#1a0533','#0d1f0f','#1a0000','#fff','#111','#0d2137','#1c0a00','#001a33'];
   const el=$('sqRow');
   sc.forEach(c=>{ const d=document.createElement('div'); d.className='sqc'; d.style.background=c; d.onclick=()=>{ $('solidClr').value=c; applyAll(); }; el.appendChild(d); });
 })();
 
+// ── BG switch ─────────────────────────────────────────────────
 function switchBG(t){
   ['image','gradient','solid','theme'].forEach(k=>{
     $('tab-'+k).classList.toggle('on',k===t);
@@ -198,33 +433,40 @@ function switchBG(t){
   applyAll();
 }
 
-// ── Image load ───────────────────────────────────────────────
+// ── Image upload ──────────────────────────────────────────────
 let upImg=null;
 function loadImg(e){
   const f=e.target.files[0]; if(!f) return;
   const rd=new FileReader();
-  rd.onload=ev=>{ const img=new Image(); img.onload=()=>{ upImg=img; $('imgThumb').src=ev.target.result; $('imgThumb').style.display='block'; $('upLbl').textContent='✓ '+f.name.slice(0,20); applyAll(); }; img.src=ev.target.result; };
+  rd.onload=ev=>{ const img=new Image(); img.onload=()=>{ upImg=img; $('imgThumb').src=ev.target.result; $('imgThumb').style.display='block'; $('upLbl').textContent='✓ '+f.name.slice(0,22); applyAll(); }; img.src=ev.target.result; };
   rd.readAsDataURL(f);
 }
 
-// ── hex → rgb ────────────────────────────────────────────────
-function h2r(h){ return {r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)}; }
+// ── Stars ─────────────────────────────────────────────────────
+let stars=[];
+function mkStars(w,h){ stars=[]; for(let i=0;i<200;i++) stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.8+0.3,sp:Math.random()*0.5+0.1,ph:Math.random()*6.28,br:Math.random()}); }
+mkStars(270,480);
 
-// ── Background drawing ───────────────────────────────────────
+// ── BG drawing ────────────────────────────────────────────────
 function drawBG(ctx,el,s,W,H){
-  ctx.clearRect(0,0,W,H);
+  ctx.save(); ctx.clearRect(0,0,W,H);
   const bt=s.bgType||'theme';
   if(bt==='image'&&upImg){
-    if(s.blur>0){ctx.save();ctx.filter=`blur(${s.blur}px)`;}
+    if(s.blur>0){ctx.filter=`blur(${s.blur}px)`;}
     const sc=Math.max(W/upImg.width,H/upImg.height);
     const dw=upImg.width*sc,dh=upImg.height*sc;
     ctx.drawImage(upImg,(W-dw)/2,(H-dh)/2,dw,dh);
-    if(s.blur>0){ctx.filter='none';ctx.restore();}
+    ctx.filter='none';
     const {r,g,b}=h2r(s.overlayClr);
     ctx.fillStyle=`rgba(${r},${g},${b},${s.overlayOp/100})`; ctx.fillRect(0,0,W,H);
   } else if(bt==='gradient'){
-    const [x1,y1,x2,y2]=s.gradDir==='lr'?[0,0,W,0]:s.gradDir==='diag'?[0,0,W,H]:[0,0,0,H];
-    const g=ctx.createLinearGradient(x1,y1,x2,y2);
+    let g;
+    if(s.gradDir==='radial'){
+      g=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)/1.4);
+    } else {
+      const [x1,y1,x2,y2]=s.gradDir==='lr'?[0,0,W,0]:s.gradDir==='diag'?[0,0,W,H]:[0,0,0,H];
+      g=ctx.createLinearGradient(x1,y1,x2,y2);
+    }
     const sh=(Math.sin(el*0.0006)+1)/2*0.1;
     g.addColorStop(0,s.gc1); g.addColorStop(Math.min(.99,.5+sh),s.gc2); g.addColorStop(1,s.gc3);
     ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
@@ -233,226 +475,330 @@ function drawBG(ctx,el,s,W,H){
   } else {
     drawTheme(ctx,el,s.theme,W,H);
   }
+  ctx.restore();
 }
 
+const RAINBOW=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bff','#ff9f43','#00d2d3','#ff6b6b'];
 function drawTheme(ctx,t,th,W,H){
-  const lg=(s,e)=>{ const g=ctx.createLinearGradient(0,0,0,H); s.forEach(([p,c])=>g.addColorStop(p,c)); return g; };
+  const lg=stops=>{const g=ctx.createLinearGradient(0,0,0,H); stops.forEach(([p,c])=>g.addColorStop(p,c)); return g;};
   if(th==='stars'){
     ctx.fillStyle=lg([[0,'#020514'],[1,'#0d0130']]); ctx.fillRect(0,0,W,H);
     stars.forEach(s=>{ const tw=(Math.sin(t*0.002*s.sp*5+s.ph)+1)/2,a=0.2+0.8*tw*s.br; ctx.beginPath(); ctx.arc(s.x,s.y,s.r*(1+0.3*tw),0,6.28); ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill(); });
   } else if(th==='sunset'){
     ctx.fillStyle=lg([[0,'#0d0d2b'],[.3,'#5c1a6d'],[.6,'#c84b31'],[.8,'#f5a623'],[1,'#1a1a2e']]); ctx.fillRect(0,0,W,H);
-    const sy=H*.62+Math.sin(t*.0005)*4,sg=ctx.createRadialGradient(W/2,sy,4,W/2,sy,W*.35);
+    const sy=H*.62+Math.sin(t*.0005)*4,sg=ctx.createRadialGradient(W/2,sy,4,W/2,sy,W*.4);
     sg.addColorStop(0,'rgba(255,220,50,.85)'); sg.addColorStop(.5,'rgba(255,120,30,.35)'); sg.addColorStop(1,'rgba(255,60,0,0)');
     ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
     ctx.fillStyle='#060612'; ctx.beginPath();
-    ctx.moveTo(0,H); [0,H*.72,W*.18,H*.55,W*.38,H*.68,W*.53,H*.5,W*.7,H*.62,W*.85,H*.58,W,H*.65,W,H].reduce((a,v,i,ar)=>{ if(i%2===0){ if(i===0)ctx.lineTo(0,H*.72); else ctx.lineTo(ar[i],ar[i+1]); } return null; });
-    ctx.lineTo(W,H); ctx.fill();
+    ctx.moveTo(0,H); ctx.lineTo(0,H*.72); ctx.lineTo(W*.18,H*.55); ctx.lineTo(W*.38,H*.68); ctx.lineTo(W*.53,H*.5); ctx.lineTo(W*.7,H*.62); ctx.lineTo(W*.85,H*.58); ctx.lineTo(W,H*.65); ctx.lineTo(W,H); ctx.fill();
   } else if(th==='ocean'){
     ctx.fillStyle=lg([[0,'#020b18'],[.5,'#0a3d62'],[1,'#074f77']]); ctx.fillRect(0,0,W,H);
     for(let i=0;i<5;i++){ const wy=H*.55+i*H*.04+Math.sin(t*.002+i)*8; ctx.strokeStyle=`rgba(100,220,255,${.15-i*.02})`; ctx.lineWidth=1.5; ctx.beginPath(); for(let x=0;x<=W;x+=2){ const y=wy+Math.sin(x*.04+t*.003+i)*6; x?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.stroke(); }
   } else if(th==='forest'){
     ctx.fillStyle=lg([[0,'#0a1628'],[.5,'#1a3a2a'],[1,'#0d1f0f']]); ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='#040e06'; for(let i=0;i<9;i++){ const tx=i/8*W,th2=H*(.28+((i*37)%10)*.025); ctx.beginPath(); ctx.moveTo(tx,H); ctx.lineTo(tx-W*.07,H-th2); ctx.lineTo(tx+W*.07,H-th2); ctx.closePath(); ctx.fill(); }
-    stars.slice(0,35).forEach(s=>{ const fy=H*.2+s.y*.5,tw=Math.sin(t*.003*s.sp*3+s.ph); ctx.beginPath(); ctx.arc(s.x,fy,1.5,0,6.28); ctx.fillStyle=`rgba(180,255,100,${Math.max(0,tw)*.8})`; ctx.fill(); });
+    ctx.fillStyle='#040e06'; for(let i=0;i<9;i++){const tx=i/8*W,th2=H*(.28+((i*37)%10)*.025); ctx.beginPath(); ctx.moveTo(tx,H); ctx.lineTo(tx-W*.07,H-th2); ctx.lineTo(tx+W*.07,H-th2); ctx.closePath(); ctx.fill();}
+    stars.slice(0,35).forEach(s=>{const fy=H*.2+s.y*.5,tw=Math.sin(t*.003*s.sp*3+s.ph); ctx.beginPath(); ctx.arc(s.x,fy,1.5,0,6.28); ctx.fillStyle=`rgba(180,255,100,${Math.max(0,tw)*.8})`; ctx.fill();});
   } else if(th==='aurora'){
     ctx.fillStyle='#010a12'; ctx.fillRect(0,0,W,H);
-    [['rgba(0,255,150,',0],['rgba(100,50,255,',1.8],['rgba(0,200,255,',3.6]].forEach(([c,bi])=>{ for(let x=0;x<=W;x+=2){ const wy=H*.35+Math.sin(x*.02+t*.001+bi)*H*.1+bi*H*.03,h2=H*.12+Math.sin(x*.03+t*.0008)*H*.04,ag=ctx.createLinearGradient(x,wy-h2,x,wy+h2); ag.addColorStop(0,c+'0)'); ag.addColorStop(.5,c+'.2)'); ag.addColorStop(1,c+'0)'); ctx.fillStyle=ag; ctx.fillRect(x,wy-h2,2,h2*2); } });
-    stars.forEach(s=>{ const tw=(Math.sin(t*.002*s.sp*4+s.ph)+1)/2,a=.1+.35*tw*s.br; ctx.beginPath(); ctx.arc(s.x,s.y*.38,s.r,0,6.28); ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill(); });
+    [['rgba(0,255,150,',0],['rgba(100,50,255,',1.8],['rgba(0,200,255,',3.6]].forEach(([c,bi])=>{ for(let x=0;x<=W;x+=2){ const wy=H*.35+Math.sin(x*.02+t*.001+bi)*H*.1+bi*H*.03,h2=H*.12+Math.sin(x*.03+t*.0008)*H*.04,ag=ctx.createLinearGradient(x,wy-h2,x,wy+h2); ag.addColorStop(0,c+'0)'); ag.addColorStop(.5,c+'.2)'); ag.addColorStop(1,c+'0)'); ctx.fillStyle=ag; ctx.fillRect(x,wy-h2,2,h2*2); }});
+    stars.forEach(s=>{const tw=(Math.sin(t*.002*s.sp*4+s.ph)+1)/2,a=.1+.35*tw*s.br; ctx.beginPath(); ctx.arc(s.x,s.y*.38,s.r,0,6.28); ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();});
   } else if(th==='fire'){
     ctx.fillStyle=lg([[0,'#0a0000'],[.4,'#3d0000'],[.7,'#8b1a00'],[1,'#ff4500']]); ctx.fillRect(0,0,W,H);
-    for(let i=0;i<7;i++){ const fx=W*(.08+i*.14)+Math.sin(t*.002+i)*14,fh=H*(.3+Math.sin(t*.003+i*1.3)*.1),fg=ctx.createRadialGradient(fx,H,4,fx,H-fh,fh*.55); fg.addColorStop(0,'rgba(255,200,0,.65)'); fg.addColorStop(.4,'rgba(255,80,0,.3)'); fg.addColorStop(1,'rgba(255,0,0,0)'); ctx.fillStyle=fg; ctx.fillRect(0,0,W,H); }
+    for(let i=0;i<7;i++){const fx=W*(.08+i*.14)+Math.sin(t*.002+i)*14,fh=H*(.3+Math.sin(t*.003+i*1.3)*.1),fg=ctx.createRadialGradient(fx,H,4,fx,H-fh,fh*.55); fg.addColorStop(0,'rgba(255,200,0,.65)'); fg.addColorStop(.4,'rgba(255,80,0,.3)'); fg.addColorStop(1,'rgba(255,0,0,0)'); ctx.fillStyle=fg; ctx.fillRect(0,0,W,H);}
+  } else if(th==='galaxy'){
+    ctx.fillStyle='#000005'; ctx.fillRect(0,0,W,H);
+    const rg=ctx.createRadialGradient(W*.5,H*.45,0,W*.5,H*.45,W*.7);
+    rg.addColorStop(0,'rgba(120,60,255,.35)'); rg.addColorStop(.5,'rgba(40,10,100,.2)'); rg.addColorStop(1,'rgba(0,0,10,0)');
+    ctx.fillStyle=rg; ctx.fillRect(0,0,W,H);
+    stars.forEach(s=>{const tw=(Math.sin(t*0.001*s.sp*4+s.ph)+1)/2,a=.1+.9*tw*s.br,hue=Math.floor((s.ph*57)%360); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,6.28); ctx.fillStyle=`hsla(${hue},80%,80%,${a})`; ctx.fill();});
+    // nebula arms
+    for(let arm=0;arm<3;arm++){
+      const ag=ctx.createLinearGradient(0,0,W,H);
+      ag.addColorStop(0,'rgba(80,0,120,0)'); ag.addColorStop(0.5,`rgba(${80+arm*60},${20},${200-arm*40},.06)`); ag.addColorStop(1,'rgba(0,0,80,0)');
+      ctx.fillStyle=ag; ctx.fillRect(0,0,W,H);
+    }
+  } else if(th==='rain'){
+    ctx.fillStyle='#000408'; ctx.fillRect(0,0,W,H);
+    for(let i=0;i<60;i++){
+      const rx=(stars[i].x+t*0.05*stars[i].sp*20)%W, ry=(stars[i].y+t*0.5*stars[i].sp*50)%H;
+      const hue=Math.floor(180+stars[i].ph*30)%360;
+      ctx.strokeStyle=`hsla(${hue},100%,60%,.6)`; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(rx-2,ry+18); ctx.stroke();
+    }
+    // neon glow floor
+    const ng=ctx.createLinearGradient(0,H*.8,0,H);
+    ng.addColorStop(0,'rgba(0,255,200,0)'); ng.addColorStop(1,'rgba(0,255,200,.08)');
+    ctx.fillStyle=ng; ctx.fillRect(0,0,W,H);
   }
 }
 
-// ── Text drawing on canvas ───────────────────────────────────
-function drawText(ctx,words,elapsed,s,W,H,DUR){
+// ── Text drawing ─────────────────────────────────────────────
+function getChunks(words, mode){
+  if(mode==='word') return words.map(w=>[w]);
+  if(mode==='all')  return [words];
+  if(mode==='typewriter') return words.map(w=>[w]);
+  if(mode==='zoom') return words.map(w=>[w]);
+  // sentence — split by ।. or !?
+  const full=words.join(' ');
+  const sents=full.split(/(?<=[।.!?])\s+/).filter(Boolean);
+  return sents.map(s=>s.split(/\s+/).filter(Boolean));
+}
+
+// typewriter state
+let twState={chunk:-1,chars:0,lastTick:0};
+function resetTW(){ twState={chunk:-1,chars:0,lastTick:0}; }
+
+function applyTextTransform(str, mode){
+  if(mode==='uppercase') return str.toUpperCase();
+  if(mode==='lowercase') return str.toLowerCase();
+  return str;
+}
+
+function drawText(ctx,words,elapsed,s,W,H,DUR,frameMs){
   const n=words.length; if(!n) return;
-  const s0=300,e0=DUR*0.92,iv=(e0-s0)/(n-1||1);
-  const ti=elapsed<s0?-1:Math.min(Math.floor((elapsed-s0)/iv),n-1);
-  if(ti<0) return;
-  const vis=words.slice(0,ti+1);
+  const mode=s.animMode||'word';
+  const speed=s.animSpeed||1;
+  const chunks=getChunks(words,mode);
+  const nc=chunks.length;
+  const s0=300*speed, e0=DUR*0.92, iv=(e0-s0)/(nc-1||1);
+  const ci=elapsed<s0?-1:Math.min(Math.floor((elapsed-s0)/iv),nc-1);
   const fade=elapsed>DUR*0.93?Math.max(0,1-(elapsed-DUR*0.93)/(DUR*0.07)):1;
-  if(fade<=0) return;
 
-  const fs=s.fontSize||22;
-  const fw=s.bold?'900':'700';
-  ctx.font=`${fw} ${fs}px 'Noto Sans Devanagari',FreeSans,Arial`;
-  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
-
-  // wrap into lines
-  const maxW=W-60, lines=[], cur=[];
-  for(const w of vis){
-    const test=cur.concat(w).join(' ');
-    if(ctx.measureText(test).width>maxW && cur.length){ lines.push(cur.join(' ')); cur.length=0; }
-    cur.push(w);
+  // choose what to render
+  let renderChunks=[];
+  if(mode==='typewriter'){
+    // show completed chunks + partially typed current
+    const tick=Math.floor(elapsed/60); // char every 60ms
+    for(let i=0;i<=ci && i<nc;i++){
+      const chunkStr=chunks[i].join(' ');
+      if(i<ci) renderChunks.push(chunkStr);
+      else {
+        const chars=Math.min(chunkStr.length, Math.floor((elapsed-(s0+i*iv))/55));
+        renderChunks.push(chunkStr.slice(0,chars));
+      }
+    }
+  } else if(mode==='zoom'){
+    if(ci>=0) renderChunks=[chunks[ci].join(' ')]; // show only current zoomed
+  } else {
+    for(let i=0;i<=ci && i<nc;i++) renderChunks.push(chunks[i].join(' '));
   }
-  if(cur.length) lines.push(cur.join(' '));
+  if(!renderChunks.length) return;
 
-  const lh=fs*1.6, totalH=lines.length*lh;
-  const sy=H/2-totalH/2+fs*0.8;
+  // font
+  const fs=s.fontSize||32;
+  const fw=s.fontWeight||'900';
+  const fst=s.fontStyle||'normal';
+  ctx.font=`${fst} ${fw} ${fs}px ${s.font}`;
+  ctx.textBaseline='alphabetic';
+
+  const wpl=s.wordsPerLine||3;
+  const pad=s.txtPad||40;
+  const maxW=W-pad*2;
+  const lh=fs*(s.lineH||1.6);
+  const align=s.txtAlign||'center';
   const {r:gr,g:gg,b:gb}=h2r(s.glowClr||'#ff6b00');
+  const {r:or,g:og,b:ob}=h2r(s.outClr||'#ff6b00');
+  const glowSz=s.glowSize||15;
+  const vertY=H*(s.txtY||50)/100;
 
-  lines.forEach((line,li)=>{
-    const y=sy+li*lh;
-    // drop shadow
-    ctx.globalAlpha=fade*0.9;
-    ctx.fillStyle='rgba(0,0,0,1)';
-    ctx.fillText(line,W/2+3,y+4);
+  // build final lines
+  let allLines=[];
+  renderChunks.forEach((chunk,ci2)=>{
+    const chunkWords=chunk.split(/\s+/).filter(Boolean);
+    let cur=[];
+    chunkWords.forEach(w=>{
+      const tw=applyTextTransform(w, s.txtTransform);
+      const test=cur.concat(tw).join(' ');
+      const meas=ctx.measureText(test).width;
+      if((meas>maxW || cur.length>=wpl) && cur.length){ allLines.push({text:cur.join(' '),ci:ci2}); cur=[tw]; }
+      else cur.push(tw);
+    });
+    if(cur.length) allLines.push({text:cur.join(' '),ci:ci2});
+    if(ci2<renderChunks.length-1) allLines.push(null); // spacer between sentences
+  });
+  allLines=allLines.filter(l=>l!==null || allLines.indexOf(null)<allLines.length-1);
+
+  const totalH=allLines.length*lh;
+  let sy=vertY-totalH/2+fs*0.8;
+
+  ctx.save();
+  ctx.globalAlpha=fade;
+
+  allLines.forEach((lineObj)=>{
+    if(!lineObj) return;
+    const {text, ci:lineCI} = lineObj;
+    const idx=allLines.indexOf(lineObj);
+    const y=sy+idx*lh;
+
+    let x=W/2;
+    if(align==='left') x=pad;
+    if(align==='right') x=W-pad;
+
+    const ta=align==='left'?'left':align==='right'?'right':'center';
+
+    // zoom effect
+    let scale=1;
+    if(mode==='zoom' && ci>=0){
+      const elapsed2=elapsed-(s0+ci*iv);
+      scale=0.3+Math.min(elapsed2/300,1)*0.7;
+      if(elapsed2<300){
+        ctx.save(); ctx.translate(x,y); ctx.scale(scale,scale); ctx.translate(-x,-y);
+      }
+    }
+
+    // shadow
+    if(s.shadow){
+      ctx.globalAlpha=fade*0.85; ctx.textAlign=ta;
+      ctx.fillStyle='rgba(0,0,0,1)';
+      ctx.fillText(text,x+3,y+4);
+    }
+
     // glow
-    ctx.globalAlpha=fade*0.4;
-    ctx.fillStyle=`rgb(${gr},${gg},${gb})`;
-    [[-3,0],[3,0],[0,-3],[0,3]].forEach(([ox,oy])=>ctx.fillText(line,W/2+ox,y+oy));
-    // main
-    ctx.globalAlpha=fade;
-    ctx.fillStyle=s.txtClr||'#FFD700';
-    ctx.fillText(line,W/2,y);
+    if(glowSz>0){
+      ctx.globalAlpha=fade*0.5; ctx.textAlign=ta;
+      ctx.shadowColor=`rgb(${gr},${gg},${gb})`; ctx.shadowBlur=glowSz;
+      ctx.fillStyle=`rgb(${gr},${gg},${gb})`;
+      ctx.fillText(text,x,y);
+      ctx.shadowBlur=0;
+    }
+
+    // main text
+    ctx.globalAlpha=fade; ctx.textAlign=ta;
+    if(s.colorMode==='gradient'){
+      const [gx1,gy1,gx2,gy2]=s.txtGradDir==='lr'?[x-200,y,x+200,y]:s.txtGradDir==='tb'?[x,y-fs,x,y+fs]:[x-150,y-fs,x+150,y];
+      const tg=ctx.createLinearGradient(gx1,gy1,gx2,gy2);
+      tg.addColorStop(0,s.txtGradA); tg.addColorStop(1,s.txtGradB);
+      ctx.fillStyle=tg;
+    } else if(s.colorMode==='rainbow'){
+      const hue=(lineCI*47+idx*31)%360;
+      ctx.fillStyle=`hsl(${hue},100%,65%)`;
+    } else {
+      ctx.fillStyle=s.txtClr||'#FFD700';
+    }
+    ctx.fillText(text,x,y);
+
     // outline
     if(s.outline){
-      ctx.strokeStyle=`rgb(${gr},${gg},${gb})`;
-      ctx.lineWidth=Math.max(1.5,fs*0.04);
-      ctx.strokeText(line,W/2,y);
+      ctx.globalAlpha=fade*0.9; ctx.textAlign=ta;
+      ctx.strokeStyle=`rgb(${or},${og},${ob})`;
+      ctx.lineWidth=Math.max(1.5,fs*0.035);
+      ctx.strokeText(text,x,y);
     }
+
+    if(mode==='zoom' && scale<1) ctx.restore();
   });
-  ctx.globalAlpha=1;
+
+  ctx.globalAlpha=1; ctx.shadowBlur=0;
+  ctx.restore();
 }
 
-// ── Progress bar on canvas ───────────────────────────────────
 function drawProg(ctx,elapsed,DUR,W,H,clr){
   const {r,g,b}=h2r(clr);
-  ctx.globalAlpha=0.8;
+  ctx.globalAlpha=0.85;
   ctx.fillStyle=`rgb(${r},${g},${b})`;
   ctx.fillRect(0,H-10,W*Math.min(elapsed/DUR,1),10);
   ctx.globalAlpha=1;
 }
 
-// ── App state ────────────────────────────────────────────────
+// ── App state ─────────────────────────────────────────────────
 const PW=270,PH=480,DUR=7000;
 let raf,t0,words=[],cfg={};
 
-mkStars(PW,PH);
-
 function applyAll(){
   cfg={
-    bgType:document.querySelector('.bgtab.on').id.replace('tab-',''),
-    overlayOp:+$('overlayOp').value, overlayClr:$('overlayClr').value,
-    blur:+$('bgBlur').value,
+    bgType:document.querySelector('.bgtab.on')?.id.replace('tab-','')||'theme',
+    overlayOp:+$('overlayOp').value, overlayClr:$('overlayClr').value, blur:+$('bgBlur').value,
     gc1:$('gc1').value, gc2:$('gc2').value, gc3:$('gc3').value, gradDir:$('gradDir').value,
     solidClr:$('solidClr').value, theme:$('thSel').value,
-    txtClr:$('txtClr').value, fontSize:+$('fontSize').value,
-    bold:$('boldCk').checked, outline:$('outCk').checked, glowClr:$('glowClr').value,
+    animMode, animSpeed:+$('animSpeed').value, entryFx:$('entryFx').value,
+    font:selFont, fontSize:+$('fontSize').value, fontWeight:$('fontWeight').value,
+    fontStyle:$('fontStyle').value, txtTransform:$('txtTransform').value,
+    letterSp:+$('letterSp').value, lineH:+$('lineH').value/10,
+    wordsPerLine:+$('wordsPerLine').value, txtAlign,
+    colorMode, txtClr:$('txtClr').value,
+    txtGradA:$('txtGradA').value, txtGradB:$('txtGradB').value, txtGradDir:$('txtGradDir').value,
+    glowClr:$('glowClr').value, glowSize:+$('glowSize').value,
+    shadow:$('shadowCk').checked, outline:$('outCk').checked, outClr:$('outClr').value,
+    txtY:+$('txtY').value, txtPad:+$('txtPad').value,
   };
   words=$('txtIn').value.trim().split(/\s+/).filter(Boolean);
   cancelAnimationFrame(raf); t0=null;
   raf=requestAnimationFrame(previewLoop);
 }
 
-// ── Preview loop (small canvas) ──────────────────────────────
 function previewLoop(ts){
   if(!t0) t0=ts;
   const el=(ts-t0)%DUR;
   const cv=$('cv'); cv.width=PW; cv.height=PH;
   const ctx=cv.getContext('2d');
   drawBG(ctx,el,cfg,PW,PH);
-  drawText(ctx,words,el,cfg,PW,PH,DUR);
+  drawText(ctx,words,el,cfg,PW,PH,DUR,1000/60);
   drawProg(ctx,el,DUR,PW,PH,cfg.txtClr||'#FFD700');
   $('recTimer').textContent=(el/1000).toFixed(1)+'s';
   raf=requestAnimationFrame(previewLoop);
 }
 
-// ════════════════════════════════════════════════════════════
-//  VIDEO RECORDING using MediaRecorder + offscreen canvas
-// ════════════════════════════════════════════════════════════
+// ── Video recording ───────────────────────────────────────────
 async function startRec(){
   const btn=$('recBtn');
-  // Check support
-  if(!window.MediaRecorder){
-    $('status').textContent='❌ MediaRecorder not supported. Chrome/Edge use karo.';
-    return;
-  }
-
+  if(!window.MediaRecorder){ $('status').textContent='❌ MediaRecorder not supported. Chrome/Edge use karo.'; return; }
   btn.disabled=true; btn.textContent='⏺ Recording...';
   $('pw').style.display='block'; $('pb').style.width='0%';
-  $('recDot').classList.add('show');
-  $('status').textContent='⏺ Recording shuru ho gayi — 7 seconds wait karo...';
+  $('recDot').classList.add('show'); $('recLbl').classList.add('show');
   cancelAnimationFrame(raf); t0=null;
 
-  // High-res offscreen canvas (9:16)
-  const VW=540, VH=960;
-  const oc=document.createElement('canvas');
-  oc.width=VW; oc.height=VH;
+  const VW=540,VH=960;
+  const oc=document.createElement('canvas'); oc.width=VW; oc.height=VH;
   const octx=oc.getContext('2d');
   mkStars(VW,VH);
 
-  // Scale font
-  const s={...cfg, fontSize: Math.round((cfg.fontSize||22)*VH/PH) };
+  const s={...cfg, fontSize:Math.round((cfg.fontSize||32)*VH/PH)};
 
-  // Pick best codec
   const mimeTypes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'];
   const mime=mimeTypes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
-  $('status').textContent=`⏺ Recording (${mime.split(';')[0]})... 7 sec wait karo`;
+  $('status').textContent=`⏺ Recording ${mime.split(';')[0]}... 7 sec wait karo 🎬`;
 
   const chunks=[];
-  const stream=oc.captureStream(30); // 30fps
-  const mr=new MediaRecorder(stream,{mimeType:mime, videoBitsPerSecond:4_000_000});
+  const stream=oc.captureStream(30);
+  const mr=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:5_000_000});
   mr.ondataavailable=e=>{ if(e.data.size>0) chunks.push(e.data); };
-
-  const FRAMES=30*7; // 30fps × 7sec
-  let frame=0;
 
   return new Promise(resolve=>{
     mr.onstop=()=>{
       const blob=new Blob(chunks,{type:mime});
       const ext=mime.includes('mp4')?'mp4':'webm';
       const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');
-      a.href=url; a.download=`word_by_word_9x16.${ext}`; a.click();
+      const a=document.createElement('a'); a.href=url; a.download=`pro_video_9x16.${ext}`; a.click();
       setTimeout(()=>URL.revokeObjectURL(url),5000);
-
-      // Restore
       mkStars(PW,PH);
-      btn.disabled=false; btn.textContent='⬇ Download Video (WebM)';
-      $('recDot').classList.remove('show');
+      btn.disabled=false; btn.textContent='⬇ Download Video';
+      $('recDot').classList.remove('show'); $('recLbl').classList.remove('show');
       $('pb').style.width='100%';
-      $('status').textContent=`✅ Video download ho gayi! ${Math.round(blob.size/1024)} KB • 540×960 • 7 sec`;
+      $('status').textContent=`✅ Video ready! ${Math.round(blob.size/1024)} KB • 540×960 • 7 sec`;
       applyAll(); resolve();
     };
 
-    mr.start(100); // collect data every 100ms
-
+    mr.start(100);
     const startMs=performance.now();
 
-    function renderFrame(){
+    function rf(){
       const elapsed=performance.now()-startMs;
-      const elCapped=Math.min(elapsed,DUR);
-
-      // Render frame to offscreen canvas
+      const elC=Math.min(elapsed,DUR);
       octx.clearRect(0,0,VW,VH);
-      drawBG(octx,elCapped,cfg,VW,VH);
-      drawText(octx,words,elCapped,s,VW,VH,DUR);
-      drawProg(octx,elCapped,DUR,VW,VH,cfg.txtClr||'#FFD700');
-
-      // Mirror to preview
+      drawBG(octx,elC,cfg,VW,VH);
+      drawText(octx,words,elC,s,VW,VH,DUR,1000/30);
+      drawProg(octx,elC,DUR,VW,VH,cfg.txtClr||'#FFD700');
       const pcv=$('cv'); pcv.width=PW; pcv.height=PH;
-      const pctx=pcv.getContext('2d');
-      pctx.drawImage(oc,0,0,PW,PH);
-      $('recTimer').textContent=(elCapped/1000).toFixed(1)+'s';
-
-      // Progress
-      $('pb').style.width=Math.round(elCapped/DUR*100)+'%';
-
-      if(elapsed<DUR+200){
-        requestAnimationFrame(renderFrame);
-      } else {
-        mr.stop();
-      }
+      const pctx=pcv.getContext('2d'); pctx.drawImage(oc,0,0,PW,PH);
+      $('recTimer').textContent=(elC/1000).toFixed(1)+'s';
+      $('pb').style.width=Math.round(elC/DUR*100)+'%';
+      elapsed<DUR+200?requestAnimationFrame(rf):mr.stop();
     }
-
-    requestAnimationFrame(renderFrame);
+    requestAnimationFrame(rf);
   });
 }
 
-// ── Init ─────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────
 applyAll();
 </script>
 </body>
