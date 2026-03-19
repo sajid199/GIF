@@ -3,632 +3,456 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GIF Maker — Word by Word</title>
+<title>Video Maker — Word by Word 9:16</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:#0f0f0f; color:#fff; font-family:sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding-bottom:30px; }
+body { background:#0f0f0f; color:#fff; font-family:sans-serif; display:flex; flex-direction:column; align-items:center; padding-bottom:40px; }
 
-h2 { font-size:16px; color:#e63946; margin:12px 0 4px; letter-spacing:1px; }
-
-.panel {
-  width:100%; max-width:680px; background:#1a1a1a;
-  border-bottom:1px solid #2a2a2a; padding:10px 14px;
-  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-}
-.panel-title { width:100%; font-size:11px; color:#e63946; font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
-label { color:#bbb; font-size:12px; display:flex; align-items:center; gap:5px; }
-select, input[type=text] { background:#252525; color:#fff; border:1px solid #3a3a3a; padding:4px 8px; border-radius:5px; font-size:12px; }
-input[type=color] { width:34px; height:26px; border:none; background:none; cursor:pointer; border-radius:3px; }
+.panel { width:100%; max-width:680px; background:#1a1a1a; border-bottom:1px solid #2a2a2a; padding:10px 14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.ptitle { width:100%; font-size:10px; color:#e63946; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:2px; }
+label { color:#bbb; font-size:12px; display:flex; align-items:center; gap:4px; }
+select, input[type=text] { background:#252525; color:#fff; border:1px solid #3a3a3a; padding:4px 8px; border-radius:4px; font-size:12px; }
+textarea { background:#252525; color:#fff; border:1px solid #3a3a3a; padding:8px; border-radius:4px; font-size:13px; resize:vertical; font-family:'Noto Sans Devanagari',sans-serif; line-height:1.5; }
+input[type=color] { width:34px; height:26px; border:none; background:none; cursor:pointer; }
 input[type=range] { width:85px; accent-color:#e63946; cursor:pointer; }
-input[type=checkbox] { accent-color:#e63946; width:14px; height:14px; cursor:pointer; }
+input[type=checkbox] { accent-color:#e63946; width:14px; height:14px; }
 
-.btn { border:none; padding:6px 14px; border-radius:5px; cursor:pointer; font-size:12px; font-weight:bold; transition:all 0.15s; }
-.btn-red { background:#e63946; color:#fff; } .btn-red:hover { background:#c1121f; }
-.btn-green { background:#2d6a4f; color:#fff; } .btn-green:hover { background:#1b4332; }
-.btn-green:disabled { background:#333; color:#666; cursor:not-allowed; }
+.btn { border:none; padding:7px 16px; border-radius:5px; cursor:pointer; font-size:13px; font-weight:bold; transition:all .15s; }
+.btn-red  { background:#e63946; color:#fff; } .btn-red:hover  { background:#c1121f; }
+.btn-grn  { background:#2d6a4f; color:#fff; } .btn-grn:hover  { background:#1b4332; }
+.btn-grn:disabled { background:#333; color:#555; cursor:not-allowed; }
 
-/* BG Tabs */
-.bg-tabs { display:flex; gap:6px; width:100%; margin-bottom:6px; }
-.bg-tab { flex:1; text-align:center; padding:6px 4px; border-radius:6px; cursor:pointer; font-size:11px; font-weight:bold; border:2px solid #333; color:#777; background:#1f1f1f; transition:all 0.2s; }
-.bg-tab.active { border-color:#e63946; color:#fff; background:#2d0a0a; }
-.bg-option { display:none; flex-wrap:wrap; gap:8px; align-items:center; width:100%; }
-.bg-option.show { display:flex; }
+/* BG tabs */
+.bg-tabs { display:flex; gap:5px; width:100%; margin-bottom:4px; }
+.bgtab { flex:1; text-align:center; padding:5px 3px; border-radius:5px; cursor:pointer; font-size:11px; font-weight:bold; border:2px solid #333; color:#666; background:#1f1f1f; transition:all .15s; }
+.bgtab.on { border-color:#e63946; color:#fff; background:#2d0a0a; }
+.bgopt { display:none; flex-wrap:wrap; gap:8px; align-items:center; width:100%; }
+.bgopt.show { display:flex; }
 
-/* Upload area */
-.upload-box { border:2px dashed #3a3a3a; border-radius:8px; padding:10px 18px; cursor:pointer; color:#777; font-size:12px; position:relative; min-width:160px; text-align:center; transition:all 0.2s; }
-.upload-box:hover { border-color:#e63946; color:#e63946; }
-.upload-box input { position:absolute; inset:0; opacity:0; cursor:pointer; }
-.upload-box img { width:44px; height:44px; border-radius:4px; object-fit:cover; display:none; margin:0 auto 4px; }
+/* Upload */
+.upbox { border:2px dashed #3a3a3a; border-radius:7px; padding:10px 14px; cursor:pointer; color:#666; font-size:12px; position:relative; min-width:150px; text-align:center; transition:all .2s; }
+.upbox:hover { border-color:#e63946; color:#e63946; }
+.upbox input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.upbox img { width:42px; height:42px; border-radius:4px; object-fit:cover; display:none; margin:0 auto 4px; }
 
 /* Gradient presets */
-.grad-presets { display:flex; gap:5px; flex-wrap:wrap; }
-.gp { width:28px; height:28px; border-radius:4px; cursor:pointer; border:2px solid transparent; transition:border-color 0.15s; }
-.gp:hover, .gp.sel { border-color:#fff; }
+.gps { display:flex; gap:4px; flex-wrap:wrap; }
+.gp { width:26px; height:26px; border-radius:4px; cursor:pointer; border:2px solid transparent; transition:border-color .15s; }
+.gp:hover,.gp.sel { border-color:#fff; }
 
 /* Solid quick */
-.sq-color { width:22px; height:22px; border-radius:3px; cursor:pointer; border:1px solid #444; transition:transform 0.1s; }
-.sq-color:hover { transform:scale(1.2); }
+.sqc { width:22px; height:22px; border-radius:3px; cursor:pointer; border:1px solid #444; transition:transform .1s; }
+.sqc:hover { transform:scale(1.2); }
 
-/* Preview */
-.preview-wrap { position:relative; width:270px; height:480px; border:2px solid #2a2a2a; border-radius:12px; overflow:hidden; margin-top:14px; background:#000; }
-#previewCanvas { position:absolute; top:0; left:0; width:100%; height:100%; }
-.txt-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:18px 14px; pointer-events:none; }
-.word-wrap { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:0; }
-.w { display:inline-block; opacity:0; margin:2px 4px; font-weight:900; font-size:20px; line-height:1.45; letter-spacing:0.4px; font-family:'Noto Sans Devanagari','Arial Unicode MS',sans-serif; }
-.prog-bar { position:absolute; bottom:0; left:0; height:4px; background:linear-gradient(90deg,#f72585,#7209b7,#3a86ff,#06d6a0,#ffbe0b); border-radius:0 2px 0 0; }
-.timer { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.6); color:#fff; font-size:10px; padding:2px 6px; border-radius:8px; font-family:monospace; }
+/* Canvas preview */
+.preview-outer { position:relative; width:270px; height:480px; margin-top:14px; border:2px solid #2a2a2a; border-radius:12px; overflow:hidden; background:#000; }
+#cv { position:absolute; top:0; left:0; width:100%; height:100%; }
 
-/* Encode progress */
-.enc-bar-wrap { width:270px; height:6px; background:#1a1a1a; border-radius:3px; margin-top:8px; overflow:hidden; display:none; }
-.enc-bar { height:100%; width:0%; background:linear-gradient(90deg,#2d6a4f,#52b788); border-radius:3px; transition:width 0.2s; }
+/* Recording overlay */
+.rec-dot { position:absolute; top:8px; left:10px; width:10px; height:10px; border-radius:50%; background:#e63946; display:none; box-shadow:0 0 8px #e63946; }
+.rec-dot.show { display:block; animation:blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+.rec-timer { position:absolute; top:6px; right:8px; background:rgba(0,0,0,.6); color:#fff; font-size:10px; padding:2px 6px; border-radius:8px; font-family:monospace; }
 
-.status { font-size:11px; color:#888; margin-top:5px; text-align:center; min-height:16px; }
-.note { font-size:10px; color:#444; margin-top:4px; text-align:center; }
+/* Progress */
+.progwrap { width:270px; height:6px; background:#1a1a1a; border-radius:3px; margin-top:8px; overflow:hidden; display:none; }
+.progbar { height:100%; width:0%; background:linear-gradient(90deg,#e63946,#7209b7,#3a86ff); border-radius:3px; transition:width .15s; }
 
-/* How to use */
-.steps { width:100%; max-width:680px; padding:10px 14px; color:#666; font-size:11px; line-height:1.8; }
-.steps b { color:#e63946; }
+.status { font-size:11px; color:#888; margin-top:6px; text-align:center; min-height:16px; padding:0 8px; }
+.note   { font-size:10px; color:#444; margin-top:3px; text-align:center; }
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- ── BACKGROUND PANEL ─────────────────────────── -->
+<!-- BG -->
 <div class="panel" style="margin-top:10px;">
-  <div class="panel-title">🎨 Background</div>
+  <div class="ptitle">🎨 Background</div>
   <div class="bg-tabs">
-    <div class="bg-tab active" id="tab-image"   onclick="switchBG('image')">🖼 Image</div>
-    <div class="bg-tab"        id="tab-gradient" onclick="switchBG('gradient')">🌈 Gradient</div>
-    <div class="bg-tab"        id="tab-solid"    onclick="switchBG('solid')">⬛ Solid</div>
-    <div class="bg-tab"        id="tab-theme"    onclick="switchBG('theme')">✨ Theme</div>
+    <div class="bgtab on"  id="tab-image"    onclick="switchBG('image')">🖼 Image</div>
+    <div class="bgtab"     id="tab-gradient" onclick="switchBG('gradient')">🌈 Gradient</div>
+    <div class="bgtab"     id="tab-solid"    onclick="switchBG('solid')">⬛ Solid</div>
+    <div class="bgtab"     id="tab-theme"    onclick="switchBG('theme')">✨ Theme</div>
   </div>
 
   <!-- IMAGE -->
-  <div class="bg-option show" id="opt-image">
-    <div class="upload-box" id="uploadBox">
-      <input type="file" id="imgFile" accept="image/*" onchange="onImgLoad(event)">
+  <div class="bgopt show" id="opt-image">
+    <div class="upbox">
+      <input type="file" id="imgFile" accept="image/*" onchange="loadImg(event)">
       <img id="imgThumb">
-      <div id="uploadLbl">📁 Image upload karo</div>
+      <div id="upLbl">📁 Image upload karo</div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:6px;">
-      <label>Overlay: <input type="range" id="overlayOp" min="0" max="90" value="40" oninput="document.getElementById('opLbl').textContent=this.value+'%'"> <span id="opLbl">40%</span></label>
-      <label>Color: <input type="color" id="overlayClr" value="#000000"></label>
-      <label>Blur: <input type="range" id="bgBlur" min="0" max="15" value="0" oninput="document.getElementById('blurLbl').textContent=this.value+'px'"> <span id="blurLbl">0px</span></label>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <label>Overlay: <input type="range" id="overlayOp" min="0" max="90" value="40" oninput="V('opLbl',this.value+'%')"> <span id="opLbl">40%</span></label>
+      <label>Color:   <input type="color"  id="overlayClr" value="#000000"></label>
+      <label>Blur:    <input type="range" id="bgBlur" min="0" max="15" value="0" oninput="V('blurLbl',this.value+'px')"> <span id="blurLbl">0px</span></label>
     </div>
   </div>
 
   <!-- GRADIENT -->
-  <div class="bg-option" id="opt-gradient">
-    <div style="display:flex;flex-direction:column;gap:6px;width:100%;">
+  <div class="bgopt" id="opt-gradient">
+    <div style="display:flex;flex-direction:column;gap:5px;width:100%;">
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <label>Dir: <select id="gradDir"><option value="tb">↓ Top-Bottom</option><option value="lr">→ Left-Right</option><option value="diag">↘ Diagonal</option></select></label>
-        <label>C1: <input type="color" id="gc1" value="#0a0a2e"></label>
-        <label>C2: <input type="color" id="gc2" value="#6a0572"></label>
-        <label>C3: <input type="color" id="gc3" value="#1a0533"></label>
+        <label>C1:<input type="color" id="gc1" value="#0a0a2e"></label>
+        <label>C2:<input type="color" id="gc2" value="#6a0572"></label>
+        <label>C3:<input type="color" id="gc3" value="#1a0533"></label>
       </div>
-      <div>
-        <div style="color:#555;font-size:10px;margin-bottom:4px;">Quick presets:</div>
-        <div class="grad-presets" id="gradPresets"></div>
-      </div>
+      <div style="color:#555;font-size:10px;margin-bottom:2px;">Quick presets:</div>
+      <div class="gps" id="gps"></div>
     </div>
   </div>
 
   <!-- SOLID -->
-  <div class="bg-option" id="opt-solid">
-    <label>Color: <input type="color" id="solidClr" value="#0a0a2e"></label>
-    <div id="solidQuick" style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;"></div>
+  <div class="bgopt" id="opt-solid">
+    <label>Color:<input type="color" id="solidClr" value="#0a0a2e"></label>
+    <div id="sqRow" style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;"></div>
   </div>
 
   <!-- THEME -->
-  <div class="bg-option" id="opt-theme">
+  <div class="bgopt" id="opt-theme">
     <label>Theme:
-      <select id="themeSelect">
+      <select id="thSel">
         <option value="stars">✨ Starry Night</option>
-        <option value="sunset">🌅 Sunset Mountains</option>
-        <option value="ocean">🌊 Deep Ocean</option>
-        <option value="forest">🌿 Forest & Fireflies</option>
-        <option value="aurora">🌌 Aurora Borealis</option>
+        <option value="sunset">🌅 Sunset</option>
+        <option value="ocean">🌊 Ocean</option>
+        <option value="forest">🌿 Forest</option>
+        <option value="aurora">🌌 Aurora</option>
         <option value="fire">🔥 Fire</option>
       </select>
     </label>
   </div>
 </div>
 
-<!-- ── TEXT & ANIMATION PANEL ───────────────────── -->
+<!-- TEXT -->
 <div class="panel">
-  <div class="panel-title">✍️ Text Settings</div>
-  <label>Color: <input type="color" id="txtClr" value="#FFD700"></label>
-  <label>Size: <input type="range" id="fontSize" min="12" max="32" value="20" oninput="document.getElementById('fsLbl').textContent=this.value+'px'"> <span id="fsLbl">20px</span></label>
-  <label>Glow: <input type="color" id="glowClr" value="#ff6b00"></label>
-  <label>Bold: <input type="checkbox" id="boldCk" checked></label>
-  <label>Outline: <input type="checkbox" id="outlineCk"></label>
+  <div class="ptitle">✍️ Text & Style</div>
+  <label>Color:<input type="color" id="txtClr" value="#FFD700"></label>
+  <label>Size:<input type="range" id="fontSize" min="12" max="36" value="22" oninput="V('fsLbl',this.value+'px')"><span id="fsLbl">22px</span></label>
+  <label>Glow:<input type="color" id="glowClr" value="#ff6b00"></label>
+  <label>Bold:<input type="checkbox" id="boldCk" checked></label>
+  <label>Outline:<input type="checkbox" id="outCk"></label>
 </div>
 
 <div class="panel">
-  <div class="panel-title">📝 Text (50 words)</div>
-  <textarea id="txtInput" style="width:100%;min-height:60px;background:#252525;color:#fff;border:1px solid #3a3a3a;border-radius:5px;padding:8px;font-size:13px;resize:vertical;font-family:'Noto Sans Devanagari',sans-serif;">जो सपने देखते हैं वो रात को भी जागते हैं। हर मुश्किल एक नया मोड़ है। हिम्मत रखो मंजिल दूर नहीं। मेहनत का फल मीठा होता है। बस एक कदम और सफलता तुम्हारी है।</textarea>
+  <div class="ptitle">📝 Text (Hindi / English)</div>
+  <textarea id="txtIn" style="width:100%;min-height:64px;">जो सपने देखते हैं वो रात को भी जागते हैं। हर मुश्किल एक नया मोड़ है। हिम्मत रखो मंजिल दूर नहीं। मेहनत का फल मीठा होता है। बस एक कदम और सफलता तुम्हारी है।</textarea>
 </div>
 
 <div class="panel" style="gap:10px;">
-  <button class="btn btn-red" onclick="applyAll()">▶ Preview Update</button>
-  <button class="btn btn-green" id="dlBtn" onclick="makeGIF()">⬇ Download GIF</button>
-  <span style="font-size:11px;color:#555;">540×960 • 9:16 HD • 7sec</span>
+  <button class="btn btn-red" onclick="applyAll()">▶ Preview</button>
+  <button class="btn btn-grn" id="recBtn" onclick="startRec()">⬇ Download Video (WebM)</button>
+  <span style="font-size:11px;color:#555;">540×960 • 9:16 • 7 sec</span>
 </div>
 
-<!-- ── PREVIEW ────────────────────────────────── -->
-<div class="preview-wrap">
-  <canvas id="previewCanvas"></canvas>
-  <div class="txt-overlay"><div class="word-wrap" id="wordWrap"></div></div>
-  <div class="prog-bar" id="progBar" style="width:0%"></div>
-  <div class="timer" id="timer">0.0s</div>
+<!-- PREVIEW -->
+<div class="preview-outer">
+  <canvas id="cv"></canvas>
+  <div class="rec-dot" id="recDot"></div>
+  <div class="rec-timer" id="recTimer">0.0s</div>
 </div>
-
-<div class="enc-bar-wrap" id="encWrap"><div class="enc-bar" id="encBar"></div></div>
-<div class="status" id="status">Settings apply karo, phir GIF download karo ✨</div>
-<div class="note">Browser mein seedha preview dekho • GIF automatically download hogi</div>
+<div class="progwrap" id="pw"><div class="progbar" id="pb"></div></div>
+<div class="status" id="status">Preview dekho phir video download karo 🎬</div>
+<div class="note">Chrome / Edge mein best kaam karta hai • WebM format (WhatsApp, Instagram pe chalega)</div>
 
 <script>
-// ════════════════════════════════════════════════════════════
-//  PURE-JS GIF ENCODER  (NeuQuant + LZW, no Worker needed)
-// ════════════════════════════════════════════════════════════
-const GIFEnc = (() => {
-  /* ── ByteArray ── */
-  class BA {
-    constructor(){ this.d=[]; }
-    wb(b){ this.d.push(b&255); }
-    ws(s){ this.wb(s&255); this.wb((s>>8)&255); }
-    wbs(a){ for(const b of a) this.wb(b); }
-    u8(){ return new Uint8Array(this.d); }
-  }
+// ── helpers ──────────────────────────────────────────────────
+const $=id=>document.getElementById(id);
+const V=(id,v)=>$(id).textContent=v;
 
-  /* ── NeuQuant palette quantiser ── */
-  function NQ(px, sf) {
-    const N=256, NBS=4, NC=100, IBS=16, IB=1<<IBS, GS=10;
-    const BTS=10, B=IB>>BTS, BG=IB<<(GS-BTS);
-    const IR=N>>3, RBS=6, RB=1<<RBS, IR2=IR*RB, RD=30;
-    const ABS=10, IA=1<<ABS, RABS=8, RAB=1<<RABS, ARBS=ABS+RABS, ARB=1<<ARBS;
-    let net=[], ni=new Int32Array(256), bias=new Int32Array(N), freq=new Int32Array(N), rp=new Int32Array(IR);
-    for(let i=0;i<N;i++){let v=(i<<(NBS+8))/N; net[i]=[v,v,v,0]; freq[i]=IB/N; bias[i]=0;}
-    const MC=n=>(1<<n)-1;
-    function cm(){let m=[],idx=new Int32Array(N); for(let i=0;i<N;i++)idx[net[i][3]]=i; let k=0; for(let l=0;l<N;l++){let j=idx[l]; m[k++]=net[j][0]; m[k++]=net[j][1]; m[k++]=net[j][2];} return m;}
-    function ib(){let pc=0,sp=0; for(let i=0;i<N;i++){let p=net[i],sm=i,sv=p[1]; for(let j=i+1;j<N;j++){let q=net[j]; if(q[1]<sv){sm=j;sv=q[1];}} let q=net[sm]; if(i!==sm){let j=q[0];q[0]=p[0];p[0]=j; j=q[1];q[1]=p[1];p[1]=j; j=q[2];q[2]=p[2];p[2]=j; j=q[3];q[3]=p[3];p[3]=j;} if(sv!==pc){ni[pc]=(sp+i)>>1; for(let j=pc+1;j<sv;j++)ni[j]=i; pc=sv;sp=i;}} ni[pc]=(sp+N-1)>>1; for(let j=pc+1;j<256;j++)ni[j]=N-1;}
-    function ct(b,g,r){let bd=~(1<<31),bbd=bd,bp=-1,bbp=bp; for(let i=0;i<N;i++){let n=net[i]; let d=Math.abs(n[0]-b)+Math.abs(n[1]-g)+Math.abs(n[2]-r); if(d<bd){bd=d;bp=i;} let bd2=d-((bias[i])>>(IBS-NBS)); if(bd2<bbd){bbd=bd2;bbp=i;} let bf=freq[i]>>BTS; freq[i]-=bf; bias[i]+=bf<<GS;} freq[bp]+=B; bias[bp]-=BG; return bbp;}
-    function as(a,i,b,g,r){let n=net[i]; n[0]-=(a*(n[0]-b))/IA; n[1]-=(a*(n[1]-g))/IA; n[2]-=(a*(n[2]-r))/IA;}
-    function an(rad,i,b,g,r){let lo=Math.abs(i-rad),hi=Math.min(i+rad,N); let j=i+1,k=i-1,m=1; while(j<hi||k>lo){let rd=rp[m++]; if(j<hi){let p=net[j++]; p[0]-=(rd*(p[0]-b))/ARB; p[1]-=(rd*(p[1]-g))/ARB; p[2]-=(rd*(p[2]-r))/ARB;} if(k>lo){let p=net[k--]; p[0]-=(rd*(p[0]-b))/ARB; p[1]-=(rd*(p[1]-g))/ARB; p[2]-=(rd*(p[2]-r))/ARB;}}}
-    function learn(){let lc=px.length,ad=30+(sf-1)/3,sp2=Math.floor(lc/(3*sf)),d2=Math.floor(sp2/NC);
-      let al=IA,rad=IR2,rd=rad>>RBS; if(rd<=1)rd=0; for(let i=0;i<rd;i++)rp[i]=Math.floor(al*(((rd*rd-i*i)*RAB)/(rd*rd)));
-      let step=lc<12800?3:lc<102400?3*sf:24; if(step%3!==0)step+=1;
-      let pos=0,i=0; while(i<sp2){let b=(px[pos]&255)<<NBS,g=(px[pos+1]&255)<<NBS,r=(px[pos+2]&255)<<NBS; let j=ct(b,g,r); as(al,j,b,g,r); if(rd)an(rd,j,b,g,r); pos+=step; if(pos>=lc)pos-=lc; i++; if(d2===0)d2=1; if(i%d2===0){al-=Math.floor(al/ad); rad-=Math.floor(rad/RD); rd=rad>>RBS; if(rd<=1)rd=0; for(let j=0;j<rd;j++)rp[j]=Math.floor(al*(((rd*rd-j*j)*RAB)/(rd*rd)));}}
-    }
-    function map(b,g,r){let bd=1000,bp=0; let i=ni[g]>>NBS,j=i-1; while(i<N||j>=0){if(i<N){let p=net[i]; let d=p[1]-g; if(d>=bd)i=N; else{i++; if(d<0)d=-d; let a=p[0]-b; if(a<0)a=-a; d+=a; if(d<bd){a=p[2]-r; if(a<0)a=-a; d+=a; if(d<bd){bd=d;bp=p[3];}}}} if(j>=0){let p=net[j]; let d=g-p[1]; if(d>=bd)j=-1; else{j--; if(d<0)d=-d; let a=p[0]-b; if(a<0)a=-a; d+=a; if(d<bd){a=p[2]-r; if(a<0)a=-a; d+=a; if(d<bd){bd=d;bp=p[3];}}}}} return bp;}
-    learn(); ib();
-    return {map, colormap:cm};
-  }
-
-  /* ── LZW encoder ── */
-  function LZW(W,H,pix,cd){
-    const MC=4096; let ics=Math.max(2,cd);
-    let acc=[],ht=[],ct2=[],ca=0,cb=0,ac=0,fe=0,mc=0,cf=false;
-    const M=[0,1,3,7,15,31,63,127,255,511,1023,2047,4095,8191,16383,32767,65535];
-    let nb,CC,EC,rem,cp;
-    const MC2=n=>(1<<n)-1;
-    function np(){if(rem===0)return 255; rem--; return pix[cp++]&255;}
-    function out(c,o){ca&=M[cb]; ca|=(c<<cb); cb+=nb; while(cb>=8){acc[ac++]=ca&255; if(ac>=254)fc(o); ca>>=8; cb-=8;} if(fe>mc||cf){if(cf){nb=ics+1;mc=MC2(nb);cf=false;}else{nb++; if(nb===12)mc=MC; else mc=MC2(nb);}} if(c===EC){while(cb>0){acc[ac++]=ca&255; if(ac>=254)fc(o); ca>>=8; cb-=8;} if(ac>0)fc(o);}}
-    function clh(s){for(let i=0;i<s;i++)ht[i]=-1;}
-    function fc(o){if(ac>0){o.wb(ac); o.wbs(acc.slice(0,ac)); ac=0;}}
-    function clb(o){clh(5003); fe=CC+2; cf=true; out(CC,o);}
-    function compress(ib2,o){let fc2,c,i,ent,dis,hs,hs2; nb=ib2; mc=MC2(nb); CC=1<<(ib2-1); EC=CC+1; fe=CC+2; cf=false; ac=0; ent=np(); hs2=0; for(fc2=5003;fc2<65536;fc2*=2)hs2++; hs2=8-hs2; hs=5003; clh(hs); out(CC,o);
-      ol: while((c=np())!==255){fc2=(c<<12)+ent; i=((c<<hs2)^ent); if(ht[i]===fc2){ent=ct2[i];continue;} else if(ht[i]>=0){dis=hs-i; if(i===0)dis=1; do{if((i-=dis)<0)i+=hs; if(ht[i]===fc2){ent=ct2[i];continue ol;}}while(ht[i]>=0);} out(ent,o); ent=c; if(fe<MC){ct2[i]=fe++;ht[i]=fc2;}else{clb(o);}} out(ent,o); out(EC,o);}
-    return {enc(o){o.wb(ics); rem=W*H; cp=0; compress(ics+1,o); o.wb(0);}};
-  }
-
-  /* ── Main encoder ── */
-  function encode(frames, W, H, delay) {
-    const ba = new BA();
-    ba.wbs([71,73,70,56,57,97]); // GIF89a
-    ba.ws(W); ba.ws(H);
-    ba.wb(0); ba.wb(0); ba.wb(0);
-    // Loop forever
-    ba.wbs([33,255,11,78,69,84,83,67,65,80,69,50,46,48,3,1,0,0,0]);
-    for(const {px} of frames){
-      const nq = NQ(px, 10);
-      const cm = nq.colormap();
-      const ip = new Uint8Array(W*H);
-      for(let i=0;i<W*H;i++) ip[i]=nq.map(px[i*3],px[i*3+1],px[i*3+2]);
-      // GCE
-      ba.wb(33); ba.wb(249); ba.wb(4);
-      ba.wb(0); ba.ws(Math.round(delay/10)); ba.wb(0); ba.wb(0);
-      // Image
-      ba.wb(44); ba.ws(0); ba.ws(0); ba.ws(W); ba.ws(H);
-      ba.wb(0x87); // local CT, 256 colors
-      for(let i=0;i<256;i++){ba.wb(cm[i*3]||0); ba.wb(cm[i*3+1]||0); ba.wb(cm[i*3+2]||0);}
-      LZW(W,H,ip,8).enc(ba);
-    }
-    ba.wb(59);
-    return ba.u8();
-  }
-  return {encode};
-})();
-
-// ════════════════════════════════════════════════════════════
-//  APP STATE
-// ════════════════════════════════════════════════════════════
-const PW=270, PH=480, DUR=7000;
-let raf, t0, words=[], wEls=[], cfg={}, lastIdx=-1, upImg=null, starArr=[];
-
+// ── Stars ────────────────────────────────────────────────────
+let stars=[];
 function mkStars(w,h){
-  starArr=[];
-  for(let i=0;i<160;i++) starArr.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.6+0.3,sp:Math.random()*0.4+0.1,ph:Math.random()*6.28,br:Math.random()});
+  stars=[];
+  for(let i=0;i<180;i++) stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.8+0.3,sp:Math.random()*0.5+0.1,ph:Math.random()*6.28,br:Math.random()});
 }
-mkStars(PW,PH);
 
-// Gradient preset data
-const GP=[['#0a0a2e','#6a0572','#1a0533'],['#1a0000','#8b0000','#ff4500'],['#0d1f0f','#1a5c2a','#4caf50'],
-          ['#020b18','#0a3d62','#74b9ff'],['#2d1b69','#11998e','#38ef7d'],['#fc5c7d','#6a3093','#1a1a2e'],
-          ['#000000','#434343','#cccccc'],['#f7971e','#ffd200','#fc4a1a'],['#1a1a2e','#16213e','#0f3460'],
-          ['#240046','#7b2d8b','#e040fb']];
-
+// ── Gradient presets ─────────────────────────────────────────
+const GP=[
+  ['#0a0a2e','#6a0572','#1a0533'],['#1a0000','#8b0000','#ff4500'],
+  ['#0d1f0f','#1a5c2a','#4caf50'],['#020b18','#0a3d62','#74b9ff'],
+  ['#2d1b69','#11998e','#38ef7d'],['#fc5c7d','#6a3093','#1a1a2e'],
+  ['#000','#434343','#ccc'],     ['#f7971e','#ffd200','#fc4a1a'],
+  ['#1a1a2e','#16213e','#0f3460'],['#240046','#7b2d8b','#e040fb'],
+];
 (()=>{
-  const el=document.getElementById('gradPresets');
+  const el=$('gps');
   GP.forEach(([a,b,c])=>{
     const d=document.createElement('div'); d.className='gp';
     d.style.background=`linear-gradient(135deg,${a},${b},${c})`;
-    d.onclick=()=>{
-      document.getElementById('gc1').value=a;
-      document.getElementById('gc2').value=b;
-      document.getElementById('gc3').value=c;
-      el.querySelectorAll('.gp').forEach(p=>p.classList.remove('sel'));
-      d.classList.add('sel'); applyAll();
-    };
+    d.onclick=()=>{ $('gc1').value=a; $('gc2').value=b; $('gc3').value=c; el.querySelectorAll('.gp').forEach(p=>p.classList.remove('sel')); d.classList.add('sel'); applyAll(); };
     el.appendChild(d);
   });
 })();
-
 (()=>{
-  const sc=['#000000','#0a0a2e','#1a0533','#0d1f0f','#1a0000','#ffffff','#1a1a1a','#0d2137','#1c0a00','#001a33'];
-  const el=document.getElementById('solidQuick');
-  sc.forEach(c=>{
-    const d=document.createElement('div'); d.className='sq-color'; d.style.background=c;
-    d.onclick=()=>{ document.getElementById('solidClr').value=c; applyAll(); };
-    el.appendChild(d);
-  });
+  const sc=['#000','#0a0a2e','#1a0533','#0d1f0f','#1a0000','#fff','#1a1a1a','#0d2137','#1c0a00','#001a33'];
+  const el=$('sqRow');
+  sc.forEach(c=>{ const d=document.createElement('div'); d.className='sqc'; d.style.background=c; d.onclick=()=>{ $('solidClr').value=c; applyAll(); }; el.appendChild(d); });
 })();
 
 function switchBG(t){
   ['image','gradient','solid','theme'].forEach(k=>{
-    document.getElementById('tab-'+k).classList.toggle('active',k===t);
-    document.getElementById('opt-'+k).classList.toggle('show',k===t);
+    $('tab-'+k).classList.toggle('on',k===t);
+    $('opt-'+k).classList.toggle('show',k===t);
   });
   applyAll();
 }
 
-function onImgLoad(e){
+// ── Image load ───────────────────────────────────────────────
+let upImg=null;
+function loadImg(e){
   const f=e.target.files[0]; if(!f) return;
   const rd=new FileReader();
-  rd.onload=ev=>{
-    const img=new Image();
-    img.onload=()=>{
-      upImg=img;
-      const th=document.getElementById('imgThumb');
-      th.src=ev.target.result; th.style.display='block';
-      document.getElementById('uploadLbl').textContent='✓ '+f.name.slice(0,22);
-      applyAll();
-    };
-    img.src=ev.target.result;
-  };
+  rd.onload=ev=>{ const img=new Image(); img.onload=()=>{ upImg=img; $('imgThumb').src=ev.target.result; $('imgThumb').style.display='block'; $('upLbl').textContent='✓ '+f.name.slice(0,20); applyAll(); }; img.src=ev.target.result; };
   rd.readAsDataURL(f);
 }
 
+// ── hex → rgb ────────────────────────────────────────────────
 function h2r(h){ return {r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)}; }
 
-// ── Background drawing ──────────────────────────
-function drawBG(ctx, elapsed, s, W, H){
+// ── Background drawing ───────────────────────────────────────
+function drawBG(ctx,el,s,W,H){
   ctx.clearRect(0,0,W,H);
   const bt=s.bgType||'theme';
-  if(bt==='image' && upImg){
-    if(s.blur>0){ctx.save(); ctx.filter=`blur(${s.blur}px)`;}
-    const sc=Math.max(W/upImg.width, H/upImg.height);
-    const dw=upImg.width*sc, dh=upImg.height*sc;
+  if(bt==='image'&&upImg){
+    if(s.blur>0){ctx.save();ctx.filter=`blur(${s.blur}px)`;}
+    const sc=Math.max(W/upImg.width,H/upImg.height);
+    const dw=upImg.width*sc,dh=upImg.height*sc;
     ctx.drawImage(upImg,(W-dw)/2,(H-dh)/2,dw,dh);
-    if(s.blur>0){ctx.filter='none'; ctx.restore();}
+    if(s.blur>0){ctx.filter='none';ctx.restore();}
     const {r,g,b}=h2r(s.overlayClr);
-    ctx.fillStyle=`rgba(${r},${g},${b},${s.overlayOp/100})`;
-    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=`rgba(${r},${g},${b},${s.overlayOp/100})`; ctx.fillRect(0,0,W,H);
   } else if(bt==='gradient'){
-    const d=s.gradDir;
-    const [x1,y1,x2,y2]=d==='lr'?[0,0,W,0]:d==='diag'?[0,0,W,H]:[0,0,0,H];
+    const [x1,y1,x2,y2]=s.gradDir==='lr'?[0,0,W,0]:s.gradDir==='diag'?[0,0,W,H]:[0,0,0,H];
     const g=ctx.createLinearGradient(x1,y1,x2,y2);
-    const sh=(Math.sin(elapsed*0.0006)+1)/2*0.12;
-    g.addColorStop(0,s.gc1); g.addColorStop(Math.min(0.99,0.5+sh),s.gc2); g.addColorStop(1,s.gc3);
+    const sh=(Math.sin(el*0.0006)+1)/2*0.1;
+    g.addColorStop(0,s.gc1); g.addColorStop(Math.min(.99,.5+sh),s.gc2); g.addColorStop(1,s.gc3);
     ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
   } else if(bt==='solid'){
     ctx.fillStyle=s.solidClr; ctx.fillRect(0,0,W,H);
   } else {
-    drawTheme(ctx,elapsed,s.theme,W,H);
+    drawTheme(ctx,el,s.theme,W,H);
   }
 }
 
 function drawTheme(ctx,t,th,W,H){
-  const g=ctx.createLinearGradient(0,0,0,H);
+  const lg=(s,e)=>{ const g=ctx.createLinearGradient(0,0,0,H); s.forEach(([p,c])=>g.addColorStop(p,c)); return g; };
   if(th==='stars'){
-    g.addColorStop(0,'#020514'); g.addColorStop(1,'#0d0130'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-    starArr.forEach(s=>{
-      const tw=(Math.sin(t*0.002*s.sp*5+s.ph)+1)/2;
-      const a=0.25+0.75*tw*s.br;
-      ctx.beginPath(); ctx.arc(s.x,s.y,s.r*(1+0.3*tw),0,6.28);
-      ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
-    });
+    ctx.fillStyle=lg([[0,'#020514'],[1,'#0d0130']]); ctx.fillRect(0,0,W,H);
+    stars.forEach(s=>{ const tw=(Math.sin(t*0.002*s.sp*5+s.ph)+1)/2,a=0.2+0.8*tw*s.br; ctx.beginPath(); ctx.arc(s.x,s.y,s.r*(1+0.3*tw),0,6.28); ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill(); });
   } else if(th==='sunset'){
-    g.addColorStop(0,'#0d0d2b'); g.addColorStop(0.3,'#5c1a6d'); g.addColorStop(0.6,'#c84b31'); g.addColorStop(0.8,'#f5a623'); g.addColorStop(1,'#1a1a2e');
-    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-    const sy=H*0.62+Math.sin(t*0.0005)*4;
-    const sg=ctx.createRadialGradient(W/2,sy,4,W/2,sy,W*0.35);
+    ctx.fillStyle=lg([[0,'#0d0d2b'],[.3,'#5c1a6d'],[.6,'#c84b31'],[.8,'#f5a623'],[1,'#1a1a2e']]); ctx.fillRect(0,0,W,H);
+    const sy=H*.62+Math.sin(t*.0005)*4,sg=ctx.createRadialGradient(W/2,sy,4,W/2,sy,W*.35);
     sg.addColorStop(0,'rgba(255,220,50,.85)'); sg.addColorStop(.5,'rgba(255,120,30,.35)'); sg.addColorStop(1,'rgba(255,60,0,0)');
     ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
     ctx.fillStyle='#060612'; ctx.beginPath();
-    ctx.moveTo(0,H); ctx.lineTo(0,H*.72); ctx.lineTo(W*.18,H*.55); ctx.lineTo(W*.38,H*.68);
-    ctx.lineTo(W*.53,H*.5); ctx.lineTo(W*.7,H*.62); ctx.lineTo(W*.85,H*.58); ctx.lineTo(W,H*.65); ctx.lineTo(W,H); ctx.fill();
+    ctx.moveTo(0,H); [0,H*.72,W*.18,H*.55,W*.38,H*.68,W*.53,H*.5,W*.7,H*.62,W*.85,H*.58,W,H*.65,W,H].reduce((a,v,i,ar)=>{ if(i%2===0){ if(i===0)ctx.lineTo(0,H*.72); else ctx.lineTo(ar[i],ar[i+1]); } return null; });
+    ctx.lineTo(W,H); ctx.fill();
   } else if(th==='ocean'){
-    g.addColorStop(0,'#020b18'); g.addColorStop(.5,'#0a3d62'); g.addColorStop(1,'#074f77'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-    for(let i=0;i<5;i++){
-      const wy=H*.55+i*H*.04+Math.sin(t*.002+i)*8;
-      ctx.strokeStyle=`rgba(100,220,255,${.15-i*.02})`; ctx.lineWidth=1.5; ctx.beginPath();
-      for(let x=0;x<=W;x+=2){const y=wy+Math.sin(x*.04+t*.003+i)*6; x?ctx.lineTo(x,y):ctx.moveTo(x,y);}
-      ctx.stroke();
-    }
+    ctx.fillStyle=lg([[0,'#020b18'],[.5,'#0a3d62'],[1,'#074f77']]); ctx.fillRect(0,0,W,H);
+    for(let i=0;i<5;i++){ const wy=H*.55+i*H*.04+Math.sin(t*.002+i)*8; ctx.strokeStyle=`rgba(100,220,255,${.15-i*.02})`; ctx.lineWidth=1.5; ctx.beginPath(); for(let x=0;x<=W;x+=2){ const y=wy+Math.sin(x*.04+t*.003+i)*6; x?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.stroke(); }
   } else if(th==='forest'){
-    g.addColorStop(0,'#0a1628'); g.addColorStop(.5,'#1a3a2a'); g.addColorStop(1,'#0d1f0f'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='#040e06';
-    for(let i=0;i<9;i++){const tx=i/8*W,th2=H*(.28+((i*37)%10)*.025); ctx.beginPath(); ctx.moveTo(tx,H); ctx.lineTo(tx-W*.07,H-th2); ctx.lineTo(tx+W*.07,H-th2); ctx.closePath(); ctx.fill();}
-    starArr.slice(0,30).forEach(s=>{const fy=H*.2+s.y*.5,tw=Math.sin(t*.003*s.sp*3+s.ph); ctx.beginPath(); ctx.arc(s.x,fy,1.5,0,6.28); ctx.fillStyle=`rgba(180,255,100,${Math.max(0,tw)*.8})`; ctx.fill();});
+    ctx.fillStyle=lg([[0,'#0a1628'],[.5,'#1a3a2a'],[1,'#0d1f0f']]); ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#040e06'; for(let i=0;i<9;i++){ const tx=i/8*W,th2=H*(.28+((i*37)%10)*.025); ctx.beginPath(); ctx.moveTo(tx,H); ctx.lineTo(tx-W*.07,H-th2); ctx.lineTo(tx+W*.07,H-th2); ctx.closePath(); ctx.fill(); }
+    stars.slice(0,35).forEach(s=>{ const fy=H*.2+s.y*.5,tw=Math.sin(t*.003*s.sp*3+s.ph); ctx.beginPath(); ctx.arc(s.x,fy,1.5,0,6.28); ctx.fillStyle=`rgba(180,255,100,${Math.max(0,tw)*.8})`; ctx.fill(); });
   } else if(th==='aurora'){
     ctx.fillStyle='#010a12'; ctx.fillRect(0,0,W,H);
-    [['rgba(0,255,150,',0],['rgba(100,50,255,',1.8],['rgba(0,200,255,',3.6]].forEach(([c,bi])=>{
-      for(let x=0;x<=W;x+=2){
-        const wy=H*.35+Math.sin(x*.02+t*.001+bi)*H*.1+bi*H*.03;
-        const h2=H*.12+Math.sin(x*.03+t*.0008)*H*.04;
-        const ag=ctx.createLinearGradient(x,wy-h2,x,wy+h2);
-        ag.addColorStop(0,c+'0)'); ag.addColorStop(.5,c+'.2)'); ag.addColorStop(1,c+'0)');
-        ctx.fillStyle=ag; ctx.fillRect(x,wy-h2,2,h2*2);
-      }
-    });
-    starArr.forEach(s=>{const tw=(Math.sin(t*.002*s.sp*4+s.ph)+1)/2,a=.15+.4*tw*s.br; ctx.beginPath(); ctx.arc(s.x,s.y*.38,s.r,0,6.28); ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();});
+    [['rgba(0,255,150,',0],['rgba(100,50,255,',1.8],['rgba(0,200,255,',3.6]].forEach(([c,bi])=>{ for(let x=0;x<=W;x+=2){ const wy=H*.35+Math.sin(x*.02+t*.001+bi)*H*.1+bi*H*.03,h2=H*.12+Math.sin(x*.03+t*.0008)*H*.04,ag=ctx.createLinearGradient(x,wy-h2,x,wy+h2); ag.addColorStop(0,c+'0)'); ag.addColorStop(.5,c+'.2)'); ag.addColorStop(1,c+'0)'); ctx.fillStyle=ag; ctx.fillRect(x,wy-h2,2,h2*2); } });
+    stars.forEach(s=>{ const tw=(Math.sin(t*.002*s.sp*4+s.ph)+1)/2,a=.1+.35*tw*s.br; ctx.beginPath(); ctx.arc(s.x,s.y*.38,s.r,0,6.28); ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill(); });
   } else if(th==='fire'){
-    g.addColorStop(0,'#0a0000'); g.addColorStop(.4,'#3d0000'); g.addColorStop(.7,'#8b1a00'); g.addColorStop(1,'#ff4500');
-    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-    for(let i=0;i<6;i++){
-      const fx=W*(.08+i*.17)+Math.sin(t*.002+i)*12;
-      const fh=H*(.28+Math.sin(t*.003+i*1.3)*.09);
-      const fg=ctx.createRadialGradient(fx,H,4,fx,H-fh,fh*.55);
-      fg.addColorStop(0,'rgba(255,200,0,.6)'); fg.addColorStop(.4,'rgba(255,80,0,.3)'); fg.addColorStop(1,'rgba(255,0,0,0)');
-      ctx.fillStyle=fg; ctx.fillRect(0,0,W,H);
-    }
+    ctx.fillStyle=lg([[0,'#0a0000'],[.4,'#3d0000'],[.7,'#8b1a00'],[1,'#ff4500']]); ctx.fillRect(0,0,W,H);
+    for(let i=0;i<7;i++){ const fx=W*(.08+i*.14)+Math.sin(t*.002+i)*14,fh=H*(.3+Math.sin(t*.003+i*1.3)*.1),fg=ctx.createRadialGradient(fx,H,4,fx,H-fh,fh*.55); fg.addColorStop(0,'rgba(255,200,0,.65)'); fg.addColorStop(.4,'rgba(255,80,0,.3)'); fg.addColorStop(1,'rgba(255,0,0,0)'); ctx.fillStyle=fg; ctx.fillRect(0,0,W,H); }
   }
 }
 
-// ── Word DOM builder ──────────────────────────
-function buildWordEls(){
-  const txt=document.getElementById('txtInput').value.trim();
-  words=txt.split(/\s+/).filter(Boolean);
-  const c=document.getElementById('wordWrap'); c.innerHTML=''; wEls=[];
-  const col=document.getElementById('txtClr').value;
-  const fs=document.getElementById('fontSize').value+'px';
-  const bold=document.getElementById('boldCk').checked;
-  const outline=document.getElementById('outlineCk').checked;
-  const {r,g,b}=h2r(document.getElementById('glowClr').value);
-  words.forEach(w=>{
-    const s=document.createElement('span'); s.className='w'; s.textContent=w;
-    s.style.color=col; s.style.fontSize=fs; s.style.fontWeight=bold?'900':'400';
-    s.style.textShadow=`0 2px 12px rgba(0,0,0,.9),0 0 20px rgba(${r},${g},${b},.7)`;
-    if(outline) s.style.webkitTextStroke=`1px rgba(${r},${g},${b},.85)`;
-    c.appendChild(s); wEls.push(s);
-  });
-  lastIdx=-1;
-}
-
-// ── Word animation ────────────────────────────
-function animWords(el){
+// ── Text drawing on canvas ───────────────────────────────────
+function drawText(ctx,words,elapsed,s,W,H,DUR){
   const n=words.length; if(!n) return;
-  const s0=200, e0=6400, iv=(e0-s0)/(n-1||1);
-  if(el<s0 && lastIdx>=0){
-    wEls.forEach(w=>{w.style.opacity='0'; w.style.transform='scale(.6) translateY(18px)'; w.style.transition='none';});
-    lastIdx=-1;
+  const s0=300,e0=DUR*0.92,iv=(e0-s0)/(n-1||1);
+  const ti=elapsed<s0?-1:Math.min(Math.floor((elapsed-s0)/iv),n-1);
+  if(ti<0) return;
+  const vis=words.slice(0,ti+1);
+  const fade=elapsed>DUR*0.93?Math.max(0,1-(elapsed-DUR*0.93)/(DUR*0.07)):1;
+  if(fade<=0) return;
+
+  const fs=s.fontSize||22;
+  const fw=s.bold?'900':'700';
+  ctx.font=`${fw} ${fs}px 'Noto Sans Devanagari',FreeSans,Arial`;
+  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+
+  // wrap into lines
+  const maxW=W-60, lines=[], cur=[];
+  for(const w of vis){
+    const test=cur.concat(w).join(' ');
+    if(ctx.measureText(test).width>maxW && cur.length){ lines.push(cur.join(' ')); cur.length=0; }
+    cur.push(w);
   }
-  const ti=Math.min(Math.floor((el-s0)/iv), n-1);
-  for(let i=0;i<=ti;i++){
-    if(i>lastIdx){
-      const w=wEls[i];
-      w.style.transition='none'; w.style.opacity='0'; w.style.transform='scale(.5) translateY(22px)';
-      requestAnimationFrame(()=>{
-        w.style.transition='opacity .28s ease, transform .36s cubic-bezier(.34,1.56,.64,1)';
-        w.style.opacity='1'; w.style.transform='scale(1) translateY(0)';
-      });
-      w.style.filter='brightness(1.8)';
-      setTimeout(()=>w.style.filter='brightness(1)', 260);
+  if(cur.length) lines.push(cur.join(' '));
+
+  const lh=fs*1.6, totalH=lines.length*lh;
+  const sy=H/2-totalH/2+fs*0.8;
+  const {r:gr,g:gg,b:gb}=h2r(s.glowClr||'#ff6b00');
+
+  lines.forEach((line,li)=>{
+    const y=sy+li*lh;
+    // drop shadow
+    ctx.globalAlpha=fade*0.9;
+    ctx.fillStyle='rgba(0,0,0,1)';
+    ctx.fillText(line,W/2+3,y+4);
+    // glow
+    ctx.globalAlpha=fade*0.4;
+    ctx.fillStyle=`rgb(${gr},${gg},${gb})`;
+    [[-3,0],[3,0],[0,-3],[0,3]].forEach(([ox,oy])=>ctx.fillText(line,W/2+ox,y+oy));
+    // main
+    ctx.globalAlpha=fade;
+    ctx.fillStyle=s.txtClr||'#FFD700';
+    ctx.fillText(line,W/2,y);
+    // outline
+    if(s.outline){
+      ctx.strokeStyle=`rgb(${gr},${gg},${gb})`;
+      ctx.lineWidth=Math.max(1.5,fs*0.04);
+      ctx.strokeText(line,W/2,y);
     }
-  }
-  if(ti>=0) lastIdx=Math.max(lastIdx,ti);
-  if(el>6500){const fa=Math.max(0,1-(el-6500)/350); wEls.forEach(w=>w.style.opacity=String(fa));}
+  });
+  ctx.globalAlpha=1;
 }
 
-// ── Render loop ───────────────────────────────
-function loop(ts){
-  if(!t0) t0=ts;
-  const el=(ts-t0)%DUR;
-  const cv=document.getElementById('previewCanvas');
-  cv.width=PW; cv.height=PH;
-  drawBG(cv.getContext('2d'), el, cfg, PW, PH);
-  animWords(el);
-  document.getElementById('progBar').style.width=(el/DUR*100)+'%';
-  document.getElementById('timer').textContent=(el/1000).toFixed(1)+'s';
-  raf=requestAnimationFrame(loop);
+// ── Progress bar on canvas ───────────────────────────────────
+function drawProg(ctx,elapsed,DUR,W,H,clr){
+  const {r,g,b}=h2r(clr);
+  ctx.globalAlpha=0.8;
+  ctx.fillStyle=`rgb(${r},${g},${b})`;
+  ctx.fillRect(0,H-10,W*Math.min(elapsed/DUR,1),10);
+  ctx.globalAlpha=1;
 }
+
+// ── App state ────────────────────────────────────────────────
+const PW=270,PH=480,DUR=7000;
+let raf,t0,words=[],cfg={};
+
+mkStars(PW,PH);
 
 function applyAll(){
   cfg={
-    bgType:document.querySelector('.bg-tab.active').id.replace('tab-',''),
-    overlayOp:+document.getElementById('overlayOp').value,
-    overlayClr:document.getElementById('overlayClr').value,
-    blur:+document.getElementById('bgBlur').value,
-    gc1:document.getElementById('gc1').value,
-    gc2:document.getElementById('gc2').value,
-    gc3:document.getElementById('gc3').value,
-    gradDir:document.getElementById('gradDir').value,
-    solidClr:document.getElementById('solidClr').value,
-    theme:document.getElementById('themeSelect').value,
-    txtClr:document.getElementById('txtClr').value,
-    fontSize:+document.getElementById('fontSize').value,
-    bold:document.getElementById('boldCk').checked,
-    outline:document.getElementById('outlineCk').checked,
-    glowClr:document.getElementById('glowClr').value,
+    bgType:document.querySelector('.bgtab.on').id.replace('tab-',''),
+    overlayOp:+$('overlayOp').value, overlayClr:$('overlayClr').value,
+    blur:+$('bgBlur').value,
+    gc1:$('gc1').value, gc2:$('gc2').value, gc3:$('gc3').value, gradDir:$('gradDir').value,
+    solidClr:$('solidClr').value, theme:$('thSel').value,
+    txtClr:$('txtClr').value, fontSize:+$('fontSize').value,
+    bold:$('boldCk').checked, outline:$('outCk').checked, glowClr:$('glowClr').value,
   };
-  cancelAnimationFrame(raf); t0=null; lastIdx=-1;
-  buildWordEls();
-  raf=requestAnimationFrame(loop);
+  words=$('txtIn').value.trim().split(/\s+/).filter(Boolean);
+  cancelAnimationFrame(raf); t0=null;
+  raf=requestAnimationFrame(previewLoop);
+}
+
+// ── Preview loop (small canvas) ──────────────────────────────
+function previewLoop(ts){
+  if(!t0) t0=ts;
+  const el=(ts-t0)%DUR;
+  const cv=$('cv'); cv.width=PW; cv.height=PH;
+  const ctx=cv.getContext('2d');
+  drawBG(ctx,el,cfg,PW,PH);
+  drawText(ctx,words,el,cfg,PW,PH,DUR);
+  drawProg(ctx,el,DUR,PW,PH,cfg.txtClr||'#FFD700');
+  $('recTimer').textContent=(el/1000).toFixed(1)+'s';
+  raf=requestAnimationFrame(previewLoop);
 }
 
 // ════════════════════════════════════════════════════════════
-//  GIF GENERATION — renders on a separate OffscreenCanvas
-//  (or regular canvas) fully in memory, no CORS issues
+//  VIDEO RECORDING using MediaRecorder + offscreen canvas
 // ════════════════════════════════════════════════════════════
-async function makeGIF(){
-  const btn=document.getElementById('dlBtn');
-  const stat=document.getElementById('status');
-  const ew=document.getElementById('encWrap');
-  const eb=document.getElementById('encBar');
-
-  btn.disabled=true; btn.textContent='⏳ Processing...';
-  ew.style.display='block'; eb.style.width='0%';
-  cancelAnimationFrame(raf);
-
-  const GW=540, GH=960, FPS=10, FRAMES=FPS*7;
-
-  // Use regular canvas — works everywhere without CORS
-  const cv=document.createElement('canvas');
-  cv.width=GW; cv.height=GH;
-  // IMPORTANT: willReadFrequently=true avoids GPU readback warnings
-  const ctx=cv.getContext('2d', {willReadFrequently:true, alpha:false});
-
-  // Scale stars for render resolution
-  mkStars(GW, GH);
-
-  const s={...cfg};
-  const n=words.length;
-  const s0=200, e0=6400, iv=(e0-s0)/(n-1||1);
-  const {r:gr,g:gg,b:gb}=h2r(s.glowClr||'#ff6b00');
-  const {r:tr,g:tg,b:tb}=h2r(s.txtClr||'#FFD700');
-  const fsBase=s.fontSize||20;
-  const fsRender=Math.round(fsBase*GH/PH);  // scale to GH
-
-  const frames=[];
-
-  for(let f=0;f<FRAMES;f++){
-    const elapsed=(f/FRAMES)*DUR;
-
-    // ── Draw background ──
-    ctx.globalAlpha=1;
-    drawBG(ctx, elapsed, s, GW, GH);
-
-    // ── Draw text word by word ──
-    const ti=Math.min(Math.floor((elapsed-s0)/iv), n-1);
-    const vis=ti>=0 ? words.slice(0,ti+1) : [];
-
-    if(vis.length>0){
-      const fadeAmt=elapsed>6500 ? Math.max(0,1-(elapsed-6500)/350) : 1;
-      ctx.globalAlpha=fadeAmt;
-
-      // font
-      const fw=s.bold?'900':'700';
-      ctx.font=`${fw} ${fsRender}px 'Noto Sans Devanagari',FreeSansBold,Arial`;
-      ctx.textAlign='center';
-      ctx.textBaseline='alphabetic';
-
-      // Wrap words into lines (max ~3 words per line or by width)
-      const maxW=GW-100;
-      const lines=[];
-      let cur=[];
-      for(const w of vis){
-        const test=cur.concat(w).join(' ');
-        const meas=ctx.measureText(test);
-        if(meas.width>maxW && cur.length>0){lines.push(cur.join(' ')); cur=[w];}
-        else cur.push(w);
-      }
-      if(cur.length) lines.push(cur.join(' '));
-
-      const lh=fsRender*1.55;
-      const totalH=lines.length*lh;
-      const startY=GH/2-totalH/2+fsRender;
-
-      lines.forEach((line,li)=>{
-        const y=startY+li*lh;
-        // Shadow
-        ctx.globalAlpha=fadeAmt*0.85;
-        ctx.fillStyle=`rgba(0,0,0,1)`;
-        ctx.fillText(line, GW/2+3, y+4);
-        // Glow passes
-        ctx.globalAlpha=fadeAmt*0.35;
-        [[-3,0],[3,0],[0,-3],[0,3]].forEach(([ox,oy])=>{
-          ctx.fillStyle=`rgb(${gr},${gg},${gb})`;
-          ctx.fillText(line, GW/2+ox, y+oy);
-        });
-        // Main text
-        ctx.globalAlpha=fadeAmt;
-        ctx.fillStyle=s.txtClr||'#FFD700';
-        ctx.fillText(line, GW/2, y);
-        // Outline
-        if(s.outline){
-          ctx.globalAlpha=fadeAmt*0.9;
-          ctx.strokeStyle=`rgb(${gr},${gg},${gb})`;
-          ctx.lineWidth=Math.max(2, fsRender*0.04);
-          ctx.strokeText(line, GW/2, y);
-        }
-      });
-    }
-
-    // Progress bar
-    ctx.globalAlpha=0.85;
-    ctx.fillStyle=`rgb(${tr},${tg},${tb})`;
-    ctx.fillRect(0,GH-12,GW*(elapsed/DUR),12);
-    ctx.globalAlpha=1;
-
-    // Extract pixels — ctx is non-alpha so no premult issues
-    const imgd=ctx.getImageData(0,0,GW,GH);
-    const rgb=new Uint8Array(GW*GH*3);
-    const data=imgd.data;
-    for(let i=0,j=0;i<data.length;i+=4,j+=3){
-      rgb[j]=data[i]; rgb[j+1]=data[i+1]; rgb[j+2]=data[i+2];
-    }
-    frames.push({px:rgb});
-
-    // Progress update
-    eb.style.width=Math.round((f+1)/FRAMES*60)+'%';
-    stat.textContent=`⏺ Capturing frame ${f+1}/${FRAMES}...`;
-    // Yield every 5 frames so UI stays responsive
-    if(f%5===4) await new Promise(r=>setTimeout(r,0));
+async function startRec(){
+  const btn=$('recBtn');
+  // Check support
+  if(!window.MediaRecorder){
+    $('status').textContent='❌ MediaRecorder not supported. Chrome/Edge use karo.';
+    return;
   }
 
-  stat.textContent='🔄 Encoding GIF... please wait (30-60 sec)';
-  eb.style.width='65%';
-  await new Promise(r=>setTimeout(r,30));
+  btn.disabled=true; btn.textContent='⏺ Recording...';
+  $('pw').style.display='block'; $('pb').style.width='0%';
+  $('recDot').classList.add('show');
+  $('status').textContent='⏺ Recording shuru ho gayi — 7 seconds wait karo...';
+  cancelAnimationFrame(raf); t0=null;
 
-  const gifBytes=GIFEnc.encode(frames, GW, GH, Math.round(1000/FPS));
-  eb.style.width='100%';
+  // High-res offscreen canvas (9:16)
+  const VW=540, VH=960;
+  const oc=document.createElement('canvas');
+  oc.width=VW; oc.height=VH;
+  const octx=oc.getContext('2d');
+  mkStars(VW,VH);
 
-  const blob=new Blob([gifBytes],{type:'image/gif'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download='word_by_word_9x16.gif'; a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),5000);
+  // Scale font
+  const s={...cfg, fontSize: Math.round((cfg.fontSize||22)*VH/PH) };
 
-  // Restore preview stars
-  mkStars(PW,PH);
+  // Pick best codec
+  const mimeTypes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'];
+  const mime=mimeTypes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
+  $('status').textContent=`⏺ Recording (${mime.split(';')[0]})... 7 sec wait karo`;
 
-  btn.disabled=false; btn.textContent='⬇ Download GIF';
-  stat.textContent=`✅ GIF download ho gayi! Size: ${Math.round(blob.size/1024)} KB | 540×960 | 7 sec`;
-  applyAll();
+  const chunks=[];
+  const stream=oc.captureStream(30); // 30fps
+  const mr=new MediaRecorder(stream,{mimeType:mime, videoBitsPerSecond:4_000_000});
+  mr.ondataavailable=e=>{ if(e.data.size>0) chunks.push(e.data); };
+
+  const FRAMES=30*7; // 30fps × 7sec
+  let frame=0;
+
+  return new Promise(resolve=>{
+    mr.onstop=()=>{
+      const blob=new Blob(chunks,{type:mime});
+      const ext=mime.includes('mp4')?'mp4':'webm';
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url; a.download=`word_by_word_9x16.${ext}`; a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),5000);
+
+      // Restore
+      mkStars(PW,PH);
+      btn.disabled=false; btn.textContent='⬇ Download Video (WebM)';
+      $('recDot').classList.remove('show');
+      $('pb').style.width='100%';
+      $('status').textContent=`✅ Video download ho gayi! ${Math.round(blob.size/1024)} KB • 540×960 • 7 sec`;
+      applyAll(); resolve();
+    };
+
+    mr.start(100); // collect data every 100ms
+
+    const startMs=performance.now();
+
+    function renderFrame(){
+      const elapsed=performance.now()-startMs;
+      const elCapped=Math.min(elapsed,DUR);
+
+      // Render frame to offscreen canvas
+      octx.clearRect(0,0,VW,VH);
+      drawBG(octx,elCapped,cfg,VW,VH);
+      drawText(octx,words,elCapped,s,VW,VH,DUR);
+      drawProg(octx,elCapped,DUR,VW,VH,cfg.txtClr||'#FFD700');
+
+      // Mirror to preview
+      const pcv=$('cv'); pcv.width=PW; pcv.height=PH;
+      const pctx=pcv.getContext('2d');
+      pctx.drawImage(oc,0,0,PW,PH);
+      $('recTimer').textContent=(elCapped/1000).toFixed(1)+'s';
+
+      // Progress
+      $('pb').style.width=Math.round(elCapped/DUR*100)+'%';
+
+      if(elapsed<DUR+200){
+        requestAnimationFrame(renderFrame);
+      } else {
+        mr.stop();
+      }
+    }
+
+    requestAnimationFrame(renderFrame);
+  });
 }
 
-// Start
+// ── Init ─────────────────────────────────────────────────────
 applyAll();
 </script>
 </body>
