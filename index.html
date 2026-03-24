@@ -1,489 +1,463 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quote Maker - Create & Download</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shayari Card Maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,600;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Noto Sans Devanagari', 'Georgia', serif;
-            background: #1a1a1a;
-            color: white;
-            overflow-x: hidden;
-        }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+}
 
-        .editor-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            max-height: 40vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            z-index: 1000;
-            overflow-y: auto;
-        }
+/* ══ LEFT PANEL ══ */
+.panel {
+  width: 310px;
+  min-width: 310px;
+  background: #1c1c1c;
+  color: #ddd;
+  overflow-y: auto;
+  padding: 22px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.panel-title {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #666;
+  text-transform: uppercase;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a2a2a;
+}
+.lbl {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: #555;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.field { display: flex; flex-direction: column; }
+textarea, input[type="text"] {
+  background: #242424;
+  border: 1px solid #303030;
+  color: #ccc;
+  padding: 9px 11px;
+  border-radius: 4px;
+  font-family: 'Noto Serif Devanagari', serif;
+  font-size: 14px;
+  line-height: 1.7;
+  resize: vertical;
+  width: 100%;
+}
+textarea:focus, input[type="text"]:focus { outline: none; border-color: #555; }
+#shayariInput { min-height: 130px; }
 
-        .editor-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
+.upload-box {
+  background: #242424;
+  border: 1px dashed #383838;
+  border-radius: 4px;
+  padding: 11px;
+  text-align: center;
+  cursor: pointer;
+  color: #555;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: all .2s;
+}
+.upload-box:hover { border-color: #666; color: #999; }
 
-        .input-group {
-            margin-bottom: 12px;
-        }
+.slider-row { display: flex; align-items: center; gap: 8px; }
+input[type="range"] { flex: 1; accent-color: #777; height: 3px; }
+.val { font-size: 10px; color: #666; min-width: 36px; text-align: right; }
 
-        .input-label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 13px;
-            font-weight: 600;
-        }
+.swatch-row { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+.bgswatch {
+  width: 26px; height: 26px; border-radius: 50%;
+  cursor: pointer; border: 2px solid transparent;
+  transition: all .15s; flex-shrink: 0;
+}
+.bgswatch:hover, .bgswatch.on { border-color: #aaa; transform: scale(1.12); }
 
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: 'Noto Sans Devanagari', 'Georgia', serif;
-            background: rgba(255,255,255,0.95);
-        }
+.btn-row { display: flex; gap: 5px; }
+.xbtn {
+  flex: 1; padding: 7px 0;
+  background: #242424; border: 1px solid #303030;
+  color: #555; border-radius: 4px; cursor: pointer;
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  transition: all .2s;
+}
+.xbtn.on, .xbtn:hover { border-color: #666; color: #ccc; background: #2a2a2a; }
 
-        textarea.input-field {
-            min-height: 80px;
-            resize: vertical;
-        }
+.dl-btn {
+  background: #2a2a2a; color: #bbb;
+  border: 1px solid #3a3a3a;
+  padding: 13px; border-radius: 5px;
+  cursor: pointer; font-size: 10px;
+  letter-spacing: 3px; text-transform: uppercase;
+  width: 100%; transition: all .2s; margin-top: 6px;
+}
+.dl-btn:hover { background: #383838; color: #fff; }
 
-        .controls-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
+hr { border: none; border-top: 1px solid #272727; }
 
-        .btn {
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
+/* color pair */
+.color-pair { display: flex; gap: 12px; align-items: center; }
+.cp { display: flex; align-items: center; gap: 6px; }
+.cp span { font-size: 9px; color: #555; letter-spacing: 1.5px; text-transform: uppercase; }
+input[type="color"] {
+  width: 32px; height: 28px; padding: 2px 2px;
+  border: 1px solid #383838; border-radius: 4px;
+  background: #242424; cursor: pointer;
+}
 
-        .btn-primary {
-            background: #4CAF50;
-            color: white;
-        }
+/* ══ PREVIEW ══ */
+.preview-area {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  background: #d8d8d8;
+  padding: 32px;
+}
 
-        .btn-secondary {
-            background: #2196F3;
-            color: white;
-        }
+/* ══ CARD — 9:16 ══ */
+#card {
+  /* 9:16 → 405 × 720  */
+  width: 405px;
+  height: 720px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 50px rgba(0,0,0,.22);
+}
 
-        .btn-danger {
-            background: #f44336;
-            color: white;
-        }
+.c-bg {
+  position: absolute; inset: 0;
+  background: #c9c9c9;
+  z-index: 0;
+}
 
-        .btn:active {
-            transform: scale(0.98);
-        }
+/* ── header ── */
+.c-header {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 13px;
+  padding: 28px 28px 0 28px;
+}
 
-        .toggle-editor {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(102,126,234,0.9);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 999;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+.c-avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  overflow: hidden; flex-shrink: 0;
+  background: #666;
+  display: flex; align-items: center; justify-content: center;
+  filter: grayscale(1) contrast(1.1);
+  border: 2px solid #555;
+}
+.c-avatar img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(1) contrast(1.1);
+}
+.c-avatar-ph { font-size: 28px; }
 
-        .preview-container {
-            margin-top: 45vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            min-height: 55vh;
-        }
+.c-info { display: flex; flex-direction: column; gap: 1px; }
 
-        .canvas-wrapper {
-            position: relative;
-            max-width: 100%;
-        }
+.c-name {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-weight: 700;
+  font-size: 20px; color: #111; line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+.c-handle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 15px;
+  color: #333; line-height: 1.3;
+}
 
-        .preview-canvas {
-            width: 100%;
-            max-width: 540px;
-            aspect-ratio: 9/16;
-            background: #d5d5d5;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
+/* ── shayari body ── */
+.c-body {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex; align-items: flex-start;
+  padding: 22px 28px 28px 28px;
+}
 
-        .canvas-profile {
-            position: absolute;
-            top: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 10;
-        }
-
-        .canvas-profile-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 3px solid #333;
-            background: #666;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-        }
-
-        .canvas-profile-text {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .canvas-profile-name {
-            font-size: 28px;
-            font-weight: bold;
-            color: #000;
-            font-style: italic;
-        }
-
-        .canvas-profile-handle {
-            font-size: 24px;
-            color: #333;
-            font-style: italic;
-            text-decoration: underline;
-        }
-
-        .canvas-text-content {
-            position: absolute;
-            width: 85%;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            cursor: move;
-            user-select: none;
-            touch-action: none;
-            transition: all 0.1s;
-        }
-
-        .canvas-main-text {
-            font-size: 42px;
-            line-height: 1.6;
-            color: #000;
-            font-weight: 900;
-            padding: 0 15px;
-            word-wrap: break-word;
-        }
-
-        .download-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 999;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .download-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .editor-panel {
-                max-height: 50vh;
-            }
-
-            .preview-container {
-                margin-top: 55vh;
-            }
-
-            .canvas-profile {
-                top: 30px;
-                gap: 12px;
-            }
-
-            .canvas-profile-img {
-                width: 60px;
-                height: 60px;
-                font-size: 28px;
-            }
-
-            .canvas-profile-name {
-                font-size: 20px;
-            }
-
-            .canvas-profile-handle {
-                font-size: 18px;
-            }
-
-            .canvas-main-text {
-                font-size: 32px;
-            }
-
-            .toggle-editor, .download-btn {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        #downloadCanvas {
-            display: none;
-        }
-
-        .color-input {
-            width: 60px;
-            height: 40px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+.c-shayari {
+  font-family: 'Noto Serif Devanagari', serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.85;
+  color: #111;
+  white-space: pre-wrap;
+  word-break: break-word;
+  width: 100%;
+}
+</style>
 </head>
 <body>
-    <div class="editor-panel" id="editorPanel">
-        <div class="editor-title">✨ Quote Maker</div>
-        
-        <div class="input-group">
-            <label class="input-label">Page Name</label>
-            <input type="text" id="pageName" class="input-field" placeholder="Classical Author" value="Classical Author">
-        </div>
 
-        <div class="input-group">
-            <label class="input-label">Page Handle</label>
-            <input type="text" id="pageHandle" class="input-field" placeholder="@classicalauthor" value="@classicalauthor">
-        </div>
+<!-- PANEL -->
+<div class="panel">
+  <div class="panel-title">✦ Shayari Card Maker</div>
 
-        <div class="input-group">
-            <label class="input-label">Profile Emoji/Icon</label>
-            <input type="text" id="profileIcon" class="input-field" placeholder="📚" value="📚" maxlength="2">
-        </div>
+  <!-- Avatar -->
+  <div class="field">
+    <div class="lbl">Profile Photo</div>
+    <div class="upload-box" id="avatarBox">↑ Upload photo (auto B&W)</div>
+    <input type="file" id="avatarFile" accept="image/*" style="display:none">
+  </div>
 
-        <div class="input-group">
-            <label class="input-label">Your Quote/Poetry Text</label>
-            <textarea id="mainText" class="input-field" placeholder="Enter your text here...">यूँ ना छोड़ ज़िंदगी की किताब को खुला,
-बेवक्त की हवा ना जाने कौन सा पन्ना पलट दे।</textarea>
-        </div>
+  <!-- Name -->
+  <div class="field">
+    <div class="lbl">Display Name</div>
+    <input type="text" id="nameInput" value="Classical Author">
+  </div>
 
-        <div class="input-group">
-            <label class="input-label">Background Color</label>
-            <input type="color" id="bgColor" class="color-input" value="#d5d5d5">
-        </div>
+  <!-- Handle -->
+  <div class="field">
+    <div class="lbl">Handle</div>
+    <input type="text" id="handleInput" value="@classicalauthor">
+  </div>
 
-        <div class="input-group">
-            <label class="input-label">Text Color</label>
-            <input type="color" id="textColor" class="color-input" value="#000000">
-        </div>
+  <hr>
 
-        <div class="controls-row">
-            <button class="btn btn-primary" onclick="updatePreview()">✓ Update Preview</button>
-            <button class="btn btn-secondary" onclick="resetPosition()">↻ Reset Position</button>
-        </div>
+  <!-- Shayari -->
+  <div class="field">
+    <div class="lbl">Shayari</div>
+    <textarea id="shayariInput">उजड़ी हुई दुनिया को
+तू आबाद न कर, बीते
+हुए लम्हों को तू याद
+न कर, एक कैद परिंदे
+ने ये कहा हम से.. मैं
+भुल चुका हूं उड़ना मुझे
+आजाद न कर!</textarea>
+  </div>
+
+  <!-- Font size -->
+  <div class="field">
+    <div class="lbl">Font Size</div>
+    <div class="slider-row">
+      <input type="range" id="fontSize" min="13" max="36" value="22">
+      <span class="val" id="fsVal">22px</span>
+    </div>
+  </div>
+
+  <!-- Line height -->
+  <div class="field">
+    <div class="lbl">Line Height</div>
+    <div class="slider-row">
+      <input type="range" id="lineH" min="1.2" max="3.0" step="0.05" value="1.85">
+      <span class="val" id="lhVal">1.85</span>
+    </div>
+  </div>
+
+  <!-- Font weight -->
+  <div class="field">
+    <div class="lbl">Weight</div>
+    <div class="btn-row">
+      <button class="xbtn" data-w="400">Regular</button>
+      <button class="xbtn" data-w="600">Semi</button>
+      <button class="xbtn on" data-w="700">Bold</button>
+      <button class="xbtn" data-w="900">Black</button>
+    </div>
+  </div>
+
+  <!-- Align -->
+  <div class="field">
+    <div class="lbl">Align</div>
+    <div class="btn-row">
+      <button class="xbtn on" data-align="left">Left</button>
+      <button class="xbtn" data-align="center">Center</button>
+      <button class="xbtn" data-align="right">Right</button>
+    </div>
+  </div>
+
+  <!-- Position -->
+  <div class="field">
+    <div class="lbl">Text Position</div>
+    <div class="btn-row">
+      <button class="xbtn on" data-pos="flex-start">Top</button>
+      <button class="xbtn" data-pos="center">Middle</button>
+      <button class="xbtn" data-pos="flex-end">Bottom</button>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- BG color -->
+  <div class="field">
+    <div class="lbl">Background</div>
+    <div class="swatch-row">
+      <div class="bgswatch on" data-c="#c9c9c9" style="background:#c9c9c9"></div>
+      <div class="bgswatch" data-c="#b3b3b3" style="background:#b3b3b3"></div>
+      <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ccc"></div>
+      <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ccc"></div>
+      <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
+      <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
+      <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
+      <input type="color" id="customBg" value="#c9c9c9"
+        style="width:26px;height:26px;padding:1px;border:1px solid #444;border-radius:50%;background:#242424;cursor:pointer">
+    </div>
+  </div>
+
+  <!-- Text colors -->
+  <div class="field">
+    <div class="lbl">Colors</div>
+    <div class="color-pair">
+      <div class="cp">
+        <input type="color" id="textColor" value="#111111">
+        <span>Shayari</span>
+      </div>
+      <div class="cp">
+        <input type="color" id="headerColor" value="#111111">
+        <span>Header</span>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <button class="dl-btn" id="dlBtn">⬇ Download 9:16 PNG</button>
+</div>
+
+<!-- PREVIEW -->
+<div class="preview-area">
+  <div id="card">
+    <div class="c-bg" id="cBg"></div>
+
+    <div class="c-header">
+      <div class="c-avatar" id="cAvatar">
+        <span id="cAvatarPh">👤</span>
+        <img id="cAvatarImg" src="" style="display:none" alt="">
+      </div>
+      <div class="c-info">
+        <div class="c-name" id="cName">Classical Author</div>
+        <div class="c-handle" id="cHandle">@classicalauthor</div>
+      </div>
     </div>
 
-    <button class="toggle-editor" id="toggleBtn" onclick="toggleEditor()">
-        ▼ Hide Editor
-    </button>
-
-    <div class="preview-container">
-        <div class="canvas-wrapper">
-            <div class="preview-canvas" id="previewCanvas">
-                <div class="canvas-profile">
-                    <div class="canvas-profile-img" id="profileImg">📚</div>
-                    <div class="canvas-profile-text">
-                        <div class="canvas-profile-name" id="displayName">Classical Author</div>
-                        <div class="canvas-profile-handle" id="displayHandle">@classicalauthor</div>
-                    </div>
-                </div>
-
-                <div class="canvas-text-content" id="textContent">
-                    <div class="canvas-main-text" id="displayText">यूँ ना छोड़ ज़िंदगी की किताब को खुला,<br>बेवक्त की हवा ना जाने कौन सा पन्ना पलट दे।</div>
-                </div>
-            </div>
-        </div>
+    <div class="c-body" id="cBody">
+      <div class="c-shayari" id="cShayari">उजड़ी हुई दुनिया को
+तू आबाद न कर, बीते
+हुए लम्हों को तू याद
+न कर, एक कैद परिंदे
+ने ये कहा हम से.. मैं
+भुल चुका हूं उड़ना मुझे
+आजाद न कर!</div>
     </div>
+  </div>
+</div>
 
-    <button class="download-btn" onclick="downloadImage()">
-        📥 Download Image
-    </button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
 
-    <canvas id="downloadCanvas"></canvas>
+// Avatar
+$('avatarBox').onclick = () => $('avatarFile').click();
+$('avatarFile').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    $('cAvatarImg').src = ev.target.result;
+    $('cAvatarImg').style.display = 'block';
+    $('cAvatarPh').style.display = 'none';
+    $('avatarBox').textContent = '✓ ' + f.name;
+  };
+  r.readAsDataURL(f);
+};
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
-        const editorPanel = document.getElementById('editorPanel');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const textContent = document.getElementById('textContent');
-        const previewCanvas = document.getElementById('previewCanvas');
+// Name / handle
+$('nameInput').oninput = e => $('cName').textContent = e.target.value;
+$('handleInput').oninput = e => $('cHandle').textContent = e.target.value;
 
-        let editorVisible = true;
-        let currentX = 50;
-        let currentY = 50;
-        let isDragging = false;
-        let startX, startY, initialLeft, initialTop;
+// Shayari
+$('shayariInput').oninput = e => $('cShayari').textContent = e.target.value;
 
-        function toggleEditor() {
-            editorVisible = !editorVisible;
-            if (editorVisible) {
-                editorPanel.style.display = 'block';
-                toggleBtn.textContent = '▼ Hide Editor';
-            } else {
-                editorPanel.style.display = 'none';
-                toggleBtn.textContent = '▲ Show Editor';
-            }
-        }
+// Font size
+$('fontSize').oninput = e => {
+  $('cShayari').style.fontSize = e.target.value + 'px';
+  $('fsVal').textContent = e.target.value + 'px';
+};
 
-        function updatePreview() {
-            const pageName = document.getElementById('pageName').value;
-            const pageHandle = document.getElementById('pageHandle').value;
-            const profileIcon = document.getElementById('profileIcon').value;
-            const mainText = document.getElementById('mainText').value;
-            const bgColor = document.getElementById('bgColor').value;
-            const textColor = document.getElementById('textColor').value;
+// Line height
+$('lineH').oninput = e => {
+  $('cShayari').style.lineHeight = e.target.value;
+  $('lhVal').textContent = parseFloat(e.target.value).toFixed(2);
+};
 
-            document.getElementById('displayName').textContent = pageName;
-            document.getElementById('displayHandle').textContent = pageHandle;
-            document.getElementById('profileImg').textContent = profileIcon;
-            document.getElementById('displayText').innerHTML = mainText.replace(/\n/g, '<br>');
-            
-            previewCanvas.style.background = bgColor;
-            document.getElementById('displayText').style.color = textColor;
-        }
+// Weight
+document.querySelectorAll('[data-w]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-w]').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    $('cShayari').style.fontWeight = b.dataset.w;
+  };
+});
 
-        function resetPosition() {
-            currentX = 50;
-            currentY = 50;
-            updatePosition();
-        }
+// Align
+document.querySelectorAll('[data-align]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-align]').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    $('cShayari').style.textAlign = b.dataset.align;
+  };
+});
 
-        function updatePosition() {
-            textContent.style.left = currentX + '%';
-            textContent.style.top = currentY + '%';
-        }
+// Position
+document.querySelectorAll('[data-pos]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-pos]').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    $('cBody').style.alignItems = b.dataset.pos;
+  };
+});
 
-        // Drag functionality
-        textContent.addEventListener('mousedown', startDrag);
-        textContent.addEventListener('touchstart', startDrag, { passive: false });
+// BG swatches
+document.querySelectorAll('.bgswatch').forEach(s => {
+  s.onclick = () => {
+    document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on'));
+    s.classList.add('on');
+    applyBg(s.dataset.c);
+  };
+});
+$('customBg').oninput = e => {
+  document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on'));
+  applyBg(e.target.value);
+};
+function applyBg(c) { $('cBg').style.background = c; }
 
-        function startDrag(e) {
-            isDragging = true;
-            const touch = e.type === 'touchstart' ? e.touches[0] : e;
-            startX = touch.clientX;
-            startY = touch.clientY;
-            
-            const rect = textContent.getBoundingClientRect();
-            const container = previewCanvas.getBoundingClientRect();
-            initialLeft = ((rect.left - container.left) / container.width) * 100;
-            initialTop = ((rect.top - container.top) / container.height) * 100;
-            
-            e.preventDefault();
-        }
+// Colors
+$('textColor').oninput = e => $('cShayari').style.color = e.target.value;
+$('headerColor').oninput = e => {
+  $('cName').style.color = e.target.value;
+  $('cHandle').style.color = e.target.value;
+};
 
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('touchmove', drag, { passive: false });
-
-        function drag(e) {
-            if (!isDragging) return;
-            
-            const touch = e.type === 'touchmove' ? e.touches[0] : e;
-            const container = previewCanvas.getBoundingClientRect();
-            const deltaX = touch.clientX - startX;
-            const deltaY = touch.clientY - startY;
-            
-            const deltaXPercent = (deltaX / container.width) * 100;
-            const deltaYPercent = (deltaY / container.height) * 100;
-            
-            currentX = Math.max(5, Math.min(85, initialLeft + deltaXPercent));
-            currentY = Math.max(10, Math.min(85, initialTop + deltaYPercent));
-            
-            updatePosition();
-            e.preventDefault();
-        }
-
-        document.addEventListener('mouseup', stopDrag);
-        document.addEventListener('touchend', stopDrag);
-
-        function stopDrag() {
-            isDragging = false;
-        }
-
-        async function downloadImage() {
-            // Hide buttons temporarily
-            toggleBtn.style.display = 'none';
-            document.querySelector('.download-btn').style.display = 'none';
-
-            try {
-                const canvas = await html2canvas(previewCanvas, {
-                    width: 1080,
-                    height: 1920,
-                    scale: 2,
-                    backgroundColor: document.getElementById('bgColor').value,
-                    logging: false,
-                    useCORS: true
-                });
-
-                canvas.toBlob((blob) => {
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    const timestamp = new Date().getTime();
-                    link.download = `quote-${timestamp}.png`;
-                    link.href = url;
-                    link.click();
-                    URL.revokeObjectURL(url);
-                });
-
-            } catch (error) {
-                console.error('Download failed:', error);
-                alert('Download failed. Please try again.');
-            } finally {
-                toggleBtn.style.display = 'block';
-                document.querySelector('.download-btn').style.display = 'block';
-            }
-        }
-
-        // Initialize
-        updatePosition();
-    </script>
+// Download
+$('dlBtn').onclick = async () => {
+  $('dlBtn').textContent = '⏳ Please wait...';
+  $('dlBtn').disabled = true;
+  try {
+    const c = await html2canvas($('card'), {
+      scale: 3, useCORS: true, allowTaint: true,
+      backgroundColor: null, logging: false
+    });
+    const a = document.createElement('a');
+    a.download = 'shayari-card.png';
+    a.href = c.toDataURL('image/png', 1.0);
+    a.click();
+  } catch(err) {
+    alert('Download failed. Please try a screenshot.');
+  }
+  $('dlBtn').textContent = '⬇ Download 9:16 PNG';
+  $('dlBtn').disabled = false;
+};
+</script>
 </body>
 </html>
