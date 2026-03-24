@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Life's Book - Poetry Art</title>
+    <title>Quote Maker - Create & Download</title>
     <style>
         * {
             margin: 0;
@@ -12,435 +12,462 @@
         }
 
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #1a1a1a;
             font-family: 'Noto Sans Devanagari', 'Georgia', serif;
-            overflow: hidden;
+            background: #1a1a1a;
+            color: white;
+            overflow-x: hidden;
         }
 
-        .wrapper {
+        .editor-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 100vh;
+            max-height: 40vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .editor-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Noto Sans Devanagari', 'Georgia', serif;
+            background: rgba(255,255,255,0.95);
+        }
+
+        textarea.input-field {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .controls-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .toggle-editor {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(102,126,234,0.9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .preview-container {
+            margin-top: 45vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            gap: 20px;
+            padding: 20px;
+            min-height: 55vh;
         }
 
-        .container {
+        .canvas-wrapper {
+            position: relative;
+            max-width: 100%;
+        }
+
+        .preview-canvas {
             width: 100%;
-            height: 100%;
-            max-width: 1080px;
-            max-height: 1920px;
+            max-width: 540px;
+            aspect-ratio: 9/16;
+            background: #d5d5d5;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
-        @media (min-width: 768px) {
-            .container {
-                width: 1080px;
-                height: 1920px;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .container {
-                width: 100vw;
-                height: calc(100vh - 80px);
-                aspect-ratio: 9/16;
-            }
-        }
-
-        .profile-section {
+        .canvas-profile {
             position: absolute;
-            top: clamp(40px, 5%, 100px);
+            top: 40px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: clamp(15px, 2vw, 25px);
+            gap: 15px;
             z-index: 10;
         }
 
-        .profile-image {
-            width: clamp(80px, 10vw, 120px);
-            height: clamp(80px, 10vw, 120px);
+        .canvas-profile-img {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             border: 3px solid #333;
-            background: #fff;
-            object-fit: cover;
+            background: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
         }
 
-        .profile-text {
+        .canvas-profile-text {
             display: flex;
             flex-direction: column;
-            gap: clamp(3px, 0.5vw, 5px);
+            gap: 3px;
         }
 
-        .profile-name {
-            font-size: clamp(22px, 3.5vw, 42px);
+        .canvas-profile-name {
+            font-size: 28px;
             font-weight: bold;
             color: #000;
             font-style: italic;
-            font-family: 'Georgia', serif;
         }
 
-        .profile-handle {
-            font-size: clamp(18px, 2.8vw, 36px);
+        .canvas-profile-handle {
+            font-size: 24px;
             color: #333;
             font-style: italic;
             text-decoration: underline;
-            font-family: 'Georgia', serif;
         }
 
-        .text-content {
+        .canvas-text-content {
             position: absolute;
             width: 85%;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            z-index: 10;
             text-align: center;
-            transition: all 0.3s ease;
             cursor: move;
             user-select: none;
-            -webkit-user-select: none;
             touch-action: none;
+            transition: all 0.1s;
         }
 
-        .text-content.dragging {
-            transition: none;
-        }
-
-        .hindi-text {
-            font-size: clamp(28px, 5.5vw, 68px);
-            line-height: 1.7;
+        .canvas-main-text {
+            font-size: 42px;
+            line-height: 1.6;
             color: #000;
             font-weight: 900;
-            padding: 0 clamp(10px, 2vw, 20px);
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
-            font-family: 'Noto Sans Devanagari', sans-serif;
-        }
-
-        .english-text {
-            font-size: clamp(20px, 4vw, 48px);
-            line-height: 1.6;
-            color: #222;
-            font-style: italic;
-            margin-top: clamp(30px, 5vw, 60px);
-            padding: 0 clamp(10px, 2vw, 20px);
-            font-family: 'Georgia', serif;
-            font-weight: 500;
-        }
-
-        .controls {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            background: rgba(0,0,0,0.7);
-            padding: clamp(10px, 2vw, 20px);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-
-        @media (max-width: 767px) {
-            .controls {
-                bottom: 10px;
-                right: 10px;
-                padding: 12px;
-            }
-        }
-
-        .control-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.5);
-            color: white;
-            width: clamp(40px, 8vw, 50px);
-            height: clamp(40px, 8vw, 50px);
-            margin: clamp(3px, 0.5vw, 5px);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: clamp(16px, 3vw, 20px);
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            touch-action: manipulation;
-        }
-
-        .control-btn:hover {
-            background: rgba(255,255,255,0.4);
-            transform: scale(1.1);
-        }
-
-        .control-btn:active {
-            transform: scale(0.95);
-            background: rgba(255,255,255,0.5);
-        }
-
-        .control-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .control-label {
-            color: white;
-            text-align: center;
-            margin-bottom: clamp(5px, 1vw, 10px);
-            font-size: clamp(11px, 2vw, 14px);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .reset-btn, .download-btn {
-            border: 2px solid rgba(255,255,255,0.6);
-            color: white;
-            padding: clamp(8px, 1.5vw, 10px) clamp(15px, 3vw, 20px);
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: clamp(5px, 1vw, 10px);
-            width: 100%;
-            transition: all 0.3s;
-            font-size: clamp(11px, 2vw, 14px);
-            touch-action: manipulation;
-        }
-
-        .reset-btn {
-            background: rgba(255,100,100,0.3);
-            border-color: rgba(255,100,100,0.6);
-        }
-
-        .reset-btn:hover {
-            background: rgba(255,100,100,0.5);
+            padding: 0 15px;
+            word-wrap: break-word;
         }
 
         .download-btn {
-            background: rgba(100,200,100,0.3);
-            border-color: rgba(100,200,100,0.6);
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .download-btn:hover {
-            background: rgba(100,200,100,0.5);
+        .download-btn:active {
+            transform: scale(0.95);
         }
 
-        .reset-btn:active, .download-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Mobile landscape optimization */
-        @media (max-width: 767px) and (orientation: landscape) {
-            .controls {
-                bottom: 5px;
-                right: 5px;
-                padding: 8px;
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .editor-panel {
+                max-height: 50vh;
             }
-            
-            .control-btn {
-                width: 35px;
-                height: 35px;
-                margin: 2px;
+
+            .preview-container {
+                margin-top: 55vh;
+            }
+
+            .canvas-profile {
+                top: 30px;
+                gap: 12px;
+            }
+
+            .canvas-profile-img {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .canvas-profile-name {
+                font-size: 20px;
+            }
+
+            .canvas-profile-handle {
+                font-size: 18px;
+            }
+
+            .canvas-main-text {
+                font-size: 32px;
+            }
+
+            .toggle-editor, .download-btn {
+                padding: 10px 20px;
                 font-size: 14px;
             }
-            
-            .control-label {
-                font-size: 10px;
-                margin-bottom: 3px;
-            }
-            
-            .reset-btn, .download-btn {
-                padding: 6px 12px;
-                font-size: 10px;
-                margin-top: 3px;
-            }
         }
 
-        .no-select {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+        .hidden {
+            display: none;
         }
 
-        /* Canvas for download */
         #downloadCanvas {
             display: none;
         }
 
-        .desktop-controls {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-        }
-
-        @media (max-width: 767px) {
-            .desktop-controls {
-                display: none;
-            }
-        }
-
-        .desktop-download-btn {
-            background: rgba(100,200,100,0.9);
-            border: 2px solid rgba(100,200,100,1);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 15px;
+        .color-input {
+            width: 60px;
+            height: 40px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            transition: all 0.3s;
-        }
-
-        .desktop-download-btn:hover {
-            background: rgba(100,220,100,1);
-            transform: translateY(-2px);
-            box-shadow: 0 7px 25px rgba(0,0,0,0.4);
-        }
-
-        .desktop-download-btn:active {
-            transform: translateY(0);
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="wrapper">
-        <div class="container" id="mainContainer">
-            <div class="profile-section">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23666'/%3E%3Ctext x='60' y='70' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3E📚%3C/text%3E%3C/svg%3E" alt="Profile" class="profile-image">
-                <div class="profile-text">
-                    <div class="profile-name">Classical Author</div>
-                    <div class="profile-handle">@classicalauthor</div>
-                </div>
-            </div>
-
-            <div class="text-content" id="textContent">
-                <div class="hindi-text">
-                    यूँ ना छोड़ ज़िंदगी की किताब को खुला,<br>
-                    बेवक्त की हवा ना जाने कौन सा पन्ना पलट दे।
-                </div>
-                
-                <div class="english-text">
-                    Don't leave the book of life open like this,<br>
-                    The untimely wind may turn any page.
-                </div>
-            </div>
-
-            <div class="controls">
-                <div class="control-label">Move Text</div>
-                <div class="control-row">
-                    <button class="control-btn" id="up">▲</button>
-                </div>
-                <div class="control-row">
-                    <button class="control-btn" id="left">◄</button>
-                    <button class="control-btn" id="down">▼</button>
-                    <button class="control-btn" id="right">►</button>
-                </div>
-                <button class="reset-btn" id="reset">Reset</button>
-                <button class="download-btn" id="download">Download</button>
-            </div>
+    <div class="editor-panel" id="editorPanel">
+        <div class="editor-title">✨ Quote Maker</div>
+        
+        <div class="input-group">
+            <label class="input-label">Page Name</label>
+            <input type="text" id="pageName" class="input-field" placeholder="Classical Author" value="Classical Author">
         </div>
 
-        <div class="desktop-controls">
-            <button class="desktop-download-btn" id="desktopDownload">📥 Download Image (9:16)</button>
+        <div class="input-group">
+            <label class="input-label">Page Handle</label>
+            <input type="text" id="pageHandle" class="input-field" placeholder="@classicalauthor" value="@classicalauthor">
+        </div>
+
+        <div class="input-group">
+            <label class="input-label">Profile Emoji/Icon</label>
+            <input type="text" id="profileIcon" class="input-field" placeholder="📚" value="📚" maxlength="2">
+        </div>
+
+        <div class="input-group">
+            <label class="input-label">Your Quote/Poetry Text</label>
+            <textarea id="mainText" class="input-field" placeholder="Enter your text here...">यूँ ना छोड़ ज़िंदगी की किताब को खुला,
+बेवक्त की हवा ना जाने कौन सा पन्ना पलट दे।</textarea>
+        </div>
+
+        <div class="input-group">
+            <label class="input-label">Background Color</label>
+            <input type="color" id="bgColor" class="color-input" value="#d5d5d5">
+        </div>
+
+        <div class="input-group">
+            <label class="input-label">Text Color</label>
+            <input type="color" id="textColor" class="color-input" value="#000000">
+        </div>
+
+        <div class="controls-row">
+            <button class="btn btn-primary" onclick="updatePreview()">✓ Update Preview</button>
+            <button class="btn btn-secondary" onclick="resetPosition()">↻ Reset Position</button>
         </div>
     </div>
+
+    <button class="toggle-editor" id="toggleBtn" onclick="toggleEditor()">
+        ▼ Hide Editor
+    </button>
+
+    <div class="preview-container">
+        <div class="canvas-wrapper">
+            <div class="preview-canvas" id="previewCanvas">
+                <div class="canvas-profile">
+                    <div class="canvas-profile-img" id="profileImg">📚</div>
+                    <div class="canvas-profile-text">
+                        <div class="canvas-profile-name" id="displayName">Classical Author</div>
+                        <div class="canvas-profile-handle" id="displayHandle">@classicalauthor</div>
+                    </div>
+                </div>
+
+                <div class="canvas-text-content" id="textContent">
+                    <div class="canvas-main-text" id="displayText">यूँ ना छोड़ ज़िंदगी की किताब को खुला,<br>बेवक्त की हवा ना जाने कौन सा पन्ना पलट दे।</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="download-btn" onclick="downloadImage()">
+        📥 Download Image
+    </button>
 
     <canvas id="downloadCanvas"></canvas>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
+        const editorPanel = document.getElementById('editorPanel');
+        const toggleBtn = document.getElementById('toggleBtn');
         const textContent = document.getElementById('textContent');
-        const upBtn = document.getElementById('up');
-        const downBtn = document.getElementById('down');
-        const leftBtn = document.getElementById('left');
-        const rightBtn = document.getElementById('right');
-        const resetBtn = document.getElementById('reset');
-        const downloadBtn = document.getElementById('download');
-        const desktopDownloadBtn = document.getElementById('desktopDownload');
-        const mainContainer = document.getElementById('mainContainer');
+        const previewCanvas = document.getElementById('previewCanvas');
 
+        let editorVisible = true;
         let currentX = 50;
         let currentY = 50;
-        
-        const getStep = () => {
-            return window.innerWidth < 768 ? 3 : 2;
-        };
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
 
-        const initialX = 50;
-        const initialY = 50;
+        function toggleEditor() {
+            editorVisible = !editorVisible;
+            if (editorVisible) {
+                editorPanel.style.display = 'block';
+                toggleBtn.textContent = '▼ Hide Editor';
+            } else {
+                editorPanel.style.display = 'none';
+                toggleBtn.textContent = '▲ Show Editor';
+            }
+        }
+
+        function updatePreview() {
+            const pageName = document.getElementById('pageName').value;
+            const pageHandle = document.getElementById('pageHandle').value;
+            const profileIcon = document.getElementById('profileIcon').value;
+            const mainText = document.getElementById('mainText').value;
+            const bgColor = document.getElementById('bgColor').value;
+            const textColor = document.getElementById('textColor').value;
+
+            document.getElementById('displayName').textContent = pageName;
+            document.getElementById('displayHandle').textContent = pageHandle;
+            document.getElementById('profileImg').textContent = profileIcon;
+            document.getElementById('displayText').innerHTML = mainText.replace(/\n/g, '<br>');
+            
+            previewCanvas.style.background = bgColor;
+            document.getElementById('displayText').style.color = textColor;
+        }
+
+        function resetPosition() {
+            currentX = 50;
+            currentY = 50;
+            updatePosition();
+        }
 
         function updatePosition() {
             textContent.style.left = currentX + '%';
             textContent.style.top = currentY + '%';
         }
 
-        // Button controls
-        upBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentY = Math.max(5, currentY - getStep());
-            updatePosition();
-        });
+        // Drag functionality
+        textContent.addEventListener('mousedown', startDrag);
+        textContent.addEventListener('touchstart', startDrag, { passive: false });
 
-        downBtn.addEventListener('click', (e) => {
+        function startDrag(e) {
+            isDragging = true;
+            const touch = e.type === 'touchstart' ? e.touches[0] : e;
+            startX = touch.clientX;
+            startY = touch.clientY;
+            
+            const rect = textContent.getBoundingClientRect();
+            const container = previewCanvas.getBoundingClientRect();
+            initialLeft = ((rect.left - container.left) / container.width) * 100;
+            initialTop = ((rect.top - container.top) / container.height) * 100;
+            
             e.preventDefault();
-            currentY = Math.min(85, currentY + getStep());
-            updatePosition();
-        });
+        }
 
-        leftBtn.addEventListener('click', (e) => {
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+
+        function drag(e) {
+            if (!isDragging) return;
+            
+            const touch = e.type === 'touchmove' ? e.touches[0] : e;
+            const container = previewCanvas.getBoundingClientRect();
+            const deltaX = touch.clientX - startX;
+            const deltaY = touch.clientY - startY;
+            
+            const deltaXPercent = (deltaX / container.width) * 100;
+            const deltaYPercent = (deltaY / container.height) * 100;
+            
+            currentX = Math.max(5, Math.min(85, initialLeft + deltaXPercent));
+            currentY = Math.max(10, Math.min(85, initialTop + deltaYPercent));
+            
+            updatePosition();
             e.preventDefault();
-            currentX = Math.max(5, currentX - getStep());
-            updatePosition();
-        });
+        }
 
-        rightBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentX = Math.min(85, currentX + getStep());
-            updatePosition();
-        });
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
 
-        resetBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentX = initialX;
-            currentY = initialY;
-            updatePosition();
-        });
+        function stopDrag() {
+            isDragging = false;
+        }
 
-        // Download functionality
         async function downloadImage() {
-            // Hide controls temporarily
-            const controls = document.querySelector('.controls');
-            const desktopControls = document.querySelector('.desktop-controls');
-            controls.style.display = 'none';
-            if (desktopControls) desktopControls.style.display = 'none';
+            // Hide buttons temporarily
+            toggleBtn.style.display = 'none';
+            document.querySelector('.download-btn').style.display = 'none';
 
             try {
-                // Use html2canvas to capture the container
-                const canvas = await html2canvas(mainContainer, {
+                const canvas = await html2canvas(previewCanvas, {
                     width: 1080,
                     height: 1920,
                     scale: 2,
-                    backgroundColor: '#e8e8e8',
+                    backgroundColor: document.getElementById('bgColor').value,
                     logging: false,
                     useCORS: true
                 });
 
-                // Convert to blob and download
                 canvas.toBlob((blob) => {
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
-                    link.download = 'poetry-art-9-16.png';
+                    const timestamp = new Date().getTime();
+                    link.download = `quote-${timestamp}.png`;
                     link.href = url;
                     link.click();
                     URL.revokeObjectURL(url);
@@ -450,130 +477,12 @@
                 console.error('Download failed:', error);
                 alert('Download failed. Please try again.');
             } finally {
-                // Show controls again
-                controls.style.display = 'block';
-                if (desktopControls) desktopControls.style.display = 'block';
+                toggleBtn.style.display = 'block';
+                document.querySelector('.download-btn').style.display = 'block';
             }
         }
 
-        downloadBtn.addEventListener('click', downloadImage);
-        desktopDownloadBtn.addEventListener('click', downloadImage);
-
-        // Drag functionality
-        let isDragging = false;
-        let startX, startY, initialLeft, initialTop;
-
-        textContent.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            textContent.classList.add('dragging', 'no-select');
-            startX = e.clientX;
-            startY = e.clientY;
-            
-            const rect = textContent.getBoundingClientRect();
-            const container = textContent.parentElement.getBoundingClientRect();
-            initialLeft = ((rect.left - container.left) / container.width) * 100;
-            initialTop = ((rect.top - container.top) / container.height) * 100;
-            e.preventDefault();
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            
-            const container = textContent.parentElement.getBoundingClientRect();
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
-            
-            const deltaXPercent = (deltaX / container.width) * 100;
-            const deltaYPercent = (deltaY / container.height) * 100;
-            
-            currentX = Math.max(5, Math.min(85, initialLeft + deltaXPercent));
-            currentY = Math.max(5, Math.min(85, initialTop + deltaYPercent));
-            
-            updatePosition();
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                textContent.classList.remove('dragging', 'no-select');
-            }
-        });
-
-        // Touch events
-        textContent.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            textContent.classList.add('dragging', 'no-select');
-            const touch = e.touches[0];
-            startX = touch.clientX;
-            startY = touch.clientY;
-            
-            const rect = textContent.getBoundingClientRect();
-            const container = textContent.parentElement.getBoundingClientRect();
-            initialLeft = ((rect.left - container.left) / container.width) * 100;
-            initialTop = ((rect.top - container.top) / container.height) * 100;
-            e.preventDefault();
-        }, { passive: false });
-
-        document.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            
-            const touch = e.touches[0];
-            const container = textContent.parentElement.getBoundingClientRect();
-            const deltaX = touch.clientX - startX;
-            const deltaY = touch.clientY - startY;
-            
-            const deltaXPercent = (deltaX / container.width) * 100;
-            const deltaYPercent = (deltaY / container.height) * 100;
-            
-            currentX = Math.max(5, Math.min(85, initialLeft + deltaXPercent));
-            currentY = Math.max(5, Math.min(85, initialTop + deltaYPercent));
-            
-            updatePosition();
-            e.preventDefault();
-        }, { passive: false });
-
-        document.addEventListener('touchend', () => {
-            if (isDragging) {
-                isDragging = false;
-                textContent.classList.remove('dragging', 'no-select');
-            }
-        });
-
-        // Keyboard controls
-        document.addEventListener('keydown', (e) => {
-            if (window.innerWidth < 768) return;
-            
-            switch(e.key) {
-                case 'ArrowUp':
-                    currentY = Math.max(5, currentY - getStep());
-                    updatePosition();
-                    e.preventDefault();
-                    break;
-                case 'ArrowDown':
-                    currentY = Math.min(85, currentY + getStep());
-                    updatePosition();
-                    e.preventDefault();
-                    break;
-                case 'ArrowLeft':
-                    currentX = Math.max(5, currentX - getStep());
-                    updatePosition();
-                    e.preventDefault();
-                    break;
-                case 'ArrowRight':
-                    currentX = Math.min(85, currentX + getStep());
-                    updatePosition();
-                    e.preventDefault();
-                    break;
-            }
-        });
-
-        document.body.addEventListener('touchmove', (e) => {
-            if (isDragging) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        // Initialize position
+        // Initialize
         updatePosition();
     </script>
 </body>
