@@ -13,9 +13,6 @@
   --border: #2e2e2e;
   --accent: #e0e0e0;
   --muted: #555;
-  --label: #888;
-  --card-w: 360px;
-  --card-h: 640px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; }
@@ -30,9 +27,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ═══════════════════════════════
-   TOP BAR
-═══════════════════════════════ */
+/* ── TOP BAR ── */
 .topbar {
   background: var(--panel);
   border-bottom: 1px solid var(--border);
@@ -40,142 +35,118 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: sticky; top: 0; z-index: 100;
   flex-shrink: 0;
 }
-.topbar-title {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  color: #ccc;
-}
+.topbar-title { font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #ccc; }
 .topbar-title span { color: var(--muted); font-weight: 400; }
-
 .dl-btn-top {
-  background: #333;
-  color: #ddd;
-  border: 1px solid #444;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all .2s;
-  white-space: nowrap;
+  background: #333; color: #ddd;
+  border: 1px solid #444; padding: 8px 18px;
+  border-radius: 6px; font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; cursor: pointer; transition: all .2s; white-space: nowrap;
 }
 .dl-btn-top:hover, .dl-btn-top:active { background: #444; color: #fff; }
 
-/* ═══════════════════════════════
-   MAIN LAYOUT
-═══════════════════════════════ */
-.main {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
+/* ── MAIN ── */
+.main { display: flex; flex: 1; overflow: hidden; }
 
-/* ═══════════════════════════════
-   PREVIEW AREA
-═══════════════════════════════ */
+/* ── PREVIEW AREA ── */
 .preview-area {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   background: #111;
   padding: 20px;
-  min-height: 0;
-  overflow: hidden;
+  min-height: 0; overflow: hidden;
 }
 
-.card-wrap {
+/* 
+  CARD SCALING APPROACH:
+  - Card is always 1080×1920px (true 9:16)
+  - A wrapper clips it to the scaled visual size
+  - CSS transform:scale() shrinks it for preview
+  - Download captures the real 1080×1920 = perfect 9:16
+*/
+.card-scaler {
+  /* Will be set by JS based on available space */
   position: relative;
-}
-
-/* THE CARD */
-#card {
-  width: var(--card-w);
-  height: var(--card-h);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,.6);
   flex-shrink: 0;
-  background: #c9c9c9;
 }
+
+#card {
+  width: 1080px;
+  height: 1920px;
+  position: relative;
+  overflow: hidden;
+  transform-origin: top left;
+  /* transform: scale(X) set by JS */
+  background: #c9c9c9;
+  box-shadow: none; /* shadow on wrapper */
+}
+
+.card-scaler-shadow {
+  position: absolute; inset: 0;
+  box-shadow: 0 20px 60px rgba(0,0,0,.7);
+  pointer-events: none;
+  z-index: 10;
+}
+
 .c-bg {
   position: absolute; inset: 0;
   background: #c9c9c9;
   z-index: 0;
 }
 
-/* HEADER — absolutely positioned so user can move it */
+/* HEADER */
 .c-header {
-  position: absolute;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  top: 26px;
-  left: 22px;
-  right: auto;
+  position: absolute; z-index: 5;
+  display: flex; align-items: center; gap: 20px;
+  top: 52px; left: 44px;
 }
-.c-header.pos-left  { left: 22px; right: auto; transform: none; }
+.c-header.pos-left  { left: 44px; right: auto; transform: none; }
 .c-header.pos-center { left: 50%; transform: translateX(-50%); right: auto; }
-.c-header.pos-right { right: 22px; left: auto; transform: none; }
+.c-header.pos-right { right: 44px; left: auto; transform: none; }
 
 .c-avatar {
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
+  border-radius: 50%; overflow: hidden; flex-shrink: 0;
   background: #888;
   display: flex; align-items: center; justify-content: center;
   filter: grayscale(1) contrast(1.1);
-  border: 2px solid rgba(0,0,0,.25);
-  width: 56px; height: 56px;
-  transition: width .2s, height .2s;
+  border: 4px solid rgba(0,0,0,.25);
+  width: 110px; height: 110px;
 }
-.c-avatar img {
-  width: 100%; height: 100%; object-fit: cover;
-  filter: grayscale(1) contrast(1.1);
-}
-.c-avatar-ph { font-size: 22px; }
+.c-avatar img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.1); }
+.c-avatar-ph { font-size: 44px; }
 
-.c-info { display: flex; flex-direction: column; gap: 1px; }
+.c-info { display: flex; flex-direction: column; gap: 2px; }
 .c-name {
   font-family: 'Playfair Display', serif;
   font-style: italic; font-weight: 700;
-  font-size: 17px; color: #111; line-height: 1.2;
+  font-size: 34px; color: #111; line-height: 1.2;
   text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
   white-space: nowrap;
-  transition: font-size .15s;
 }
 .c-handle {
   font-family: 'Playfair Display', serif;
-  font-style: italic; font-size: 13px;
+  font-style: italic; font-size: 26px;
   color: #333; line-height: 1.3;
   white-space: nowrap;
-  transition: font-size .15s;
 }
 
-/* SHAYARI BODY */
+/* SHAYARI */
 .c-body {
-  position: absolute;
-  z-index: 4;
+  position: absolute; z-index: 4;
   display: flex;
-  left: 22px; right: 22px;
-  top: 110px; bottom: 22px;
+  left: 44px; right: 44px;
+  top: 220px; bottom: 44px;
   align-items: flex-start;
-  transition: top .2s;
 }
 .c-shayari {
   font-family: 'Noto Serif Devanagari', serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 40px;
   line-height: 1.85;
   color: #111;
   white-space: pre-wrap;
@@ -183,112 +154,59 @@ body {
   width: 100%;
 }
 
-/* ═══════════════════════════════
-   RIGHT PANEL (desktop)
-═══════════════════════════════ */
+/* ── RIGHT PANEL ── */
 .right-panel {
-  width: 300px;
-  min-width: 300px;
+  width: 300px; min-width: 300px;
   background: var(--panel);
   border-left: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  display: flex; flex-direction: column; overflow: hidden;
 }
-
-/* TAB NAV */
 .tab-nav {
-  display: flex;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  display: flex; background: var(--bg);
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
 }
 .tab-nav-btn {
-  flex: 1;
-  padding: 11px 4px;
-  background: transparent;
-  border: none;
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all .2s;
-  font-family: 'Inter', sans-serif;
+  flex: 1; padding: 11px 4px;
+  background: transparent; border: none; color: var(--muted);
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: all .2s; font-family: 'Inter', sans-serif;
 }
-.tab-nav-btn.on {
-  color: #ccc;
-  border-bottom-color: #888;
-}
+.tab-nav-btn.on { color: #ccc; border-bottom-color: #888; }
 
-/* TAB CONTENT */
 .tab-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px 14px;
-  display: none;
-  flex-direction: column;
-  gap: 14px;
+  flex: 1; overflow-y: auto; padding: 16px 14px;
+  display: none; flex-direction: column; gap: 14px;
 }
 .tab-content.on { display: flex; }
-
-/* scrollbar */
 .tab-content::-webkit-scrollbar { width: 3px; }
 .tab-content::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
-/* ═══════════════════════════════
-   CONTROLS COMPONENTS
-═══════════════════════════════ */
-.lbl {
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
+/* ── CONTROLS ── */
+.lbl { font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
 .field { display: flex; flex-direction: column; }
 
 textarea, input[type="text"] {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: #ccc;
-  padding: 9px 11px;
-  border-radius: 5px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: #ccc; padding: 9px 11px; border-radius: 5px;
   font-family: 'Noto Serif Devanagari', serif;
-  font-size: 14px;
-  line-height: 1.7;
-  resize: vertical; width: 100%;
-  transition: border-color .2s;
+  font-size: 14px; line-height: 1.7;
+  resize: vertical; width: 100%; transition: border-color .2s;
 }
 textarea:focus, input[type="text"]:focus { outline: none; border-color: #555; }
 #shayariInput { min-height: 120px; }
 
 .upload-box {
-  background: var(--surface);
-  border: 1px dashed #383838;
-  border-radius: 5px;
-  padding: 12px 10px;
-  text-align: center;
-  cursor: pointer;
-  color: #555;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  transition: all .2s;
+  background: var(--surface); border: 1px dashed #383838;
+  border-radius: 5px; padding: 12px 10px; text-align: center;
+  cursor: pointer; color: #555; font-size: 10px;
+  letter-spacing: 1.5px; text-transform: uppercase; transition: all .2s;
 }
 .upload-box:hover { border-color: #666; color: #999; }
 
 .slider-row { display: flex; align-items: center; gap: 8px; }
-input[type="range"] {
-  flex: 1; accent-color: #888;
-  height: 4px; cursor: pointer;
-}
-.val {
-  font-size: 10px; color: #666;
-  min-width: 34px; text-align: right;
-}
+input[type="range"] { flex: 1; accent-color: #888; height: 4px; cursor: pointer; }
+.val { font-size: 10px; color: #666; min-width: 34px; text-align: right; }
 
 .swatch-row { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
 .bgswatch {
@@ -308,13 +226,6 @@ input[type="range"] {
 }
 .xbtn.on, .xbtn:hover { border-color: #666; color: #ccc; background: #2e2e2e; }
 
-/* 3-grid for position */
-.pos-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-}
-
 .color-pair { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 .cp { display: flex; align-items: center; gap: 6px; }
 .cp span { font-size: 9px; color: #555; letter-spacing: 1px; text-transform: uppercase; }
@@ -326,77 +237,37 @@ input[type="color"] {
 
 hr { border: none; border-top: 1px solid var(--border); }
 
-/* ═══════════════════════════════
-   BOTTOM SHEET (mobile)
-═══════════════════════════════ */
-.bottom-sheet {
-  display: none;
-  flex-direction: column;
-  background: var(--panel);
-  border-top: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
+/* ── BOTTOM SHEET (mobile) ── */
+.bottom-sheet { display: none; flex-direction: column; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
 .bottom-tab-nav {
-  display: flex;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-  scrollbar-width: none;
+  display: flex; background: var(--bg); border-bottom: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none;
 }
 .bottom-tab-nav::-webkit-scrollbar { display: none; }
-
 .bottom-tab-btn {
-  flex-shrink: 0;
-  padding: 10px 14px;
-  background: transparent; border: none;
-  color: var(--muted);
-  font-size: 9px; letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all .2s;
-  font-family: 'Inter', sans-serif;
-  white-space: nowrap;
+  flex-shrink: 0; padding: 10px 14px;
+  background: transparent; border: none; color: var(--muted);
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: all .2s; font-family: 'Inter', sans-serif; white-space: nowrap;
 }
 .bottom-tab-btn.on { color: #ccc; border-bottom-color: #888; }
-
 .bottom-tab-content {
-  display: none;
-  flex-direction: column;
-  gap: 12px;
-  padding: 14px;
-  max-height: 42vh;
-  overflow-y: auto;
+  display: none; flex-direction: column; gap: 12px;
+  padding: 14px; max-height: 44vh; overflow-y: auto;
 }
 .bottom-tab-content.on { display: flex; }
 .bottom-tab-content::-webkit-scrollbar { width: 2px; }
 .bottom-tab-content::-webkit-scrollbar-thumb { background: #333; }
 
-/* ═══════════════════════════════
-   RESPONSIVE
-═══════════════════════════════ */
+/* ── RESPONSIVE ── */
 @media (max-width: 700px) {
-  :root {
-    --card-w: 260px;
-    --card-h: 462px;
-  }
   .main { flex-direction: column; overflow: visible; }
   .right-panel { display: none; }
   .bottom-sheet { display: flex; }
-  .preview-area { padding: 14px; min-height: 0; flex-shrink: 0; }
-  #card { box-shadow: 0 8px 30px rgba(0,0,0,.5); }
-  .c-header { top: 18px; left: 16px; }
-  .c-header.pos-center { left: 50%; }
-  .c-header.pos-right { right: 16px; left: auto; }
-  .c-body { left: 16px; right: 16px; top: 88px; bottom: 16px; }
-  .c-avatar { width: 46px !important; height: 46px !important; }
-  .c-name { font-size: 14px !important; }
-  .c-handle { font-size: 11px !important; }
+  .preview-area { padding: 12px; min-height: 0; flex-shrink: 0; }
 }
-
 @media (min-width: 701px) and (max-width: 960px) {
-  :root { --card-w: 300px; --card-h: 533px; }
   .right-panel { width: 260px; min-width: 260px; }
 }
 </style>
@@ -406,19 +277,18 @@ hr { border: none; border-top: 1px solid var(--border); }
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-title">Shayari Card <span>Maker</span></div>
-  <button class="dl-btn-top" id="dlBtn">⬇ Download</button>
+  <button class="dl-btn-top" id="dlBtn">⬇ Download 9:16</button>
 </div>
 
 <!-- MAIN -->
 <div class="main">
 
   <!-- PREVIEW -->
-  <div class="preview-area">
-    <div class="card-wrap">
+  <div class="preview-area" id="previewArea">
+    <div class="card-scaler" id="cardScaler">
       <div id="card">
         <div class="c-bg" id="cBg"></div>
 
-        <!-- Header -->
         <div class="c-header pos-left" id="cHeader">
           <div class="c-avatar" id="cAvatar">
             <span id="cAvatarPh">👤</span>
@@ -430,7 +300,6 @@ hr { border: none; border-top: 1px solid var(--border); }
           </div>
         </div>
 
-        <!-- Shayari -->
         <div class="c-body" id="cBody">
           <div class="c-shayari" id="cShayari">उजड़ी हुई दुनिया को
 तू आबाद न कर, बीते
@@ -441,10 +310,11 @@ hr { border: none; border-top: 1px solid var(--border); }
 आजाद न कर!</div>
         </div>
       </div>
+      <div class="card-scaler-shadow"></div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL (desktop) -->
+  <!-- RIGHT PANEL -->
   <div class="right-panel">
     <div class="tab-nav">
       <button class="tab-nav-btn on" data-tab="profile">Profile</button>
@@ -453,7 +323,7 @@ hr { border: none; border-top: 1px solid var(--border); }
       <button class="tab-nav-btn" data-tab="style">Style</button>
     </div>
 
-    <!-- Profile tab -->
+    <!-- Profile -->
     <div class="tab-content on" id="tab-profile">
       <div class="field">
         <div class="lbl">Profile Photo</div>
@@ -477,7 +347,7 @@ hr { border: none; border-top: 1px solid var(--border); }
       </div>
     </div>
 
-    <!-- Header tab -->
+    <!-- Header -->
     <div class="tab-content" id="tab-header">
       <div class="field">
         <div class="lbl">Horizontal Position</div>
@@ -488,45 +358,44 @@ hr { border: none; border-top: 1px solid var(--border); }
         </div>
       </div>
       <div class="field">
-        <div class="lbl">Top Offset <span class="val" id="topVal" style="display:inline">26px</span></div>
+        <div class="lbl">Top Offset &nbsp;<span class="val" id="topVal" style="display:inline">52px</span></div>
         <div class="slider-row">
-          <input type="range" id="headerTop" min="0" max="200" value="26">
+          <input type="range" id="headerTop" min="0" max="400" value="52">
         </div>
       </div>
       <div class="field">
-        <div class="lbl">Left / Right Offset <span class="val" id="hOffVal" style="display:inline">22px</span></div>
+        <div class="lbl">Side Offset &nbsp;<span class="val" id="hOffVal" style="display:inline">44px</span></div>
         <div class="slider-row">
-          <input type="range" id="headerOff" min="0" max="80" value="22">
+          <input type="range" id="headerOff" min="0" max="160" value="44">
         </div>
       </div>
       <div class="field">
-        <div class="lbl">Avatar Size <span class="val" id="avatarSzVal" style="display:inline">56px</span></div>
+        <div class="lbl">Avatar Size &nbsp;<span class="val" id="avatarSzVal" style="display:inline">110px</span></div>
         <div class="slider-row">
-          <input type="range" id="avatarSz" min="28" max="100" value="56">
+          <input type="range" id="avatarSz" min="50" max="220" value="110">
         </div>
       </div>
       <div class="field">
-        <div class="lbl">Name Font Size <span class="val" id="nameFsVal" style="display:inline">17px</span></div>
+        <div class="lbl">Name Size &nbsp;<span class="val" id="nameFsVal" style="display:inline">34px</span></div>
         <div class="slider-row">
-          <input type="range" id="nameFs" min="10" max="32" value="17">
+          <input type="range" id="nameFs" min="16" max="72" value="34">
         </div>
       </div>
       <div class="field">
-        <div class="lbl">Handle Font Size <span class="val" id="handleFsVal" style="display:inline">13px</span></div>
+        <div class="lbl">Handle Size &nbsp;<span class="val" id="handleFsVal" style="display:inline">26px</span></div>
         <div class="slider-row">
-          <input type="range" id="handleFs" min="8" max="26" value="13">
+          <input type="range" id="handleFs" min="12" max="56" value="26">
         </div>
       </div>
       <div class="field">
-        <div class="lbl">Gap between avatar & text</div>
+        <div class="lbl">Gap &nbsp;<span class="val" id="gapVal" style="display:inline">20px</span></div>
         <div class="slider-row">
-          <input type="range" id="headerGap" min="4" max="24" value="10">
-          <span class="val" id="gapVal">10px</span>
+          <input type="range" id="headerGap" min="4" max="60" value="20">
         </div>
       </div>
     </div>
 
-    <!-- Text tab -->
+    <!-- Text -->
     <div class="tab-content" id="tab-text">
       <div class="field">
         <div class="lbl">Shayari</div>
@@ -541,8 +410,8 @@ hr { border: none; border-top: 1px solid var(--border); }
       <div class="field">
         <div class="lbl">Font Size</div>
         <div class="slider-row">
-          <input type="range" id="fontSize" min="12" max="36" value="20">
-          <span class="val" id="fsVal">20px</span>
+          <input type="range" id="fontSize" min="20" max="80" value="40">
+          <span class="val" id="fsVal">40px</span>
         </div>
       </div>
       <div class="field">
@@ -583,30 +452,27 @@ hr { border: none; border-top: 1px solid var(--border); }
       </div>
     </div>
 
-    <!-- Style tab -->
+    <!-- Style -->
     <div class="tab-content" id="tab-style">
       <div class="field">
         <div class="lbl">Background</div>
         <div class="swatch-row">
-          <div class="bgswatch on" data-c="#c9c9c9" style="background:#c9c9c9" title="Light Grey"></div>
-          <div class="bgswatch" data-c="#b3b3b3" style="background:#b3b3b3" title="Grey"></div>
-          <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ddd" title="Off White"></div>
-          <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd" title="White"></div>
-          <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a" title="Black"></div>
-          <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00" title="Dark Brown"></div>
-          <div class="bgswatch" data-c="#0d1520" style="background:#0d1520" title="Dark Blue"></div>
+          <div class="bgswatch on" data-c="#c9c9c9" style="background:#c9c9c9"></div>
+          <div class="bgswatch" data-c="#b3b3b3" style="background:#b3b3b3"></div>
+          <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ddd"></div>
+          <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd"></div>
+          <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
+          <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
+          <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
           <input type="color" id="customBg" value="#c9c9c9" style="width:26px;height:26px;padding:1px;border:1px solid #444;border-radius:50%;background:#242424;cursor:pointer;flex-shrink:0">
         </div>
       </div>
     </div>
-
-  </div><!-- /right-panel -->
+  </div>
 
 </div><!-- /main -->
 
-<!-- ═══════════════════════
-     BOTTOM SHEET (mobile)
-════════════════════════ -->
+<!-- BOTTOM SHEET (mobile) -->
 <div class="bottom-sheet">
   <div class="bottom-tab-nav">
     <button class="bottom-tab-btn on" data-btab="b-profile">Profile</button>
@@ -615,20 +481,13 @@ hr { border: none; border-top: 1px solid var(--border); }
     <button class="bottom-tab-btn" data-btab="b-style">Style</button>
   </div>
 
-  <!-- Profile -->
   <div class="bottom-tab-content on" id="b-profile">
     <div class="field">
       <div class="lbl">Profile Photo</div>
       <div class="upload-box" id="avatarBox2">↑ Upload photo (B&W)</div>
     </div>
-    <div class="field">
-      <div class="lbl">Display Name</div>
-      <input type="text" id="nameInput2" value="Classical Author">
-    </div>
-    <div class="field">
-      <div class="lbl">Handle</div>
-      <input type="text" id="handleInput2" value="@classicalauthor">
-    </div>
+    <div class="field"><div class="lbl">Display Name</div><input type="text" id="nameInput2" value="Classical Author"></div>
+    <div class="field"><div class="lbl">Handle</div><input type="text" id="handleInput2" value="@classicalauthor"></div>
     <div class="field">
       <div class="lbl">Colors</div>
       <div class="color-pair">
@@ -638,7 +497,6 @@ hr { border: none; border-top: 1px solid var(--border); }
     </div>
   </div>
 
-  <!-- Header positioning -->
   <div class="bottom-tab-content" id="b-header">
     <div class="field">
       <div class="lbl">Position</div>
@@ -648,32 +506,15 @@ hr { border: none; border-top: 1px solid var(--border); }
         <button class="xbtn" data-hpos2="pos-right">Right</button>
       </div>
     </div>
-    <div class="field">
-      <div class="lbl">Top <span class="val" id="topVal2" style="display:inline">26px</span></div>
-      <input type="range" id="headerTop2" min="0" max="200" value="26">
-    </div>
-    <div class="field">
-      <div class="lbl">Side Offset <span class="val" id="hOffVal2" style="display:inline">22px</span></div>
-      <input type="range" id="headerOff2" min="0" max="80" value="22">
-    </div>
-    <div class="field">
-      <div class="lbl">Avatar Size <span class="val" id="avatarSzVal2" style="display:inline">56px</span></div>
-      <input type="range" id="avatarSz2" min="28" max="100" value="56">
-    </div>
-    <div class="field">
-      <div class="lbl">Name Size <span class="val" id="nameFsVal2" style="display:inline">17px</span></div>
-      <input type="range" id="nameFs2" min="10" max="32" value="17">
-    </div>
-    <div class="field">
-      <div class="lbl">Handle Size <span class="val" id="handleFsVal2" style="display:inline">13px</span></div>
-      <input type="range" id="handleFs2" min="8" max="26" value="13">
-    </div>
+    <div class="field"><div class="lbl">Top &nbsp;<span class="val" id="topVal2" style="display:inline">52px</span></div><input type="range" id="headerTop2" min="0" max="400" value="52"></div>
+    <div class="field"><div class="lbl">Side Offset &nbsp;<span class="val" id="hOffVal2" style="display:inline">44px</span></div><input type="range" id="headerOff2" min="0" max="160" value="44"></div>
+    <div class="field"><div class="lbl">Avatar Size &nbsp;<span class="val" id="avatarSzVal2" style="display:inline">110px</span></div><input type="range" id="avatarSz2" min="50" max="220" value="110"></div>
+    <div class="field"><div class="lbl">Name Size &nbsp;<span class="val" id="nameFsVal2" style="display:inline">34px</span></div><input type="range" id="nameFs2" min="16" max="72" value="34"></div>
+    <div class="field"><div class="lbl">Handle Size &nbsp;<span class="val" id="handleFsVal2" style="display:inline">26px</span></div><input type="range" id="handleFs2" min="12" max="56" value="26"></div>
   </div>
 
-  <!-- Text -->
   <div class="bottom-tab-content" id="b-text">
-    <div class="field">
-      <div class="lbl">Shayari</div>
+    <div class="field"><div class="lbl">Shayari</div>
       <textarea id="shayariInput2" style="min-height:90px">उजड़ी हुई दुनिया को
 तू आबाद न कर, बीते
 हुए लम्हों को तू याद
@@ -682,14 +523,8 @@ hr { border: none; border-top: 1px solid var(--border); }
 भुल चुका हूं उड़ना मुझे
 आजाद न कर!</textarea>
     </div>
-    <div class="field">
-      <div class="lbl">Font Size <span class="val" id="fsVal2" style="display:inline">20px</span></div>
-      <input type="range" id="fontSize2" min="12" max="36" value="20">
-    </div>
-    <div class="field">
-      <div class="lbl">Line Height <span class="val" id="lhVal2" style="display:inline">1.85</span></div>
-      <input type="range" id="lineH2" min="1.2" max="3.0" step="0.05" value="1.85">
-    </div>
+    <div class="field"><div class="lbl">Font Size &nbsp;<span class="val" id="fsVal2" style="display:inline">40px</span></div><input type="range" id="fontSize2" min="20" max="80" value="40"></div>
+    <div class="field"><div class="lbl">Line Height &nbsp;<span class="val" id="lhVal2" style="display:inline">1.85</span></div><input type="range" id="lineH2" min="1.2" max="3.0" step="0.05" value="1.85"></div>
     <div class="field">
       <div class="lbl">Weight</div>
       <div class="btn-row">
@@ -715,12 +550,9 @@ hr { border: none; border-top: 1px solid var(--border); }
         <button class="xbtn" data-vpos2="flex-end">Bot</button>
       </div>
     </div>
-    <div class="field">
-      <div class="cp"><input type="color" id="textColor2" value="#111111"><span style="font-size:9px;color:#555;letter-spacing:1px;text-transform:uppercase">Text Color</span></div>
-    </div>
+    <div class="field"><div class="cp"><input type="color" id="textColor2" value="#111111"><span style="font-size:9px;color:#555;letter-spacing:1px;text-transform:uppercase">Text Color</span></div></div>
   </div>
 
-  <!-- Style -->
   <div class="bottom-tab-content" id="b-style">
     <div class="field">
       <div class="lbl">Background</div>
@@ -742,15 +574,36 @@ hr { border: none; border-top: 1px solid var(--border); }
 <script>
 const $ = id => document.getElementById(id);
 
-// ── SYNC helper: apply change to card, keep both panels in sync ──
-function syncInputs(id1, id2, fn) {
-  const a = $(id1), b = $(id2);
-  if (!a || !b) return;
-  a.addEventListener('input', e => { if(b.value !== e.target.value) b.value = e.target.value; fn(e.target.value); });
-  b.addEventListener('input', e => { if(a.value !== e.target.value) a.value = e.target.value; fn(e.target.value); });
+// ═══════════════════════════════════════
+// SCALE THE CARD TO FIT PREVIEW AREA
+// Card is always 1080×1920; we scale it
+// ═══════════════════════════════════════
+const CARD_W = 1080, CARD_H = 1920;
+
+function scaleCard() {
+  const area = $('previewArea');
+  const pad = 24;
+  const availW = area.clientWidth - pad * 2;
+  const availH = area.clientHeight - pad * 2;
+  const scale = Math.min(availW / CARD_W, availH / CARD_H);
+  const displayW = CARD_W * scale;
+  const displayH = CARD_H * scale;
+  const scaler = $('cardScaler');
+  scaler.style.width = displayW + 'px';
+  scaler.style.height = displayH + 'px';
+  scaler.style.overflow = 'hidden';
+  scaler.style.position = 'relative';
+  scaler.style.flexShrink = '0';
+  $('card').style.transform = `scale(${scale})`;
+  $('card').style.transformOrigin = 'top left';
 }
 
-// ── DESKTOP TAB SWITCH ──
+window.addEventListener('resize', scaleCard);
+// Run after fonts load
+document.fonts.ready.then(scaleCard);
+scaleCard();
+
+// ── TABS (desktop) ──
 document.querySelectorAll('.tab-nav-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('on'));
@@ -760,7 +613,7 @@ document.querySelectorAll('.tab-nav-btn').forEach(btn => {
   };
 });
 
-// ── MOBILE TAB SWITCH ──
+// ── TABS (mobile) ──
 document.querySelectorAll('.bottom-tab-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.bottom-tab-btn').forEach(b => b.classList.remove('on'));
@@ -770,219 +623,169 @@ document.querySelectorAll('.bottom-tab-btn').forEach(btn => {
   };
 });
 
-// ── AVATAR UPLOAD ──
-function handleAvatarUpload(file) {
+// ── AVATAR ──
+function handleAvatar(file) {
   const r = new FileReader();
   r.onload = ev => {
     $('cAvatarImg').src = ev.target.result;
     $('cAvatarImg').style.display = 'block';
     $('cAvatarPh').style.display = 'none';
-    $('avatarBox').textContent = '✓ ' + file.name;
-    $('avatarBox2').textContent = '✓ ' + file.name;
+    const txt = '✓ ' + file.name;
+    $('avatarBox').textContent = txt;
+    $('avatarBox2').textContent = txt;
   };
   r.readAsDataURL(file);
 }
 $('avatarBox').onclick = () => $('avatarFile').click();
 $('avatarBox2').onclick = () => $('avatarFile').click();
-$('avatarFile').onchange = e => { if(e.target.files[0]) handleAvatarUpload(e.target.files[0]); };
+$('avatarFile').onchange = e => { if(e.target.files[0]) handleAvatar(e.target.files[0]); };
 
-// ── NAME / HANDLE ──
-syncInputs('nameInput','nameInput2', v => $('cName').textContent = v);
-syncInputs('handleInput','handleInput2', v => $('cHandle').textContent = v);
-
-// ── NAME / HANDLE COLORS ──
-function bindColorPair(id1, id2, fn) {
+// ── SYNC helpers ──
+function syncText(id1, id2, fn) {
   const a = $(id1), b = $(id2);
   if(!a||!b) return;
-  a.oninput = e => { b.value = e.target.value; fn(e.target.value); };
-  b.oninput = e => { a.value = e.target.value; fn(e.target.value); };
+  a.addEventListener('input', e => { if(b.value!==e.target.value) b.value=e.target.value; fn(e.target.value); });
+  b.addEventListener('input', e => { if(a.value!==e.target.value) a.value=e.target.value; fn(e.target.value); });
 }
-bindColorPair('nameColor','nameColor2', v => $('cName').style.color = v);
-bindColorPair('handleColor','handleColor2', v => $('cHandle').style.color = v);
+function syncColor(id1, id2, fn) {
+  const a=$(id1),b=$(id2);
+  if(!a||!b) return;
+  a.oninput=e=>{b.value=e.target.value;fn(e.target.value);};
+  b.oninput=e=>{a.value=e.target.value;fn(e.target.value);};
+}
+function syncSlider(id1, id2, valId1, valId2, suffix, fn) {
+  const a=$(id1),b=$(id2);
+  if(!a) return;
+  function apply(v){
+    if(b) b.value=v;
+    if(valId1&&$(valId1)) $(valId1).textContent=v+suffix;
+    if(valId2&&$(valId2)) $(valId2).textContent=v+suffix;
+    fn(v);
+  }
+  a.oninput=e=>apply(e.target.value);
+  if(b) b.oninput=e=>apply(e.target.value);
+}
 
-// ── HEADER POSITION (horizontal) ──
+// Name / handle
+syncText('nameInput','nameInput2', v=>$('cName').textContent=v);
+syncText('handleInput','handleInput2', v=>$('cHandle').textContent=v);
+syncColor('nameColor','nameColor2', v=>$('cName').style.color=v);
+syncColor('handleColor','handleColor2', v=>$('cHandle').style.color=v);
+
+// ── HEADER POSITION ──
+let currentHpos = 'pos-left';
 function applyHpos(cls) {
+  currentHpos = cls;
   const h = $('cHeader');
   h.classList.remove('pos-left','pos-center','pos-right');
   h.classList.add(cls);
-  const off = parseInt($('headerOff').value);
-  updateHeaderOffset(off);
+  applyOffset(parseInt($('headerOff').value));
 }
-document.querySelectorAll('[data-hpos]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-hpos]').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('[data-hpos2]').forEach(x => { if(x.dataset.hpos2 === b.dataset.hpos.replace('pos-','')) x.classList.add('on'); else x.classList.remove('on'); });
-    b.classList.add('on');
-    applyHpos(b.dataset.hpos);
-  };
-});
-document.querySelectorAll('[data-hpos2]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-hpos2]').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('[data-hpos]').forEach(x => { if(x.dataset.hpos === 'pos-'+b.dataset.hpos2) x.classList.add('on'); else x.classList.remove('on'); });
-    b.classList.add('on');
-    applyHpos('pos-' + b.dataset.hpos2);
-  };
-});
-
-function updateHeaderOffset(v) {
+function applyOffset(v) {
   const h = $('cHeader');
-  if (h.classList.contains('pos-left'))  { h.style.left = v+'px'; h.style.right = 'auto'; }
-  if (h.classList.contains('pos-right')) { h.style.right = v+'px'; h.style.left = 'auto'; }
-  if (h.classList.contains('pos-center')){ h.style.left = '50%'; h.style.right = 'auto'; }
+  if(currentHpos==='pos-left')   { h.style.left=v+'px'; h.style.right='auto'; }
+  if(currentHpos==='pos-right')  { h.style.right=v+'px'; h.style.left='auto'; }
+  if(currentHpos==='pos-center') { h.style.left='50%'; h.style.right='auto'; }
 }
 
-// ── HEADER TOP ──
-function syncSlider(id1, id2, valId1, valId2, fn) {
-  const a = $(id1), b = $(id2);
-  if(!a) return;
-  a.oninput = e => {
-    if(b) b.value = e.target.value;
-    if(valId1) $(valId1).textContent = e.target.value + (a.step < 1 ? '' : 'px');
-    if(valId2 && $(valId2)) $(valId2).textContent = e.target.value + (a.step < 1 ? '' : 'px');
-    fn(e.target.value);
-  };
-  if(b) b.oninput = e => {
-    a.value = e.target.value;
-    if(valId1) $(valId1).textContent = e.target.value + (a.step < 1 ? '' : 'px');
-    if(valId2 && $(valId2)) $(valId2).textContent = e.target.value + (a.step < 1 ? '' : 'px');
-    fn(e.target.value);
-  };
+function bindHposGroup(attr) {
+  document.querySelectorAll(`[${attr}]`).forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('[data-hpos]').forEach(x=>x.classList.remove('on'));
+      document.querySelectorAll('[data-hpos2]').forEach(x=>x.classList.remove('on'));
+      const cls = b.dataset.hpos || ('pos-'+b.dataset.hpos2);
+      document.querySelectorAll(`[data-hpos="${cls}"]`).forEach(x=>x.classList.add('on'));
+      document.querySelectorAll(`[data-hpos2="${cls.replace('pos-','')}"]`).forEach(x=>x.classList.add('on'));
+      applyHpos(cls);
+    };
+  });
 }
+bindHposGroup('data-hpos');
+bindHposGroup('data-hpos2');
 
-syncSlider('headerTop','headerTop2','topVal','topVal2', v => { $('cHeader').style.top = v+'px'; });
-syncSlider('headerOff','headerOff2','hOffVal','hOffVal2', v => updateHeaderOffset(parseInt(v)));
-syncSlider('avatarSz','avatarSz2','avatarSzVal','avatarSzVal2', v => {
-  $('cAvatar').style.width = v+'px';
-  $('cAvatar').style.height = v+'px';
-});
-syncSlider('nameFs','nameFs2','nameFsVal','nameFsVal2', v => $('cName').style.fontSize = v+'px');
-syncSlider('handleFs','handleFs2','handleFsVal','handleFsVal2', v => $('cHandle').style.fontSize = v+'px');
-syncSlider('headerGap','headerGap','gapVal',null, v => $('cHeader').style.gap = v+'px');
+syncSlider('headerTop','headerTop2','topVal','topVal2','px', v=>$('cHeader').style.top=v+'px');
+syncSlider('headerOff','headerOff2','hOffVal','hOffVal2','px', v=>applyOffset(parseInt(v)));
+syncSlider('avatarSz','avatarSz2','avatarSzVal','avatarSzVal2','px', v=>{ $('cAvatar').style.width=v+'px'; $('cAvatar').style.height=v+'px'; });
+syncSlider('nameFs','nameFs2','nameFsVal','nameFsVal2','px', v=>$('cName').style.fontSize=v+'px');
+syncSlider('handleFs','handleFs2','handleFsVal','handleFsVal2','px', v=>$('cHandle').style.fontSize=v+'px');
+syncSlider('headerGap',null,'gapVal',null,'px', v=>$('cHeader').style.gap=v+'px');
 
 // ── SHAYARI ──
-syncInputs('shayariInput','shayariInput2', v => $('cShayari').textContent = v);
-syncSlider('fontSize','fontSize2','fsVal','fsVal2', v => $('cShayari').style.fontSize = v+'px');
-syncSlider('lineH','lineH2','lhVal','lhVal2', v => { $('cShayari').style.lineHeight = v; });
+syncText('shayariInput','shayariInput2', v=>$('cShayari').textContent=v);
+syncSlider('fontSize','fontSize2','fsVal','fsVal2','px', v=>$('cShayari').style.fontSize=v+'px');
+syncSlider('lineH','lineH2','lhVal','lhVal2','', v=>$('cShayari').style.lineHeight=v);
 
-// ── FONT WEIGHT ──
-document.querySelectorAll('[data-w]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-w]').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('[data-w2]').forEach(x => { if(x.dataset.w2===b.dataset.w) x.classList.add('on'); else x.classList.remove('on'); });
-    b.classList.add('on');
-    $('cShayari').style.fontWeight = b.dataset.w;
-  };
-});
-document.querySelectorAll('[data-w2]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-w2]').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('[data-w]').forEach(x => { if(x.dataset.w===b.dataset.w2) x.classList.add('on'); else x.classList.remove('on'); });
-    b.classList.add('on');
-    $('cShayari').style.fontWeight = b.dataset.w2;
-  };
-});
+function bindGroup(attr1, attr2, fn) {
+  function handler(b, val) {
+    document.querySelectorAll(`[${attr1}]`).forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll(`[${attr2}]`).forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll(`[${attr1}="${val}"]`).forEach(x=>x.classList.add('on'));
+    document.querySelectorAll(`[${attr2}="${val}"]`).forEach(x=>x.classList.add('on'));
+    fn(val);
+  }
+  document.querySelectorAll(`[${attr1}]`).forEach(b=>{ b.onclick=()=>handler(b, b.getAttribute(attr1)); });
+  document.querySelectorAll(`[${attr2}]`).forEach(b=>{ b.onclick=()=>handler(b, b.getAttribute(attr2)); });
+}
+bindGroup('data-w','data-w2', v=>$('cShayari').style.fontWeight=v);
+bindGroup('data-align','data-align2', v=>$('cShayari').style.textAlign=v);
+bindGroup('data-vpos','data-vpos2', v=>$('cBody').style.alignItems=v);
 
-// ── TEXT ALIGN ──
-document.querySelectorAll('[data-align]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-align]').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('[data-align2]').forEach(x => { if(x.dataset.align2===b.dataset.align) x.classList.add('on'); else x.classList.remove('on'); });
-    b.classList.add('on');
-    $('cShayari').style.textAlign = b.dataset.align;
-  };
-});
-document.querySelectorAll('[data-align2]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-align2]').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('[data-align]').forEach(x => { if(x.dataset.align===b.dataset.align2) x.classList.add('on'); else x.classList.remove('on'); });
-    b.classList.add('on');
-    $('cShayari').style.textAlign = b.dataset.align2;
-  };
-});
-
-// ── VERTICAL POSITION ──
-document.querySelectorAll('[data-vpos]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-vpos]').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('[data-vpos2]').forEach(x => { if(x.dataset.vpos2===b.dataset.vpos) x.classList.add('on'); else x.classList.remove('on'); });
-    b.classList.add('on');
-    $('cBody').style.alignItems = b.dataset.vpos;
-  };
-});
-document.querySelectorAll('[data-vpos2]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-vpos2]').forEach(x => x.classList.remove('on'));
-    document.querySelectorAll('[data-vpos]').forEach(x => { if(x.dataset.vpos===b.dataset.vpos2) x.classList.add('on'); else x.classList.remove('on'); });
-    b.classList.add('on');
-    $('cBody').style.alignItems = b.dataset.vpos2;
-  };
-});
-
-// ── TEXT COLOR ──
-bindColorPair('textColor','textColor2', v => $('cShayari').style.color = v);
+syncColor('textColor','textColor2', v=>$('cShayari').style.color=v);
 
 // ── BACKGROUND ──
-function applyBg(c) { $('cBg').style.background = c; }
-document.querySelectorAll('.bgswatch').forEach(s => {
-  s.onclick = () => {
-    document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on'));
-    // activate both matching swatches
-    document.querySelectorAll(`.bgswatch[data-c="${s.dataset.c}"]`).forEach(x => x.classList.add('on'));
+function applyBg(c) { $('cBg').style.background=c; }
+document.querySelectorAll('.bgswatch').forEach(s=>{
+  s.onclick=()=>{
+    document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll(`.bgswatch[data-c="${s.dataset.c}"]`).forEach(x=>x.classList.add('on'));
     applyBg(s.dataset.c);
   };
 });
-$('customBg').oninput = e => { document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on')); applyBg(e.target.value); $('customBg2').value = e.target.value; };
-$('customBg2').oninput = e => { document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on')); applyBg(e.target.value); $('customBg').value = e.target.value; };
+syncColor('customBg','customBg2', v=>{ document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on')); applyBg(v); });
 
-// ── DOWNLOAD ──
-async function doDownload() {
+// ═══════════════════════════════════════
+// DOWNLOAD — captures the actual 1080×1920
+// No resizing needed! Card is already full size.
+// ═══════════════════════════════════════
+$('dlBtn').onclick = async () => {
   const btn = $('dlBtn');
   const orig = btn.textContent;
-  btn.textContent = '⏳ Wait...';
+  btn.textContent = '⏳ Please wait...';
   btn.disabled = true;
+
   try {
-    // Temporarily set card to full export size
+    // Temporarily remove the CSS scale so html2canvas captures at full 1080×1920
     const card = $('card');
-    const origW = card.style.width, origH = card.style.height;
-    card.style.width = '1080px';
-    card.style.height = '1920px';
+    card.style.transform = 'none';
 
     const canvas = await html2canvas(card, {
-      scale: 1,
+      scale: 1,          // 1:1 — card is already 1080×1920
       useCORS: true,
       allowTaint: true,
       backgroundColor: null,
       logging: false,
       width: 1080,
-      height: 1920
+      height: 1920,
+      windowWidth: 1080,
+      windowHeight: 1920,
     });
-    card.style.width = origW;
-    card.style.height = origH;
 
+    // Restore scale
+    scaleCard();
+
+    // Verify 9:16
     const a = document.createElement('a');
-    a.download = 'shayari-card.png';
+    a.download = 'shayari-card-1080x1920.png';
     a.href = canvas.toDataURL('image/png', 1.0);
     a.click();
   } catch(err) {
-    // fallback: render at display size × 3
-    try {
-      const canvas = await html2canvas($('card'), {
-        scale: 3, useCORS: true, allowTaint: true,
-        backgroundColor: null, logging: false
-      });
-      const a = document.createElement('a');
-      a.download = 'shayari-card.png';
-      a.href = canvas.toDataURL('image/png', 1.0);
-      a.click();
-    } catch(e2) {
-      alert('Download failed. Try a screenshot instead.');
-    }
+    scaleCard();
+    alert('Download failed. Try a screenshot instead.\n' + err.message);
   }
+
   btn.textContent = orig;
   btn.disabled = false;
-}
-$('dlBtn').onclick = doDownload;
+};
 </script>
 </body>
 </html>
