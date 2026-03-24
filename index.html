@@ -679,7 +679,7 @@ function applyHpos(cls) {
   const h = $('cHeader');
   h.classList.remove('pos-left','pos-center','pos-right');
   h.classList.add(cls);
-  applyOffset(parseInt($('headerOff').value));
+  applyOffset(getOffsetVal());
 }
 function applyOffset(v) {
   const h = $('cHeader');
@@ -687,15 +687,20 @@ function applyOffset(v) {
   if(currentHpos==='pos-right')  { h.style.right=v+'px'; h.style.left='auto'; }
   if(currentHpos==='pos-center') { h.style.left='50%'; h.style.right='auto'; }
 }
+function getOffsetVal() {
+  const el = $('headerOff') || $('headerOff2');
+  return el ? parseInt(el.value) : 44;
+}
 
 function bindHposGroup(attr) {
   document.querySelectorAll(`[${attr}]`).forEach(b => {
     b.onclick = () => {
       document.querySelectorAll('[data-hpos]').forEach(x=>x.classList.remove('on'));
       document.querySelectorAll('[data-hpos2]').forEach(x=>x.classList.remove('on'));
-      const cls = b.dataset.hpos || ('pos-'+b.dataset.hpos2);
+      // data-hpos values are like "pos-left"; data-hpos2 values are also "pos-left"
+      const cls = b.dataset.hpos || b.dataset.hpos2;
       document.querySelectorAll(`[data-hpos="${cls}"]`).forEach(x=>x.classList.add('on'));
-      document.querySelectorAll(`[data-hpos2="${cls.replace('pos-','')}"]`).forEach(x=>x.classList.add('on'));
+      document.querySelectorAll(`[data-hpos2="${cls}"]`).forEach(x=>x.classList.add('on'));
       applyHpos(cls);
     };
   });
