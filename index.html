@@ -2,67 +2,274 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Shayari Card Maker</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,600;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #181818;
+  --panel: #1e1e1e;
+  --surface: #262626;
+  --border: #2e2e2e;
+  --accent: #e0e0e0;
+  --muted: #555;
+  --label: #888;
+  --card-w: 360px;
+  --card-h: 640px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
 
 body {
   font-family: 'Inter', sans-serif;
-  background: #e0e0e0;
-  min-height: 100vh;
-  display: flex;
-}
-
-/* ══ LEFT PANEL ══ */
-.panel {
-  width: 310px;
-  min-width: 310px;
-  background: #1c1c1c;
-  color: #ddd;
-  overflow-y: auto;
-  padding: 22px 16px;
+  background: var(--bg);
+  color: var(--accent);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
-.panel-title {
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: #666;
+
+/* ═══════════════════════════════
+   TOP BAR
+═══════════════════════════════ */
+.topbar {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+.topbar-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ccc;
+}
+.topbar-title span { color: var(--muted); font-weight: 400; }
+
+.dl-btn-top {
+  background: #333;
+  color: #ddd;
+  border: 1px solid #444;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.dl-btn-top:hover, .dl-btn-top:active { background: #444; color: #fff; }
+
+/* ═══════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════ */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════
+   PREVIEW AREA
+═══════════════════════════════ */
+.preview-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  padding: 20px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card-wrap {
+  position: relative;
+}
+
+/* THE CARD */
+#card {
+  width: var(--card-w);
+  height: var(--card-h);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  flex-shrink: 0;
+  background: #c9c9c9;
+}
+.c-bg {
+  position: absolute; inset: 0;
+  background: #c9c9c9;
+  z-index: 0;
+}
+
+/* HEADER — absolutely positioned so user can move it */
+.c-header {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  top: 26px;
+  left: 22px;
+  right: auto;
+}
+.c-header.pos-left  { left: 22px; right: auto; transform: none; }
+.c-header.pos-center { left: 50%; transform: translateX(-50%); right: auto; }
+.c-header.pos-right { right: 22px; left: auto; transform: none; }
+
+.c-avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #888;
+  display: flex; align-items: center; justify-content: center;
+  filter: grayscale(1) contrast(1.1);
+  border: 2px solid rgba(0,0,0,.25);
+  width: 56px; height: 56px;
+  transition: width .2s, height .2s;
+}
+.c-avatar img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(1) contrast(1.1);
+}
+.c-avatar-ph { font-size: 22px; }
+
+.c-info { display: flex; flex-direction: column; gap: 1px; }
+.c-name {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-weight: 700;
+  font-size: 17px; color: #111; line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  transition: font-size .15s;
+}
+.c-handle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 13px;
+  color: #333; line-height: 1.3;
+  white-space: nowrap;
+  transition: font-size .15s;
+}
+
+/* SHAYARI BODY */
+.c-body {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  left: 22px; right: 22px;
+  top: 110px; bottom: 22px;
+  align-items: flex-start;
+  transition: top .2s;
+}
+.c-shayari {
+  font-family: 'Noto Serif Devanagari', serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.85;
+  color: #111;
+  white-space: pre-wrap;
+  word-break: break-word;
+  width: 100%;
+}
+
+/* ═══════════════════════════════
+   RIGHT PANEL (desktop)
+═══════════════════════════════ */
+.right-panel {
+  width: 300px;
+  min-width: 300px;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* TAB NAV */
+.tab-nav {
+  display: flex;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.tab-nav-btn {
+  flex: 1;
+  padding: 11px 4px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #2a2a2a;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+  font-family: 'Inter', sans-serif;
 }
+.tab-nav-btn.on {
+  color: #ccc;
+  border-bottom-color: #888;
+}
+
+/* TAB CONTENT */
+.tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 14px;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+.tab-content.on { display: flex; }
+
+/* scrollbar */
+.tab-content::-webkit-scrollbar { width: 3px; }
+.tab-content::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+/* ═══════════════════════════════
+   CONTROLS COMPONENTS
+═══════════════════════════════ */
 .lbl {
   font-size: 9px;
-  letter-spacing: 2.5px;
-  color: #555;
+  letter-spacing: 2px;
+  color: var(--muted);
   text-transform: uppercase;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
+
 .field { display: flex; flex-direction: column; }
+
 textarea, input[type="text"] {
-  background: #242424;
-  border: 1px solid #303030;
+  background: var(--surface);
+  border: 1px solid var(--border);
   color: #ccc;
   padding: 9px 11px;
-  border-radius: 4px;
+  border-radius: 5px;
   font-family: 'Noto Serif Devanagari', serif;
   font-size: 14px;
   line-height: 1.7;
-  resize: vertical;
-  width: 100%;
+  resize: vertical; width: 100%;
+  transition: border-color .2s;
 }
 textarea:focus, input[type="text"]:focus { outline: none; border-color: #555; }
-#shayariInput { min-height: 130px; }
+#shayariInput { min-height: 120px; }
 
 .upload-box {
-  background: #242424;
+  background: var(--surface);
   border: 1px dashed #383838;
-  border-radius: 4px;
-  padding: 11px;
+  border-radius: 5px;
+  padding: 12px 10px;
   text-align: center;
   cursor: pointer;
   color: #555;
@@ -74,8 +281,14 @@ textarea:focus, input[type="text"]:focus { outline: none; border-color: #555; }
 .upload-box:hover { border-color: #666; color: #999; }
 
 .slider-row { display: flex; align-items: center; gap: 8px; }
-input[type="range"] { flex: 1; accent-color: #777; height: 3px; }
-.val { font-size: 10px; color: #666; min-width: 36px; text-align: right; }
+input[type="range"] {
+  flex: 1; accent-color: #888;
+  height: 4px; cursor: pointer;
+}
+.val {
+  font-size: 10px; color: #666;
+  min-width: 34px; text-align: right;
+}
 
 .swatch-row { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
 .bgswatch {
@@ -83,273 +296,444 @@ input[type="range"] { flex: 1; accent-color: #777; height: 3px; }
   cursor: pointer; border: 2px solid transparent;
   transition: all .15s; flex-shrink: 0;
 }
-.bgswatch:hover, .bgswatch.on { border-color: #aaa; transform: scale(1.12); }
+.bgswatch:hover, .bgswatch.on { border-color: #bbb; transform: scale(1.12); }
 
 .btn-row { display: flex; gap: 5px; }
 .xbtn {
-  flex: 1; padding: 7px 0;
-  background: #242424; border: 1px solid #303030;
-  color: #555; border-radius: 4px; cursor: pointer;
-  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-  transition: all .2s;
+  flex: 1; padding: 8px 0;
+  background: var(--surface); border: 1px solid var(--border);
+  color: #555; border-radius: 5px; cursor: pointer;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  transition: all .2s; font-family: 'Inter', sans-serif;
 }
-.xbtn.on, .xbtn:hover { border-color: #666; color: #ccc; background: #2a2a2a; }
+.xbtn.on, .xbtn:hover { border-color: #666; color: #ccc; background: #2e2e2e; }
 
-.dl-btn {
-  background: #2a2a2a; color: #bbb;
-  border: 1px solid #3a3a3a;
-  padding: 13px; border-radius: 5px;
-  cursor: pointer; font-size: 10px;
-  letter-spacing: 3px; text-transform: uppercase;
-  width: 100%; transition: all .2s; margin-top: 6px;
+/* 3-grid for position */
+.pos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
 }
-.dl-btn:hover { background: #383838; color: #fff; }
 
-hr { border: none; border-top: 1px solid #272727; }
-
-/* color pair */
-.color-pair { display: flex; gap: 12px; align-items: center; }
+.color-pair { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 .cp { display: flex; align-items: center; gap: 6px; }
-.cp span { font-size: 9px; color: #555; letter-spacing: 1.5px; text-transform: uppercase; }
+.cp span { font-size: 9px; color: #555; letter-spacing: 1px; text-transform: uppercase; }
 input[type="color"] {
-  width: 32px; height: 28px; padding: 2px 2px;
+  width: 32px; height: 28px; padding: 2px;
   border: 1px solid #383838; border-radius: 4px;
-  background: #242424; cursor: pointer;
+  background: var(--surface); cursor: pointer;
 }
 
-/* ══ PREVIEW ══ */
-.preview-area {
-  flex: 1;
-  display: flex; align-items: center; justify-content: center;
-  background: #d8d8d8;
-  padding: 32px;
-}
+hr { border: none; border-top: 1px solid var(--border); }
 
-/* ══ CARD — 9:16 ══ */
-#card {
-  /* 9:16 → 405 × 720  */
-  width: 405px;
-  height: 720px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
+/* ═══════════════════════════════
+   BOTTOM SHEET (mobile)
+═══════════════════════════════ */
+.bottom-sheet {
+  display: none;
   flex-direction: column;
-  box-shadow: 0 16px 50px rgba(0,0,0,.22);
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
-.c-bg {
-  position: absolute; inset: 0;
-  background: #c9c9c9;
-  z-index: 0;
+.bottom-tab-nav {
+  display: flex;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.bottom-tab-nav::-webkit-scrollbar { display: none; }
+
+.bottom-tab-btn {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  background: transparent; border: none;
+  color: var(--muted);
+  font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+.bottom-tab-btn.on { color: #ccc; border-bottom-color: #888; }
+
+.bottom-tab-content {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  max-height: 42vh;
+  overflow-y: auto;
+}
+.bottom-tab-content.on { display: flex; }
+.bottom-tab-content::-webkit-scrollbar { width: 2px; }
+.bottom-tab-content::-webkit-scrollbar-thumb { background: #333; }
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media (max-width: 700px) {
+  :root {
+    --card-w: 260px;
+    --card-h: 462px;
+  }
+  .main { flex-direction: column; overflow: visible; }
+  .right-panel { display: none; }
+  .bottom-sheet { display: flex; }
+  .preview-area { padding: 14px; min-height: 0; flex-shrink: 0; }
+  #card { box-shadow: 0 8px 30px rgba(0,0,0,.5); }
+  .c-header { top: 18px; left: 16px; }
+  .c-header.pos-center { left: 50%; }
+  .c-header.pos-right { right: 16px; left: auto; }
+  .c-body { left: 16px; right: 16px; top: 88px; bottom: 16px; }
+  .c-avatar { width: 46px !important; height: 46px !important; }
+  .c-name { font-size: 14px !important; }
+  .c-handle { font-size: 11px !important; }
 }
 
-/* ── header ── */
-.c-header {
-  position: relative; z-index: 2;
-  display: flex; align-items: center; gap: 13px;
-  padding: 28px 28px 0 28px;
-}
-
-.c-avatar {
-  width: 64px; height: 64px; border-radius: 50%;
-  overflow: hidden; flex-shrink: 0;
-  background: #666;
-  display: flex; align-items: center; justify-content: center;
-  filter: grayscale(1) contrast(1.1);
-  border: 2px solid #555;
-}
-.c-avatar img {
-  width: 100%; height: 100%; object-fit: cover;
-  filter: grayscale(1) contrast(1.1);
-}
-.c-avatar-ph { font-size: 28px; }
-
-.c-info { display: flex; flex-direction: column; gap: 1px; }
-
-.c-name {
-  font-family: 'Playfair Display', serif;
-  font-style: italic; font-weight: 700;
-  font-size: 20px; color: #111; line-height: 1.2;
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 3px;
-}
-.c-handle {
-  font-family: 'Playfair Display', serif;
-  font-style: italic; font-size: 15px;
-  color: #333; line-height: 1.3;
-}
-
-/* ── shayari body ── */
-.c-body {
-  position: relative; z-index: 2;
-  flex: 1;
-  display: flex; align-items: flex-start;
-  padding: 22px 28px 28px 28px;
-}
-
-.c-shayari {
-  font-family: 'Noto Serif Devanagari', serif;
-  font-weight: 700;
-  font-size: 22px;
-  line-height: 1.85;
-  color: #111;
-  white-space: pre-wrap;
-  word-break: break-word;
-  width: 100%;
+@media (min-width: 701px) and (max-width: 960px) {
+  :root { --card-w: 300px; --card-h: 533px; }
+  .right-panel { width: 260px; min-width: 260px; }
 }
 </style>
 </head>
 <body>
 
-<!-- PANEL -->
-<div class="panel">
-  <div class="panel-title">✦ Shayari Card Maker</div>
-
-  <!-- Avatar -->
-  <div class="field">
-    <div class="lbl">Profile Photo</div>
-    <div class="upload-box" id="avatarBox">↑ Upload photo (auto B&W)</div>
-    <input type="file" id="avatarFile" accept="image/*" style="display:none">
-  </div>
-
-  <!-- Name -->
-  <div class="field">
-    <div class="lbl">Display Name</div>
-    <input type="text" id="nameInput" value="Classical Author">
-  </div>
-
-  <!-- Handle -->
-  <div class="field">
-    <div class="lbl">Handle</div>
-    <input type="text" id="handleInput" value="@classicalauthor">
-  </div>
-
-  <hr>
-
-  <!-- Shayari -->
-  <div class="field">
-    <div class="lbl">Shayari</div>
-    <textarea id="shayariInput">उजड़ी हुई दुनिया को
-तू आबाद न कर, बीते
-हुए लम्हों को तू याद
-न कर, एक कैद परिंदे
-ने ये कहा हम से.. मैं
-भुल चुका हूं उड़ना मुझे
-आजाद न कर!</textarea>
-  </div>
-
-  <!-- Font size -->
-  <div class="field">
-    <div class="lbl">Font Size</div>
-    <div class="slider-row">
-      <input type="range" id="fontSize" min="13" max="36" value="22">
-      <span class="val" id="fsVal">22px</span>
-    </div>
-  </div>
-
-  <!-- Line height -->
-  <div class="field">
-    <div class="lbl">Line Height</div>
-    <div class="slider-row">
-      <input type="range" id="lineH" min="1.2" max="3.0" step="0.05" value="1.85">
-      <span class="val" id="lhVal">1.85</span>
-    </div>
-  </div>
-
-  <!-- Font weight -->
-  <div class="field">
-    <div class="lbl">Weight</div>
-    <div class="btn-row">
-      <button class="xbtn" data-w="400">Regular</button>
-      <button class="xbtn" data-w="600">Semi</button>
-      <button class="xbtn on" data-w="700">Bold</button>
-      <button class="xbtn" data-w="900">Black</button>
-    </div>
-  </div>
-
-  <!-- Align -->
-  <div class="field">
-    <div class="lbl">Align</div>
-    <div class="btn-row">
-      <button class="xbtn on" data-align="left">Left</button>
-      <button class="xbtn" data-align="center">Center</button>
-      <button class="xbtn" data-align="right">Right</button>
-    </div>
-  </div>
-
-  <!-- Position -->
-  <div class="field">
-    <div class="lbl">Text Position</div>
-    <div class="btn-row">
-      <button class="xbtn on" data-pos="flex-start">Top</button>
-      <button class="xbtn" data-pos="center">Middle</button>
-      <button class="xbtn" data-pos="flex-end">Bottom</button>
-    </div>
-  </div>
-
-  <hr>
-
-  <!-- BG color -->
-  <div class="field">
-    <div class="lbl">Background</div>
-    <div class="swatch-row">
-      <div class="bgswatch on" data-c="#c9c9c9" style="background:#c9c9c9"></div>
-      <div class="bgswatch" data-c="#b3b3b3" style="background:#b3b3b3"></div>
-      <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ccc"></div>
-      <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ccc"></div>
-      <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
-      <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
-      <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
-      <input type="color" id="customBg" value="#c9c9c9"
-        style="width:26px;height:26px;padding:1px;border:1px solid #444;border-radius:50%;background:#242424;cursor:pointer">
-    </div>
-  </div>
-
-  <!-- Text colors -->
-  <div class="field">
-    <div class="lbl">Colors</div>
-    <div class="color-pair">
-      <div class="cp">
-        <input type="color" id="textColor" value="#111111">
-        <span>Shayari</span>
-      </div>
-      <div class="cp">
-        <input type="color" id="headerColor" value="#111111">
-        <span>Header</span>
-      </div>
-    </div>
-  </div>
-
-  <hr>
-
-  <button class="dl-btn" id="dlBtn">⬇ Download 9:16 PNG</button>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-title">Shayari Card <span>Maker</span></div>
+  <button class="dl-btn-top" id="dlBtn">⬇ Download</button>
 </div>
 
-<!-- PREVIEW -->
-<div class="preview-area">
-  <div id="card">
-    <div class="c-bg" id="cBg"></div>
+<!-- MAIN -->
+<div class="main">
 
-    <div class="c-header">
-      <div class="c-avatar" id="cAvatar">
-        <span id="cAvatarPh">👤</span>
-        <img id="cAvatarImg" src="" style="display:none" alt="">
-      </div>
-      <div class="c-info">
-        <div class="c-name" id="cName">Classical Author</div>
-        <div class="c-handle" id="cHandle">@classicalauthor</div>
-      </div>
-    </div>
+  <!-- PREVIEW -->
+  <div class="preview-area">
+    <div class="card-wrap">
+      <div id="card">
+        <div class="c-bg" id="cBg"></div>
 
-    <div class="c-body" id="cBody">
-      <div class="c-shayari" id="cShayari">उजड़ी हुई दुनिया को
+        <!-- Header -->
+        <div class="c-header pos-left" id="cHeader">
+          <div class="c-avatar" id="cAvatar">
+            <span id="cAvatarPh">👤</span>
+            <img id="cAvatarImg" src="" style="display:none" alt="">
+          </div>
+          <div class="c-info">
+            <div class="c-name" id="cName">Classical Author</div>
+            <div class="c-handle" id="cHandle">@classicalauthor</div>
+          </div>
+        </div>
+
+        <!-- Shayari -->
+        <div class="c-body" id="cBody">
+          <div class="c-shayari" id="cShayari">उजड़ी हुई दुनिया को
 तू आबाद न कर, बीते
 हुए लम्हों को तू याद
 न कर, एक कैद परिंदे
 ने ये कहा हम से.. मैं
 भुल चुका हूं उड़ना मुझे
 आजाद न कर!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL (desktop) -->
+  <div class="right-panel">
+    <div class="tab-nav">
+      <button class="tab-nav-btn on" data-tab="profile">Profile</button>
+      <button class="tab-nav-btn" data-tab="header">Header</button>
+      <button class="tab-nav-btn" data-tab="text">Text</button>
+      <button class="tab-nav-btn" data-tab="style">Style</button>
+    </div>
+
+    <!-- Profile tab -->
+    <div class="tab-content on" id="tab-profile">
+      <div class="field">
+        <div class="lbl">Profile Photo</div>
+        <div class="upload-box" id="avatarBox">↑ Upload photo (auto B&W)</div>
+        <input type="file" id="avatarFile" accept="image/*" style="display:none">
+      </div>
+      <div class="field">
+        <div class="lbl">Display Name</div>
+        <input type="text" id="nameInput" value="Classical Author">
+      </div>
+      <div class="field">
+        <div class="lbl">Handle</div>
+        <input type="text" id="handleInput" value="@classicalauthor">
+      </div>
+      <div class="field">
+        <div class="lbl">Header Text Color</div>
+        <div class="color-pair">
+          <div class="cp"><input type="color" id="nameColor" value="#111111"><span>Name</span></div>
+          <div class="cp"><input type="color" id="handleColor" value="#333333"><span>Handle</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header tab -->
+    <div class="tab-content" id="tab-header">
+      <div class="field">
+        <div class="lbl">Horizontal Position</div>
+        <div class="btn-row">
+          <button class="xbtn on" data-hpos="pos-left">Left</button>
+          <button class="xbtn" data-hpos="pos-center">Center</button>
+          <button class="xbtn" data-hpos="pos-right">Right</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Top Offset <span class="val" id="topVal" style="display:inline">26px</span></div>
+        <div class="slider-row">
+          <input type="range" id="headerTop" min="0" max="200" value="26">
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Left / Right Offset <span class="val" id="hOffVal" style="display:inline">22px</span></div>
+        <div class="slider-row">
+          <input type="range" id="headerOff" min="0" max="80" value="22">
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Avatar Size <span class="val" id="avatarSzVal" style="display:inline">56px</span></div>
+        <div class="slider-row">
+          <input type="range" id="avatarSz" min="28" max="100" value="56">
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Name Font Size <span class="val" id="nameFsVal" style="display:inline">17px</span></div>
+        <div class="slider-row">
+          <input type="range" id="nameFs" min="10" max="32" value="17">
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Handle Font Size <span class="val" id="handleFsVal" style="display:inline">13px</span></div>
+        <div class="slider-row">
+          <input type="range" id="handleFs" min="8" max="26" value="13">
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Gap between avatar & text</div>
+        <div class="slider-row">
+          <input type="range" id="headerGap" min="4" max="24" value="10">
+          <span class="val" id="gapVal">10px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text tab -->
+    <div class="tab-content" id="tab-text">
+      <div class="field">
+        <div class="lbl">Shayari</div>
+        <textarea id="shayariInput">उजड़ी हुई दुनिया को
+तू आबाद न कर, बीते
+हुए लम्हों को तू याद
+न कर, एक कैद परिंदे
+ने ये कहा हम से.. मैं
+भुल चुका हूं उड़ना मुझे
+आजाद न कर!</textarea>
+      </div>
+      <div class="field">
+        <div class="lbl">Font Size</div>
+        <div class="slider-row">
+          <input type="range" id="fontSize" min="12" max="36" value="20">
+          <span class="val" id="fsVal">20px</span>
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Line Height</div>
+        <div class="slider-row">
+          <input type="range" id="lineH" min="1.2" max="3.0" step="0.05" value="1.85">
+          <span class="val" id="lhVal">1.85</span>
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Font Weight</div>
+        <div class="btn-row">
+          <button class="xbtn" data-w="400">Regular</button>
+          <button class="xbtn" data-w="600">Semi</button>
+          <button class="xbtn on" data-w="700">Bold</button>
+          <button class="xbtn" data-w="900">Black</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Align</div>
+        <div class="btn-row">
+          <button class="xbtn on" data-align="left">Left</button>
+          <button class="xbtn" data-align="center">Center</button>
+          <button class="xbtn" data-align="right">Right</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Vertical Position</div>
+        <div class="btn-row">
+          <button class="xbtn on" data-vpos="flex-start">Top</button>
+          <button class="xbtn" data-vpos="center">Middle</button>
+          <button class="xbtn" data-vpos="flex-end">Bottom</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Text Color</div>
+        <div class="cp"><input type="color" id="textColor" value="#111111"><span>Shayari</span></div>
+      </div>
+    </div>
+
+    <!-- Style tab -->
+    <div class="tab-content" id="tab-style">
+      <div class="field">
+        <div class="lbl">Background</div>
+        <div class="swatch-row">
+          <div class="bgswatch on" data-c="#c9c9c9" style="background:#c9c9c9" title="Light Grey"></div>
+          <div class="bgswatch" data-c="#b3b3b3" style="background:#b3b3b3" title="Grey"></div>
+          <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ddd" title="Off White"></div>
+          <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd" title="White"></div>
+          <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a" title="Black"></div>
+          <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00" title="Dark Brown"></div>
+          <div class="bgswatch" data-c="#0d1520" style="background:#0d1520" title="Dark Blue"></div>
+          <input type="color" id="customBg" value="#c9c9c9" style="width:26px;height:26px;padding:1px;border:1px solid #444;border-radius:50%;background:#242424;cursor:pointer;flex-shrink:0">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /right-panel -->
+
+</div><!-- /main -->
+
+<!-- ═══════════════════════
+     BOTTOM SHEET (mobile)
+════════════════════════ -->
+<div class="bottom-sheet">
+  <div class="bottom-tab-nav">
+    <button class="bottom-tab-btn on" data-btab="b-profile">Profile</button>
+    <button class="bottom-tab-btn" data-btab="b-header">Header</button>
+    <button class="bottom-tab-btn" data-btab="b-text">Text</button>
+    <button class="bottom-tab-btn" data-btab="b-style">Style</button>
+  </div>
+
+  <!-- Profile -->
+  <div class="bottom-tab-content on" id="b-profile">
+    <div class="field">
+      <div class="lbl">Profile Photo</div>
+      <div class="upload-box" id="avatarBox2">↑ Upload photo (B&W)</div>
+    </div>
+    <div class="field">
+      <div class="lbl">Display Name</div>
+      <input type="text" id="nameInput2" value="Classical Author">
+    </div>
+    <div class="field">
+      <div class="lbl">Handle</div>
+      <input type="text" id="handleInput2" value="@classicalauthor">
+    </div>
+    <div class="field">
+      <div class="lbl">Colors</div>
+      <div class="color-pair">
+        <div class="cp"><input type="color" id="nameColor2" value="#111111"><span>Name</span></div>
+        <div class="cp"><input type="color" id="handleColor2" value="#333333"><span>Handle</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header positioning -->
+  <div class="bottom-tab-content" id="b-header">
+    <div class="field">
+      <div class="lbl">Position</div>
+      <div class="btn-row">
+        <button class="xbtn on" data-hpos2="pos-left">Left</button>
+        <button class="xbtn" data-hpos2="pos-center">Center</button>
+        <button class="xbtn" data-hpos2="pos-right">Right</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="lbl">Top <span class="val" id="topVal2" style="display:inline">26px</span></div>
+      <input type="range" id="headerTop2" min="0" max="200" value="26">
+    </div>
+    <div class="field">
+      <div class="lbl">Side Offset <span class="val" id="hOffVal2" style="display:inline">22px</span></div>
+      <input type="range" id="headerOff2" min="0" max="80" value="22">
+    </div>
+    <div class="field">
+      <div class="lbl">Avatar Size <span class="val" id="avatarSzVal2" style="display:inline">56px</span></div>
+      <input type="range" id="avatarSz2" min="28" max="100" value="56">
+    </div>
+    <div class="field">
+      <div class="lbl">Name Size <span class="val" id="nameFsVal2" style="display:inline">17px</span></div>
+      <input type="range" id="nameFs2" min="10" max="32" value="17">
+    </div>
+    <div class="field">
+      <div class="lbl">Handle Size <span class="val" id="handleFsVal2" style="display:inline">13px</span></div>
+      <input type="range" id="handleFs2" min="8" max="26" value="13">
+    </div>
+  </div>
+
+  <!-- Text -->
+  <div class="bottom-tab-content" id="b-text">
+    <div class="field">
+      <div class="lbl">Shayari</div>
+      <textarea id="shayariInput2" style="min-height:90px">उजड़ी हुई दुनिया को
+तू आबाद न कर, बीते
+हुए लम्हों को तू याद
+न कर, एक कैद परिंदे
+ने ये कहा हम से.. मैं
+भुल चुका हूं उड़ना मुझे
+आजाद न कर!</textarea>
+    </div>
+    <div class="field">
+      <div class="lbl">Font Size <span class="val" id="fsVal2" style="display:inline">20px</span></div>
+      <input type="range" id="fontSize2" min="12" max="36" value="20">
+    </div>
+    <div class="field">
+      <div class="lbl">Line Height <span class="val" id="lhVal2" style="display:inline">1.85</span></div>
+      <input type="range" id="lineH2" min="1.2" max="3.0" step="0.05" value="1.85">
+    </div>
+    <div class="field">
+      <div class="lbl">Weight</div>
+      <div class="btn-row">
+        <button class="xbtn" data-w2="400">Reg</button>
+        <button class="xbtn" data-w2="600">Semi</button>
+        <button class="xbtn on" data-w2="700">Bold</button>
+        <button class="xbtn" data-w2="900">Black</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="lbl">Align</div>
+      <div class="btn-row">
+        <button class="xbtn on" data-align2="left">Left</button>
+        <button class="xbtn" data-align2="center">Center</button>
+        <button class="xbtn" data-align2="right">Right</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="lbl">V-Position</div>
+      <div class="btn-row">
+        <button class="xbtn on" data-vpos2="flex-start">Top</button>
+        <button class="xbtn" data-vpos2="center">Mid</button>
+        <button class="xbtn" data-vpos2="flex-end">Bot</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="cp"><input type="color" id="textColor2" value="#111111"><span style="font-size:9px;color:#555;letter-spacing:1px;text-transform:uppercase">Text Color</span></div>
+    </div>
+  </div>
+
+  <!-- Style -->
+  <div class="bottom-tab-content" id="b-style">
+    <div class="field">
+      <div class="lbl">Background</div>
+      <div class="swatch-row">
+        <div class="bgswatch on" data-c="#c9c9c9" style="background:#c9c9c9"></div>
+        <div class="bgswatch" data-c="#b3b3b3" style="background:#b3b3b3"></div>
+        <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ddd"></div>
+        <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd"></div>
+        <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
+        <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
+        <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
+        <input type="color" id="customBg2" value="#c9c9c9" style="width:26px;height:26px;padding:1px;border:1px solid #444;border-radius:50%;background:#242424;cursor:pointer;flex-shrink:0">
+      </div>
     </div>
   </div>
 </div>
@@ -358,106 +742,247 @@ input[type="color"] {
 <script>
 const $ = id => document.getElementById(id);
 
-// Avatar
-$('avatarBox').onclick = () => $('avatarFile').click();
-$('avatarFile').onchange = e => {
-  const f = e.target.files[0]; if(!f) return;
+// ── SYNC helper: apply change to card, keep both panels in sync ──
+function syncInputs(id1, id2, fn) {
+  const a = $(id1), b = $(id2);
+  if (!a || !b) return;
+  a.addEventListener('input', e => { if(b.value !== e.target.value) b.value = e.target.value; fn(e.target.value); });
+  b.addEventListener('input', e => { if(a.value !== e.target.value) a.value = e.target.value; fn(e.target.value); });
+}
+
+// ── DESKTOP TAB SWITCH ──
+document.querySelectorAll('.tab-nav-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('on'));
+    btn.classList.add('on');
+    $('tab-' + btn.dataset.tab).classList.add('on');
+  };
+});
+
+// ── MOBILE TAB SWITCH ──
+document.querySelectorAll('.bottom-tab-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.bottom-tab-btn').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.bottom-tab-content').forEach(c => c.classList.remove('on'));
+    btn.classList.add('on');
+    $(btn.dataset.btab).classList.add('on');
+  };
+});
+
+// ── AVATAR UPLOAD ──
+function handleAvatarUpload(file) {
   const r = new FileReader();
   r.onload = ev => {
     $('cAvatarImg').src = ev.target.result;
     $('cAvatarImg').style.display = 'block';
     $('cAvatarPh').style.display = 'none';
-    $('avatarBox').textContent = '✓ ' + f.name;
+    $('avatarBox').textContent = '✓ ' + file.name;
+    $('avatarBox2').textContent = '✓ ' + file.name;
   };
-  r.readAsDataURL(f);
-};
+  r.readAsDataURL(file);
+}
+$('avatarBox').onclick = () => $('avatarFile').click();
+$('avatarBox2').onclick = () => $('avatarFile').click();
+$('avatarFile').onchange = e => { if(e.target.files[0]) handleAvatarUpload(e.target.files[0]); };
 
-// Name / handle
-$('nameInput').oninput = e => $('cName').textContent = e.target.value;
-$('handleInput').oninput = e => $('cHandle').textContent = e.target.value;
+// ── NAME / HANDLE ──
+syncInputs('nameInput','nameInput2', v => $('cName').textContent = v);
+syncInputs('handleInput','handleInput2', v => $('cHandle').textContent = v);
 
-// Shayari
-$('shayariInput').oninput = e => $('cShayari').textContent = e.target.value;
+// ── NAME / HANDLE COLORS ──
+function bindColorPair(id1, id2, fn) {
+  const a = $(id1), b = $(id2);
+  if(!a||!b) return;
+  a.oninput = e => { b.value = e.target.value; fn(e.target.value); };
+  b.oninput = e => { a.value = e.target.value; fn(e.target.value); };
+}
+bindColorPair('nameColor','nameColor2', v => $('cName').style.color = v);
+bindColorPair('handleColor','handleColor2', v => $('cHandle').style.color = v);
 
-// Font size
-$('fontSize').oninput = e => {
-  $('cShayari').style.fontSize = e.target.value + 'px';
-  $('fsVal').textContent = e.target.value + 'px';
-};
+// ── HEADER POSITION (horizontal) ──
+function applyHpos(cls) {
+  const h = $('cHeader');
+  h.classList.remove('pos-left','pos-center','pos-right');
+  h.classList.add(cls);
+  const off = parseInt($('headerOff').value);
+  updateHeaderOffset(off);
+}
+document.querySelectorAll('[data-hpos]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-hpos]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-hpos2]').forEach(x => { if(x.dataset.hpos2 === b.dataset.hpos.replace('pos-','')) x.classList.add('on'); else x.classList.remove('on'); });
+    b.classList.add('on');
+    applyHpos(b.dataset.hpos);
+  };
+});
+document.querySelectorAll('[data-hpos2]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-hpos2]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-hpos]').forEach(x => { if(x.dataset.hpos === 'pos-'+b.dataset.hpos2) x.classList.add('on'); else x.classList.remove('on'); });
+    b.classList.add('on');
+    applyHpos('pos-' + b.dataset.hpos2);
+  };
+});
 
-// Line height
-$('lineH').oninput = e => {
-  $('cShayari').style.lineHeight = e.target.value;
-  $('lhVal').textContent = parseFloat(e.target.value).toFixed(2);
-};
+function updateHeaderOffset(v) {
+  const h = $('cHeader');
+  if (h.classList.contains('pos-left'))  { h.style.left = v+'px'; h.style.right = 'auto'; }
+  if (h.classList.contains('pos-right')) { h.style.right = v+'px'; h.style.left = 'auto'; }
+  if (h.classList.contains('pos-center')){ h.style.left = '50%'; h.style.right = 'auto'; }
+}
 
-// Weight
+// ── HEADER TOP ──
+function syncSlider(id1, id2, valId1, valId2, fn) {
+  const a = $(id1), b = $(id2);
+  if(!a) return;
+  a.oninput = e => {
+    if(b) b.value = e.target.value;
+    if(valId1) $(valId1).textContent = e.target.value + (a.step < 1 ? '' : 'px');
+    if(valId2 && $(valId2)) $(valId2).textContent = e.target.value + (a.step < 1 ? '' : 'px');
+    fn(e.target.value);
+  };
+  if(b) b.oninput = e => {
+    a.value = e.target.value;
+    if(valId1) $(valId1).textContent = e.target.value + (a.step < 1 ? '' : 'px');
+    if(valId2 && $(valId2)) $(valId2).textContent = e.target.value + (a.step < 1 ? '' : 'px');
+    fn(e.target.value);
+  };
+}
+
+syncSlider('headerTop','headerTop2','topVal','topVal2', v => { $('cHeader').style.top = v+'px'; });
+syncSlider('headerOff','headerOff2','hOffVal','hOffVal2', v => updateHeaderOffset(parseInt(v)));
+syncSlider('avatarSz','avatarSz2','avatarSzVal','avatarSzVal2', v => {
+  $('cAvatar').style.width = v+'px';
+  $('cAvatar').style.height = v+'px';
+});
+syncSlider('nameFs','nameFs2','nameFsVal','nameFsVal2', v => $('cName').style.fontSize = v+'px');
+syncSlider('handleFs','handleFs2','handleFsVal','handleFsVal2', v => $('cHandle').style.fontSize = v+'px');
+syncSlider('headerGap','headerGap','gapVal',null, v => $('cHeader').style.gap = v+'px');
+
+// ── SHAYARI ──
+syncInputs('shayariInput','shayariInput2', v => $('cShayari').textContent = v);
+syncSlider('fontSize','fontSize2','fsVal','fsVal2', v => $('cShayari').style.fontSize = v+'px');
+syncSlider('lineH','lineH2','lhVal','lhVal2', v => { $('cShayari').style.lineHeight = v; });
+
+// ── FONT WEIGHT ──
 document.querySelectorAll('[data-w]').forEach(b => {
   b.onclick = () => {
     document.querySelectorAll('[data-w]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-w2]').forEach(x => { if(x.dataset.w2===b.dataset.w) x.classList.add('on'); else x.classList.remove('on'); });
     b.classList.add('on');
     $('cShayari').style.fontWeight = b.dataset.w;
   };
 });
+document.querySelectorAll('[data-w2]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-w2]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-w]').forEach(x => { if(x.dataset.w===b.dataset.w2) x.classList.add('on'); else x.classList.remove('on'); });
+    b.classList.add('on');
+    $('cShayari').style.fontWeight = b.dataset.w2;
+  };
+});
 
-// Align
+// ── TEXT ALIGN ──
 document.querySelectorAll('[data-align]').forEach(b => {
   b.onclick = () => {
     document.querySelectorAll('[data-align]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-align2]').forEach(x => { if(x.dataset.align2===b.dataset.align) x.classList.add('on'); else x.classList.remove('on'); });
     b.classList.add('on');
     $('cShayari').style.textAlign = b.dataset.align;
   };
 });
-
-// Position
-document.querySelectorAll('[data-pos]').forEach(b => {
+document.querySelectorAll('[data-align2]').forEach(b => {
   b.onclick = () => {
-    document.querySelectorAll('[data-pos]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-align2]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-align]').forEach(x => { if(x.dataset.align===b.dataset.align2) x.classList.add('on'); else x.classList.remove('on'); });
     b.classList.add('on');
-    $('cBody').style.alignItems = b.dataset.pos;
+    $('cShayari').style.textAlign = b.dataset.align2;
   };
 });
 
-// BG swatches
+// ── VERTICAL POSITION ──
+document.querySelectorAll('[data-vpos]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-vpos]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-vpos2]').forEach(x => { if(x.dataset.vpos2===b.dataset.vpos) x.classList.add('on'); else x.classList.remove('on'); });
+    b.classList.add('on');
+    $('cBody').style.alignItems = b.dataset.vpos;
+  };
+});
+document.querySelectorAll('[data-vpos2]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-vpos2]').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('[data-vpos]').forEach(x => { if(x.dataset.vpos===b.dataset.vpos2) x.classList.add('on'); else x.classList.remove('on'); });
+    b.classList.add('on');
+    $('cBody').style.alignItems = b.dataset.vpos2;
+  };
+});
+
+// ── TEXT COLOR ──
+bindColorPair('textColor','textColor2', v => $('cShayari').style.color = v);
+
+// ── BACKGROUND ──
+function applyBg(c) { $('cBg').style.background = c; }
 document.querySelectorAll('.bgswatch').forEach(s => {
   s.onclick = () => {
     document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on'));
-    s.classList.add('on');
+    // activate both matching swatches
+    document.querySelectorAll(`.bgswatch[data-c="${s.dataset.c}"]`).forEach(x => x.classList.add('on'));
     applyBg(s.dataset.c);
   };
 });
-$('customBg').oninput = e => {
-  document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on'));
-  applyBg(e.target.value);
-};
-function applyBg(c) { $('cBg').style.background = c; }
+$('customBg').oninput = e => { document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on')); applyBg(e.target.value); $('customBg2').value = e.target.value; };
+$('customBg2').oninput = e => { document.querySelectorAll('.bgswatch').forEach(x => x.classList.remove('on')); applyBg(e.target.value); $('customBg').value = e.target.value; };
 
-// Colors
-$('textColor').oninput = e => $('cShayari').style.color = e.target.value;
-$('headerColor').oninput = e => {
-  $('cName').style.color = e.target.value;
-  $('cHandle').style.color = e.target.value;
-};
-
-// Download
-$('dlBtn').onclick = async () => {
-  $('dlBtn').textContent = '⏳ Please wait...';
-  $('dlBtn').disabled = true;
+// ── DOWNLOAD ──
+async function doDownload() {
+  const btn = $('dlBtn');
+  const orig = btn.textContent;
+  btn.textContent = '⏳ Wait...';
+  btn.disabled = true;
   try {
-    const c = await html2canvas($('card'), {
-      scale: 3, useCORS: true, allowTaint: true,
-      backgroundColor: null, logging: false
+    // Temporarily set card to full export size
+    const card = $('card');
+    const origW = card.style.width, origH = card.style.height;
+    card.style.width = '1080px';
+    card.style.height = '1920px';
+
+    const canvas = await html2canvas(card, {
+      scale: 1,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      logging: false,
+      width: 1080,
+      height: 1920
     });
+    card.style.width = origW;
+    card.style.height = origH;
+
     const a = document.createElement('a');
     a.download = 'shayari-card.png';
-    a.href = c.toDataURL('image/png', 1.0);
+    a.href = canvas.toDataURL('image/png', 1.0);
     a.click();
   } catch(err) {
-    alert('Download failed. Please try a screenshot.');
+    // fallback: render at display size × 3
+    try {
+      const canvas = await html2canvas($('card'), {
+        scale: 3, useCORS: true, allowTaint: true,
+        backgroundColor: null, logging: false
+      });
+      const a = document.createElement('a');
+      a.download = 'shayari-card.png';
+      a.href = canvas.toDataURL('image/png', 1.0);
+      a.click();
+    } catch(e2) {
+      alert('Download failed. Try a screenshot instead.');
+    }
   }
-  $('dlBtn').textContent = '⬇ Download 9:16 PNG';
-  $('dlBtn').disabled = false;
-};
+  btn.textContent = orig;
+  btn.disabled = false;
+}
+$('dlBtn').onclick = doDownload;
 </script>
 </body>
 </html>
