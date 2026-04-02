@@ -4,21 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Shayari Card Maker</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,600;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,600;1,700&family=Cinzel:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #181818;
-  --panel: #1e1e1e;
-  --surface: #262626;
-  --border: #2e2e2e;
+  --bg: #0f0f0f;
+  --panel: #161616;
+  --surface: #1e1e1e;
+  --border: #282828;
   --accent: #e0e0e0;
-  --muted: #555;
+  --muted: #4a4a4a;
+  --highlight: #f5c842;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   background: var(--bg);
   color: var(--accent);
   display: flex;
@@ -31,22 +32,23 @@ body {
 .topbar {
   background: var(--panel);
   border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: sticky; top: 0; z-index: 100;
   flex-shrink: 0;
 }
-.topbar-title { font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #ccc; }
-.topbar-title span { color: var(--muted); font-weight: 400; }
+.topbar-title { font-size: 12px; font-weight: 600; letter-spacing: 2px; color: #aaa; text-transform: uppercase; }
+.topbar-title span { color: var(--highlight); }
 .dl-btn-top {
-  background: #333; color: #ddd;
-  border: 1px solid #444; padding: 8px 18px;
-  border-radius: 6px; font-size: 12px; font-weight: 600;
+  background: linear-gradient(135deg, #f5c842, #e8a020);
+  color: #111;
+  border: none; padding: 8px 18px;
+  border-radius: 6px; font-size: 11px; font-weight: 700;
   letter-spacing: 1px; cursor: pointer; transition: all .2s; white-space: nowrap;
 }
-.dl-btn-top:hover, .dl-btn-top:active { background: #444; color: #fff; }
+.dl-btn-top:hover { opacity: .9; transform: translateY(-1px); }
 
 /* ── MAIN ── */
 .main { display: flex; flex: 1; overflow: hidden; }
@@ -55,20 +57,13 @@ body {
 .preview-area {
   flex: 1;
   display: flex; align-items: center; justify-content: center;
-  background: #111;
+  background: #0a0a0a;
+  background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 70%);
   padding: 20px;
   min-height: 0; overflow: hidden;
 }
 
-/* 
-  CARD SCALING APPROACH:
-  - Card is always 1080×1920px (true 9:16)
-  - A wrapper clips it to the scaled visual size
-  - CSS transform:scale() shrinks it for preview
-  - Download captures the real 1080×1920 = perfect 9:16
-*/
 .card-scaler {
-  /* Will be set by JS based on available space */
   position: relative;
   flex-shrink: 0;
 }
@@ -79,22 +74,51 @@ body {
   position: relative;
   overflow: hidden;
   transform-origin: top left;
-  /* transform: scale(X) set by JS */
-  background: #c9c9c9;
-  box-shadow: none; /* shadow on wrapper */
+  background: #1a1a2e;
 }
 
 .card-scaler-shadow {
   position: absolute; inset: 0;
-  box-shadow: 0 20px 60px rgba(0,0,0,.7);
+  box-shadow: 0 24px 80px rgba(0,0,0,.9);
   pointer-events: none;
   z-index: 10;
 }
 
+/* BG LAYER */
 .c-bg {
   position: absolute; inset: 0;
-  background: #c9c9c9;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   z-index: 0;
+  transition: background .3s;
+}
+/* Optional BG image layer */
+.c-bg-img {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity .3s;
+}
+/* Overlay for text legibility */
+.c-overlay {
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: rgba(0,0,0,0);
+  transition: background .3s;
+  pointer-events: none;
+}
+
+/* DECORATIVE ACCENT LINE */
+.c-accent-line {
+  position: absolute;
+  z-index: 4;
+  top: 200px;
+  left: 44px;
+  width: 80px;
+  height: 5px;
+  background: var(--card-accent, #f5c842);
+  border-radius: 3px;
+  display: none;
 }
 
 /* HEADER */
@@ -109,30 +133,31 @@ body {
 
 .c-avatar {
   border-radius: 50%; overflow: hidden; flex-shrink: 0;
-  background: #888;
+  background: #333;
   display: flex; align-items: center; justify-content: center;
-  filter: grayscale(1) contrast(1.1);
-  border: 4px solid rgba(0,0,0,.25);
+  border: 4px solid rgba(245,200,66,.5);
   width: 110px; height: 110px;
+  box-shadow: 0 0 0 2px rgba(245,200,66,.15);
 }
-.c-avatar img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.1); }
+.c-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .c-avatar-ph { font-size: 44px; }
 
-.c-info { display: flex; flex-direction: column; gap: 2px; }
+.c-info { display: flex; flex-direction: column; gap: 4px; }
 .c-name {
   font-family: 'Playfair Display', serif;
   font-style: italic; font-weight: 700;
-  font-size: 34px; color: #111; line-height: 1.2;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
+  font-size: 38px; color: #fff; line-height: 1.2;
+  text-shadow: 0 2px 12px rgba(0,0,0,.5);
   white-space: nowrap;
 }
 .c-handle {
-  font-family: 'Playfair Display', serif;
-  font-style: italic; font-size: 26px;
-  color: #333; line-height: 1.3;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  color: rgba(245,200,66,.85);
+  line-height: 1.3;
   white-space: nowrap;
+  letter-spacing: 0.5px;
 }
 
 /* SHAYARI */
@@ -140,23 +165,34 @@ body {
   position: absolute; z-index: 4;
   display: flex;
   left: 44px; right: 44px;
-  top: 220px; bottom: 44px;
+  top: 260px; bottom: 100px;
   align-items: flex-start;
 }
 .c-shayari {
   font-family: 'Noto Serif Devanagari', serif;
   font-weight: 700;
-  font-size: 40px;
+  font-size: 48px;
   line-height: 1.85;
-  color: #111;
+  color: #fff;
   white-space: pre-wrap;
   word-break: break-word;
   width: 100%;
+  text-shadow: 0 2px 20px rgba(0,0,0,.6);
+}
+
+/* FOOTER WATERMARK */
+.c-footer {
+  position: absolute; z-index: 5;
+  bottom: 44px; right: 60px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 22px; color: rgba(255,255,255,.35);
+  letter-spacing: 2px;
+  display: none;
 }
 
 /* ── RIGHT PANEL ── */
 .right-panel {
-  width: 300px; min-width: 300px;
+  width: 310px; min-width: 310px;
   background: var(--panel);
   border-left: 1px solid var(--border);
   display: flex; flex-direction: column; overflow: hidden;
@@ -164,15 +200,17 @@ body {
 .tab-nav {
   display: flex; background: var(--bg);
   border-bottom: 1px solid var(--border); flex-shrink: 0;
+  overflow-x: auto; scrollbar-width: none;
 }
+.tab-nav::-webkit-scrollbar { display: none; }
 .tab-nav-btn {
-  flex: 1; padding: 11px 4px;
+  flex: 1; padding: 11px 4px; min-width: 52px;
   background: transparent; border: none; color: var(--muted);
   font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
   cursor: pointer; border-bottom: 2px solid transparent;
-  transition: all .2s; font-family: 'Inter', sans-serif;
+  transition: all .2s; font-family: 'DM Sans', sans-serif; white-space: nowrap;
 }
-.tab-nav-btn.on { color: #ccc; border-bottom-color: #888; }
+.tab-nav-btn.on { color: var(--highlight); border-bottom-color: var(--highlight); }
 
 .tab-content {
   flex: 1; overflow-y: auto; padding: 16px 14px;
@@ -197,45 +235,72 @@ textarea:focus, input[type="text"]:focus { outline: none; border-color: #555; }
 #shayariInput { min-height: 120px; }
 
 .upload-box {
-  background: var(--surface); border: 1px dashed #383838;
+  background: var(--surface); border: 1px dashed #333;
   border-radius: 5px; padding: 12px 10px; text-align: center;
   cursor: pointer; color: #555; font-size: 10px;
   letter-spacing: 1.5px; text-transform: uppercase; transition: all .2s;
 }
-.upload-box:hover { border-color: #666; color: #999; }
+.upload-box:hover { border-color: var(--highlight); color: var(--highlight); }
 
 .slider-row { display: flex; align-items: center; gap: 8px; }
-input[type="range"] { flex: 1; accent-color: #888; height: 4px; cursor: pointer; }
-.val { font-size: 10px; color: #666; min-width: 34px; text-align: right; }
+input[type="range"] { flex: 1; accent-color: var(--highlight); height: 4px; cursor: pointer; }
+.val { font-size: 10px; color: #555; min-width: 40px; text-align: right; }
 
-.swatch-row { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+/* SWATCHES */
+.swatch-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .bgswatch {
-  width: 26px; height: 26px; border-radius: 50%;
+  width: 28px; height: 28px; border-radius: 6px;
   cursor: pointer; border: 2px solid transparent;
   transition: all .15s; flex-shrink: 0;
+  position: relative;
 }
-.bgswatch:hover, .bgswatch.on { border-color: #bbb; transform: scale(1.12); }
+.bgswatch:hover, .bgswatch.on { border-color: var(--highlight); transform: scale(1.12); }
+.bgswatch[data-grad] {
+  border-radius: 6px;
+}
 
-.btn-row { display: flex; gap: 5px; }
+/* GRADIENT PREVIEW SWATCHES */
+.bgswatch[data-grad="fb-blue"] { background: linear-gradient(135deg,#1a237e,#1565c0); }
+.bgswatch[data-grad="fb-warm"] { background: linear-gradient(135deg,#bf360c,#e65100); }
+.bgswatch[data-grad="fb-rose"] { background: linear-gradient(135deg,#880e4f,#c62828); }
+.bgswatch[data-grad="fb-forest"] { background: linear-gradient(135deg,#1b5e20,#2e7d32); }
+.bgswatch[data-grad="fb-purple"] { background: linear-gradient(135deg,#4a148c,#6a1b9a); }
+.bgswatch[data-grad="fb-teal"] { background: linear-gradient(135deg,#004d40,#00695c); }
+.bgswatch[data-grad="fb-gold"] { background: linear-gradient(135deg,#e65100,#f9a825); }
+.bgswatch[data-grad="fb-night"] { background: linear-gradient(135deg,#0d0d0d,#1a1a2e); }
+.bgswatch[data-grad="fb-dawn"] { background: linear-gradient(135deg,#ff6f00,#ff8f00,#f57f17); }
+.bgswatch[data-grad="fb-dusk"] { background: linear-gradient(135deg,#311b92,#4527a0,#c2185b); }
+.bgswatch[data-grad="fb-ocean"] { background: linear-gradient(135deg,#0d47a1,#1565c0,#0097a7); }
+.bgswatch[data-grad="fb-sakura"] { background: linear-gradient(135deg,#880e4f,#e91e63,#ff8a65); }
+
+.btn-row { display: flex; gap: 5px; flex-wrap: wrap; }
 .xbtn {
-  flex: 1; padding: 8px 0;
+  flex: 1; padding: 8px 6px;
   background: var(--surface); border: 1px solid var(--border);
   color: #555; border-radius: 5px; cursor: pointer;
   font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-  transition: all .2s; font-family: 'Inter', sans-serif;
+  transition: all .2s; font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  min-width: 0;
 }
-.xbtn.on, .xbtn:hover { border-color: #666; color: #ccc; background: #2e2e2e; }
+.xbtn.on, .xbtn:hover { border-color: var(--highlight); color: var(--highlight); background: rgba(245,200,66,.08); }
 
 .color-pair { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 .cp { display: flex; align-items: center; gap: 6px; }
 .cp span { font-size: 9px; color: #555; letter-spacing: 1px; text-transform: uppercase; }
 input[type="color"] {
   width: 32px; height: 28px; padding: 2px;
-  border: 1px solid #383838; border-radius: 4px;
+  border: 1px solid #333; border-radius: 4px;
   background: var(--surface); cursor: pointer;
 }
 
 hr { border: none; border-top: 1px solid var(--border); }
+
+/* SECTION HEADER */
+.sec-hd {
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  color: #383838; padding: 4px 0; border-bottom: 1px solid #222;
+  margin-bottom: 2px;
+}
 
 /* ── BOTTOM SHEET (mobile) ── */
 .bottom-sheet { display: none; flex-direction: column; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
@@ -245,13 +310,13 @@ hr { border: none; border-top: 1px solid var(--border); }
 }
 .bottom-tab-nav::-webkit-scrollbar { display: none; }
 .bottom-tab-btn {
-  flex-shrink: 0; padding: 10px 14px;
+  flex-shrink: 0; padding: 10px 12px;
   background: transparent; border: none; color: var(--muted);
   font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
   cursor: pointer; border-bottom: 2px solid transparent;
-  transition: all .2s; font-family: 'Inter', sans-serif; white-space: nowrap;
+  transition: all .2s; font-family: 'DM Sans', sans-serif; white-space: nowrap;
 }
-.bottom-tab-btn.on { color: #ccc; border-bottom-color: #888; }
+.bottom-tab-btn.on { color: var(--highlight); border-bottom-color: var(--highlight); }
 .bottom-tab-content {
   display: none; flex-direction: column; gap: 12px;
   padding: 14px; max-height: 44vh; overflow-y: auto;
@@ -259,6 +324,24 @@ hr { border: none; border-top: 1px solid var(--border); }
 .bottom-tab-content.on { display: flex; }
 .bottom-tab-content::-webkit-scrollbar { width: 2px; }
 .bottom-tab-content::-webkit-scrollbar-thumb { background: #333; }
+
+/* TOGGLE SWITCH */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; }
+.toggle-row .lbl { margin: 0; }
+.toggle { position: relative; display: inline-block; width: 36px; height: 20px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: #2a2a2a;
+  border-radius: 20px; cursor: pointer; transition: .2s; border: 1px solid #333;
+}
+.toggle-slider:before {
+  content: ''; position: absolute;
+  height: 14px; width: 14px;
+  left: 2px; top: 2px;
+  background: #555; border-radius: 50%; transition: .2s;
+}
+.toggle input:checked + .toggle-slider { background: rgba(245,200,66,.2); border-color: var(--highlight); }
+.toggle input:checked + .toggle-slider:before { background: var(--highlight); transform: translateX(16px); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 700px) {
@@ -268,7 +351,7 @@ hr { border: none; border-top: 1px solid var(--border); }
   .preview-area { padding: 12px; min-height: 0; flex-shrink: 0; }
 }
 @media (min-width: 701px) and (max-width: 960px) {
-  .right-panel { width: 260px; min-width: 260px; }
+  .right-panel { width: 270px; min-width: 270px; }
 }
 </style>
 </head>
@@ -276,7 +359,7 @@ hr { border: none; border-top: 1px solid var(--border); }
 
 <!-- TOP BAR -->
 <div class="topbar">
-  <div class="topbar-title">Shayari Card <span>Maker</span></div>
+  <div class="topbar-title">Shayari <span>Card</span> Maker</div>
   <button class="dl-btn-top" id="dlBtn">⬇ Download 9:16</button>
 </div>
 
@@ -287,8 +370,15 @@ hr { border: none; border-top: 1px solid var(--border); }
   <div class="preview-area" id="previewArea">
     <div class="card-scaler" id="cardScaler">
       <div id="card">
+        <!-- BG layers -->
         <div class="c-bg" id="cBg"></div>
+        <div class="c-bg-img" id="cBgImg"></div>
+        <div class="c-overlay" id="cOverlay"></div>
 
+        <!-- Accent line -->
+        <div class="c-accent-line" id="cAccentLine"></div>
+
+        <!-- Header -->
         <div class="c-header pos-left" id="cHeader">
           <div class="c-avatar" id="cAvatar">
             <span id="cAvatarPh">👤</span>
@@ -300,6 +390,7 @@ hr { border: none; border-top: 1px solid var(--border); }
           </div>
         </div>
 
+        <!-- Shayari body -->
         <div class="c-body" id="cBody">
           <div class="c-shayari" id="cShayari">उजड़ी हुई दुनिया को
 तू आबाद न कर, बीते
@@ -309,6 +400,9 @@ hr { border: none; border-top: 1px solid var(--border); }
 भुल चुका हूं उड़ना मुझे
 आजाद न कर!</div>
         </div>
+
+        <!-- Footer watermark -->
+        <div class="c-footer" id="cFooter">@classicalauthor</div>
       </div>
       <div class="card-scaler-shadow"></div>
     </div>
@@ -320,34 +414,47 @@ hr { border: none; border-top: 1px solid var(--border); }
       <button class="tab-nav-btn on" data-tab="profile">Profile</button>
       <button class="tab-nav-btn" data-tab="header">Header</button>
       <button class="tab-nav-btn" data-tab="text">Text</button>
-      <button class="tab-nav-btn" data-tab="style">Style</button>
+      <button class="tab-nav-btn" data-tab="bg">BG</button>
+      <button class="tab-nav-btn" data-tab="extras">Extra</button>
     </div>
 
     <!-- Profile -->
     <div class="tab-content on" id="tab-profile">
       <div class="field">
         <div class="lbl">Profile Photo</div>
-        <div class="upload-box" id="avatarBox">↑ Upload photo (auto B&W)</div>
+        <div class="upload-box" id="avatarBox">↑ Upload photo</div>
         <input type="file" id="avatarFile" accept="image/*" style="display:none">
+      </div>
+      <div class="field">
+        <div class="lbl">Avatar Border Color</div>
+        <div class="cp"><input type="color" id="avatarBorder" value="#f5c842"><span>Border</span></div>
       </div>
       <div class="field">
         <div class="lbl">Display Name</div>
         <input type="text" id="nameInput" value="Classical Author">
       </div>
       <div class="field">
-        <div class="lbl">Handle</div>
+        <div class="lbl">Handle / Page Name</div>
         <input type="text" id="handleInput" value="@classicalauthor">
       </div>
       <div class="field">
-        <div class="lbl">Header Text Color</div>
+        <div class="lbl">Name Font Size &nbsp;<span class="val" id="nameFsVal" style="display:inline">38px</span></div>
+        <div class="slider-row"><input type="range" id="nameFs" min="16" max="72" value="38"></div>
+      </div>
+      <div class="field">
+        <div class="lbl">Handle Font Size &nbsp;<span class="val" id="handleFsVal" style="display:inline">24px</span></div>
+        <div class="slider-row"><input type="range" id="handleFs" min="12" max="56" value="24"></div>
+      </div>
+      <div class="field">
+        <div class="lbl">Text Colors</div>
         <div class="color-pair">
-          <div class="cp"><input type="color" id="nameColor" value="#111111"><span>Name</span></div>
-          <div class="cp"><input type="color" id="handleColor" value="#333333"><span>Handle</span></div>
+          <div class="cp"><input type="color" id="nameColor" value="#ffffff"><span>Name</span></div>
+          <div class="cp"><input type="color" id="handleColor" value="#f5c842"><span>Handle</span></div>
         </div>
       </div>
     </div>
 
-    <!-- Header -->
+    <!-- Header Position -->
     <div class="tab-content" id="tab-header">
       <div class="field">
         <div class="lbl">Horizontal Position</div>
@@ -359,46 +466,26 @@ hr { border: none; border-top: 1px solid var(--border); }
       </div>
       <div class="field">
         <div class="lbl">Top Offset &nbsp;<span class="val" id="topVal" style="display:inline">52px</span></div>
-        <div class="slider-row">
-          <input type="range" id="headerTop" min="0" max="400" value="52">
-        </div>
+        <div class="slider-row"><input type="range" id="headerTop" min="0" max="400" value="52"></div>
       </div>
       <div class="field">
         <div class="lbl">Side Offset &nbsp;<span class="val" id="hOffVal" style="display:inline">44px</span></div>
-        <div class="slider-row">
-          <input type="range" id="headerOff" min="0" max="160" value="44">
-        </div>
+        <div class="slider-row"><input type="range" id="headerOff" min="0" max="200" value="44"></div>
       </div>
       <div class="field">
         <div class="lbl">Avatar Size &nbsp;<span class="val" id="avatarSzVal" style="display:inline">110px</span></div>
-        <div class="slider-row">
-          <input type="range" id="avatarSz" min="50" max="220" value="110">
-        </div>
-      </div>
-      <div class="field">
-        <div class="lbl">Name Size &nbsp;<span class="val" id="nameFsVal" style="display:inline">34px</span></div>
-        <div class="slider-row">
-          <input type="range" id="nameFs" min="16" max="72" value="34">
-        </div>
-      </div>
-      <div class="field">
-        <div class="lbl">Handle Size &nbsp;<span class="val" id="handleFsVal" style="display:inline">26px</span></div>
-        <div class="slider-row">
-          <input type="range" id="handleFs" min="12" max="56" value="26">
-        </div>
+        <div class="slider-row"><input type="range" id="avatarSz" min="50" max="220" value="110"></div>
       </div>
       <div class="field">
         <div class="lbl">Gap &nbsp;<span class="val" id="gapVal" style="display:inline">20px</span></div>
-        <div class="slider-row">
-          <input type="range" id="headerGap" min="4" max="60" value="20">
-        </div>
+        <div class="slider-row"><input type="range" id="headerGap" min="4" max="80" value="20"></div>
       </div>
     </div>
 
     <!-- Text -->
     <div class="tab-content" id="tab-text">
       <div class="field">
-        <div class="lbl">Shayari</div>
+        <div class="lbl">Shayari Text</div>
         <textarea id="shayariInput">उजड़ी हुई दुनिया को
 तू आबाद न कर, बीते
 हुए लम्हों को तू याद
@@ -408,30 +495,28 @@ hr { border: none; border-top: 1px solid var(--border); }
 आजाद न कर!</textarea>
       </div>
       <div class="field">
-        <div class="lbl">Font Size</div>
-        <div class="slider-row">
-          <input type="range" id="fontSize" min="20" max="80" value="40">
-          <span class="val" id="fsVal">40px</span>
-        </div>
+        <div class="lbl">Font Size &nbsp;<span class="val" id="fsVal">48px</span></div>
+        <div class="slider-row"><input type="range" id="fontSize" min="20" max="90" value="48"><span class="val" id="fsValHide" style="display:none"></span></div>
       </div>
       <div class="field">
-        <div class="lbl">Line Height</div>
-        <div class="slider-row">
-          <input type="range" id="lineH" min="1.2" max="3.0" step="0.05" value="1.85">
-          <span class="val" id="lhVal">1.85</span>
-        </div>
+        <div class="lbl">Line Height &nbsp;<span class="val" id="lhVal">1.85</span></div>
+        <div class="slider-row"><input type="range" id="lineH" min="1.2" max="3.0" step="0.05" value="1.85"></div>
+      </div>
+      <div class="field">
+        <div class="lbl">Letter Spacing &nbsp;<span class="val" id="lsVal">0px</span></div>
+        <div class="slider-row"><input type="range" id="letterSpacing" min="-2" max="10" step="0.5" value="0"></div>
       </div>
       <div class="field">
         <div class="lbl">Font Weight</div>
         <div class="btn-row">
-          <button class="xbtn" data-w="400">Regular</button>
+          <button class="xbtn" data-w="400">Light</button>
           <button class="xbtn" data-w="600">Semi</button>
           <button class="xbtn on" data-w="700">Bold</button>
           <button class="xbtn" data-w="900">Black</button>
         </div>
       </div>
       <div class="field">
-        <div class="lbl">Align</div>
+        <div class="lbl">Alignment</div>
         <div class="btn-row">
           <button class="xbtn on" data-align="left">Left</button>
           <button class="xbtn" data-align="center">Center</button>
@@ -448,28 +533,153 @@ hr { border: none; border-top: 1px solid var(--border); }
       </div>
       <div class="field">
         <div class="lbl">Text Color</div>
-        <div class="cp"><input type="color" id="textColor" value="#111111"><span>Shayari</span></div>
+        <div class="cp"><input type="color" id="textColor" value="#ffffff"><span>Shayari</span></div>
       </div>
-    </div>
-
-    <!-- Style -->
-    <div class="tab-content" id="tab-style">
       <div class="field">
-        <div class="lbl">Background</div>
-        <div class="swatch-row">
-          <div class="bgswatch on" data-c="#c9c9c9" style="background:#c9c9c9"></div>
-          <div class="bgswatch" data-c="#b3b3b3" style="background:#b3b3b3"></div>
-          <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ddd"></div>
-          <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd"></div>
-          <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
-          <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
-          <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
-          <input type="color" id="customBg" value="#c9c9c9" style="width:26px;height:26px;padding:1px;border:1px solid #444;border-radius:50%;background:#242424;cursor:pointer;flex-shrink:0">
+        <div class="lbl">Text Shadow</div>
+        <div class="btn-row">
+          <button class="xbtn on" data-shadow="0 2px 20px rgba(0,0,0,.6)">Soft</button>
+          <button class="xbtn" data-shadow="0 4px 40px rgba(0,0,0,.9)">Strong</button>
+          <button class="xbtn" data-shadow="2px 2px 0 rgba(0,0,0,.8)">Hard</button>
+          <button class="xbtn" data-shadow="none">None</button>
         </div>
       </div>
+      <div class="field">
+        <div class="lbl">Text Left Margin &nbsp;<span class="val" id="textLeftVal">44px</span></div>
+        <div class="slider-row"><input type="range" id="textLeft" min="0" max="200" value="44"></div>
+      </div>
+      <div class="field">
+        <div class="lbl">Text Top Offset &nbsp;<span class="val" id="textTopVal">260px</span></div>
+        <div class="slider-row"><input type="range" id="textTop" min="100" max="800" value="260"></div>
+      </div>
     </div>
-  </div>
 
+    <!-- Background -->
+    <div class="tab-content" id="tab-bg">
+      <div class="sec-hd">🎨 Gradient Presets (Facebook-Optimized)</div>
+      <div class="swatch-row">
+        <div class="bgswatch on" data-grad="fb-night" title="Classic Night"></div>
+        <div class="bgswatch" data-grad="fb-blue" title="Deep Blue"></div>
+        <div class="bgswatch" data-grad="fb-warm" title="Warm Fire"></div>
+        <div class="bgswatch" data-grad="fb-rose" title="Rose Red"></div>
+        <div class="bgswatch" data-grad="fb-forest" title="Forest"></div>
+        <div class="bgswatch" data-grad="fb-purple" title="Royal Purple"></div>
+        <div class="bgswatch" data-grad="fb-teal" title="Teal Dark"></div>
+        <div class="bgswatch" data-grad="fb-gold" title="Sunset Gold"></div>
+        <div class="bgswatch" data-grad="fb-dawn" title="Dawn"></div>
+        <div class="bgswatch" data-grad="fb-dusk" title="Dusk"></div>
+        <div class="bgswatch" data-grad="fb-ocean" title="Ocean"></div>
+        <div class="bgswatch" data-grad="fb-sakura" title="Sakura"></div>
+      </div>
+
+      <div class="sec-hd" style="margin-top:4px">🖤 Solid Colors</div>
+      <div class="swatch-row">
+        <div class="bgswatch" data-c="#0d0d0d" style="background:#0d0d0d"></div>
+        <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
+        <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
+        <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd"></div>
+        <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ddd"></div>
+        <div class="bgswatch" data-c="#c9c9c9" style="background:#c9c9c9"></div>
+        <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
+        <div class="bgswatch" data-c="#0f1a00" style="background:#0f1a00"></div>
+      </div>
+
+      <div class="field">
+        <div class="lbl">Custom Background Color</div>
+        <input type="color" id="customBg" value="#1a1a2e" style="width:100%;height:36px;padding:2px;border:1px solid #333;border-radius:5px;background:var(--surface);cursor:pointer">
+      </div>
+
+      <hr>
+
+      <div class="field">
+        <div class="lbl">Background Image Upload</div>
+        <div class="upload-box" id="bgImgBox">↑ Upload background image</div>
+        <input type="file" id="bgImgFile" accept="image/*" style="display:none">
+        <button class="xbtn" id="clearBgImg" style="margin-top:5px;flex:none">✕ Clear Image</button>
+      </div>
+
+      <div class="field">
+        <div class="lbl">Dark Overlay &nbsp;<span class="val" id="overlayVal">0%</span></div>
+        <div class="slider-row"><input type="range" id="overlaySlider" min="0" max="90" value="0"></div>
+      </div>
+
+      <hr>
+
+      <div class="field">
+        <div class="lbl">Custom Gradient</div>
+        <div class="color-pair">
+          <div class="cp"><input type="color" id="gradFrom" value="#1a1a2e"><span>From</span></div>
+          <div class="cp"><input type="color" id="gradTo" value="#0f3460"><span>To</span></div>
+        </div>
+        <div style="margin-top:8px">
+          <div class="lbl">Direction</div>
+          <div class="btn-row">
+            <button class="xbtn on" data-gdir="135deg">↘ Diag</button>
+            <button class="xbtn" data-gdir="180deg">↓ Down</button>
+            <button class="xbtn" data-gdir="90deg">→ Right</button>
+            <button class="xbtn" data-gdir="45deg">↗ Up</button>
+          </div>
+        </div>
+        <button class="xbtn" id="applyGrad" style="margin-top:8px;flex:none">Apply Custom Gradient</button>
+      </div>
+    </div>
+
+    <!-- Extras -->
+    <div class="tab-content" id="tab-extras">
+      <div class="sec-hd">Card Extras</div>
+
+      <div class="toggle-row field">
+        <div class="lbl" style="margin:0">Show Watermark</div>
+        <label class="toggle">
+          <input type="checkbox" id="showWatermark">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <div class="lbl">Watermark Text</div>
+        <input type="text" id="watermarkText" value="@classicalauthor" style="font-family:'DM Sans',sans-serif">
+      </div>
+
+      <div class="toggle-row field">
+        <div class="lbl" style="margin:0">Accent Line</div>
+        <label class="toggle">
+          <input type="checkbox" id="showAccentLine">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <div class="lbl">Accent / Avatar Border Color</div>
+        <input type="color" id="accentColor" value="#f5c842" style="width:100%;height:36px;padding:2px;border:1px solid #333;border-radius:5px;background:var(--surface);cursor:pointer">
+      </div>
+
+      <hr>
+
+      <div class="sec-hd" style="margin-top:4px">Avatar Style</div>
+      <div class="field">
+        <div class="lbl">Filter</div>
+        <div class="btn-row">
+          <button class="xbtn on" data-avf="none">Color</button>
+          <button class="xbtn" data-avf="grayscale(1)">B&W</button>
+          <button class="xbtn" data-avf="sepia(0.8)">Sepia</button>
+          <button class="xbtn" data-avf="contrast(1.3) saturate(1.3)">Vivid</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Avatar Border Width &nbsp;<span class="val" id="avBwVal">4px</span></div>
+        <div class="slider-row"><input type="range" id="avBorderW" min="0" max="16" value="4"></div>
+      </div>
+
+      <hr>
+      <div class="sec-hd" style="margin-top:4px">Card Padding</div>
+      <div class="field">
+        <div class="lbl">Side Padding &nbsp;<span class="val" id="sidePadVal">44px</span></div>
+        <div class="slider-row"><input type="range" id="sidePad" min="20" max="160" value="44"></div>
+      </div>
+    </div>
+
+  </div>
 </div><!-- /main -->
 
 <!-- BOTTOM SHEET (mobile) -->
@@ -478,25 +688,28 @@ hr { border: none; border-top: 1px solid var(--border); }
     <button class="bottom-tab-btn on" data-btab="b-profile">Profile</button>
     <button class="bottom-tab-btn" data-btab="b-header">Header</button>
     <button class="bottom-tab-btn" data-btab="b-text">Text</button>
-    <button class="bottom-tab-btn" data-btab="b-style">Style</button>
+    <button class="bottom-tab-btn" data-btab="b-bg">BG</button>
+    <button class="bottom-tab-btn" data-btab="b-extras">Extra</button>
   </div>
 
+  <!-- B-Profile -->
   <div class="bottom-tab-content on" id="b-profile">
     <div class="field">
       <div class="lbl">Profile Photo</div>
-      <div class="upload-box" id="avatarBox2">↑ Upload photo (B&W)</div>
+      <div class="upload-box" id="avatarBox2">↑ Upload photo</div>
     </div>
     <div class="field"><div class="lbl">Display Name</div><input type="text" id="nameInput2" value="Classical Author"></div>
     <div class="field"><div class="lbl">Handle</div><input type="text" id="handleInput2" value="@classicalauthor"></div>
     <div class="field">
       <div class="lbl">Colors</div>
       <div class="color-pair">
-        <div class="cp"><input type="color" id="nameColor2" value="#111111"><span>Name</span></div>
-        <div class="cp"><input type="color" id="handleColor2" value="#333333"><span>Handle</span></div>
+        <div class="cp"><input type="color" id="nameColor2" value="#ffffff"><span>Name</span></div>
+        <div class="cp"><input type="color" id="handleColor2" value="#f5c842"><span>Handle</span></div>
       </div>
     </div>
   </div>
 
+  <!-- B-Header -->
   <div class="bottom-tab-content" id="b-header">
     <div class="field">
       <div class="lbl">Position</div>
@@ -507,12 +720,11 @@ hr { border: none; border-top: 1px solid var(--border); }
       </div>
     </div>
     <div class="field"><div class="lbl">Top &nbsp;<span class="val" id="topVal2" style="display:inline">52px</span></div><input type="range" id="headerTop2" min="0" max="400" value="52"></div>
-    <div class="field"><div class="lbl">Side Offset &nbsp;<span class="val" id="hOffVal2" style="display:inline">44px</span></div><input type="range" id="headerOff2" min="0" max="160" value="44"></div>
+    <div class="field"><div class="lbl">Side Offset &nbsp;<span class="val" id="hOffVal2" style="display:inline">44px</span></div><input type="range" id="headerOff2" min="0" max="200" value="44"></div>
     <div class="field"><div class="lbl">Avatar Size &nbsp;<span class="val" id="avatarSzVal2" style="display:inline">110px</span></div><input type="range" id="avatarSz2" min="50" max="220" value="110"></div>
-    <div class="field"><div class="lbl">Name Size &nbsp;<span class="val" id="nameFsVal2" style="display:inline">34px</span></div><input type="range" id="nameFs2" min="16" max="72" value="34"></div>
-    <div class="field"><div class="lbl">Handle Size &nbsp;<span class="val" id="handleFsVal2" style="display:inline">26px</span></div><input type="range" id="handleFs2" min="12" max="56" value="26"></div>
   </div>
 
+  <!-- B-Text -->
   <div class="bottom-tab-content" id="b-text">
     <div class="field"><div class="lbl">Shayari</div>
       <textarea id="shayariInput2" style="min-height:90px">उजड़ी हुई दुनिया को
@@ -523,12 +735,12 @@ hr { border: none; border-top: 1px solid var(--border); }
 भुल चुका हूं उड़ना मुझे
 आजाद न कर!</textarea>
     </div>
-    <div class="field"><div class="lbl">Font Size &nbsp;<span class="val" id="fsVal2" style="display:inline">40px</span></div><input type="range" id="fontSize2" min="20" max="80" value="40"></div>
+    <div class="field"><div class="lbl">Font Size &nbsp;<span class="val" id="fsVal2" style="display:inline">48px</span></div><input type="range" id="fontSize2" min="20" max="90" value="48"></div>
     <div class="field"><div class="lbl">Line Height &nbsp;<span class="val" id="lhVal2" style="display:inline">1.85</span></div><input type="range" id="lineH2" min="1.2" max="3.0" step="0.05" value="1.85"></div>
     <div class="field">
       <div class="lbl">Weight</div>
       <div class="btn-row">
-        <button class="xbtn" data-w2="400">Reg</button>
+        <button class="xbtn" data-w2="400">Light</button>
         <button class="xbtn" data-w2="600">Semi</button>
         <button class="xbtn on" data-w2="700">Bold</button>
         <button class="xbtn" data-w2="900">Black</button>
@@ -542,29 +754,71 @@ hr { border: none; border-top: 1px solid var(--border); }
         <button class="xbtn" data-align2="right">Right</button>
       </div>
     </div>
-    <div class="field">
-      <div class="lbl">V-Position</div>
-      <div class="btn-row">
-        <button class="xbtn on" data-vpos2="flex-start">Top</button>
-        <button class="xbtn" data-vpos2="center">Mid</button>
-        <button class="xbtn" data-vpos2="flex-end">Bot</button>
-      </div>
-    </div>
-    <div class="field"><div class="cp"><input type="color" id="textColor2" value="#111111"><span style="font-size:9px;color:#555;letter-spacing:1px;text-transform:uppercase">Text Color</span></div></div>
+    <div class="field"><div class="cp"><input type="color" id="textColor2" value="#ffffff"><span style="font-size:9px;color:#555;letter-spacing:1px;text-transform:uppercase">Text Color</span></div></div>
   </div>
 
-  <div class="bottom-tab-content" id="b-style">
+  <!-- B-BG -->
+  <div class="bottom-tab-content" id="b-bg">
+    <div class="lbl">Gradient Presets</div>
+    <div class="swatch-row">
+      <div class="bgswatch on" data-grad="fb-night"></div>
+      <div class="bgswatch" data-grad="fb-blue"></div>
+      <div class="bgswatch" data-grad="fb-warm"></div>
+      <div class="bgswatch" data-grad="fb-rose"></div>
+      <div class="bgswatch" data-grad="fb-forest"></div>
+      <div class="bgswatch" data-grad="fb-purple"></div>
+      <div class="bgswatch" data-grad="fb-teal"></div>
+      <div class="bgswatch" data-grad="fb-gold"></div>
+      <div class="bgswatch" data-grad="fb-dawn"></div>
+      <div class="bgswatch" data-grad="fb-dusk"></div>
+      <div class="bgswatch" data-grad="fb-ocean"></div>
+      <div class="bgswatch" data-grad="fb-sakura"></div>
+    </div>
+    <div class="lbl" style="margin-top:8px">Solid Colors</div>
+    <div class="swatch-row">
+      <div class="bgswatch" data-c="#0d0d0d" style="background:#0d0d0d"></div>
+      <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
+      <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd"></div>
+      <div class="bgswatch" data-c="#c9c9c9" style="background:#c9c9c9"></div>
+      <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
+      <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
+    </div>
+    <div class="field"><div class="lbl">Custom Color</div>
+      <input type="color" id="customBg2" value="#1a1a2e" style="width:100%;height:36px;padding:2px;border:1px solid #333;border-radius:5px;background:var(--surface);cursor:pointer">
+    </div>
     <div class="field">
-      <div class="lbl">Background</div>
-      <div class="swatch-row">
-        <div class="bgswatch on" data-c="#c9c9c9" style="background:#c9c9c9"></div>
-        <div class="bgswatch" data-c="#b3b3b3" style="background:#b3b3b3"></div>
-        <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ddd"></div>
-        <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd"></div>
-        <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
-        <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
-        <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
-        <input type="color" id="customBg2" value="#c9c9c9" style="width:26px;height:26px;padding:1px;border:1px solid #444;border-radius:50%;background:#242424;cursor:pointer;flex-shrink:0">
+      <div class="lbl">BG Image Upload</div>
+      <div class="upload-box" id="bgImgBox2">↑ Upload background</div>
+    </div>
+    <div class="field"><div class="lbl">Overlay &nbsp;<span class="val" id="overlayVal2">0%</span></div><input type="range" id="overlaySlider2" min="0" max="90" value="0"></div>
+  </div>
+
+  <!-- B-Extras -->
+  <div class="bottom-tab-content" id="b-extras">
+    <div class="toggle-row field">
+      <div class="lbl" style="margin:0">Watermark</div>
+      <label class="toggle">
+        <input type="checkbox" id="showWatermark2">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row field">
+      <div class="lbl" style="margin:0">Accent Line</div>
+      <label class="toggle">
+        <input type="checkbox" id="showAccentLine2">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="field">
+      <div class="lbl">Accent Color</div>
+      <input type="color" id="accentColor2" value="#f5c842" style="width:100%;height:36px;padding:2px;border:1px solid #333;border-radius:5px;background:var(--surface);cursor:pointer">
+    </div>
+    <div class="field">
+      <div class="lbl">Avatar Filter</div>
+      <div class="btn-row">
+        <button class="xbtn on" data-avf2="none">Color</button>
+        <button class="xbtn" data-avf2="grayscale(1)">B&W</button>
+        <button class="xbtn" data-avf2="sepia(0.8)">Sepia</button>
       </div>
     </div>
   </div>
@@ -574,36 +828,28 @@ hr { border: none; border-top: 1px solid var(--border); }
 <script>
 const $ = id => document.getElementById(id);
 
-// ═══════════════════════════════════════
-// SCALE THE CARD TO FIT PREVIEW AREA
-// Card is always 1080×1920; we scale it
-// ═══════════════════════════════════════
+// ═══ SCALE CARD ═══
 const CARD_W = 1080, CARD_H = 1920;
-
 function scaleCard() {
   const area = $('previewArea');
   const pad = 24;
   const availW = area.clientWidth - pad * 2;
   const availH = area.clientHeight - pad * 2;
   const scale = Math.min(availW / CARD_W, availH / CARD_H);
-  const displayW = CARD_W * scale;
-  const displayH = CARD_H * scale;
   const scaler = $('cardScaler');
-  scaler.style.width = displayW + 'px';
-  scaler.style.height = displayH + 'px';
+  scaler.style.width = (CARD_W * scale) + 'px';
+  scaler.style.height = (CARD_H * scale) + 'px';
   scaler.style.overflow = 'hidden';
   scaler.style.position = 'relative';
   scaler.style.flexShrink = '0';
   $('card').style.transform = `scale(${scale})`;
   $('card').style.transformOrigin = 'top left';
 }
-
 window.addEventListener('resize', scaleCard);
-// Run after fonts load
 document.fonts.ready.then(scaleCard);
 scaleCard();
 
-// ── TABS (desktop) ──
+// ═══ TABS (desktop) ═══
 document.querySelectorAll('.tab-nav-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('on'));
@@ -613,7 +859,7 @@ document.querySelectorAll('.tab-nav-btn').forEach(btn => {
   };
 });
 
-// ── TABS (mobile) ──
+// ═══ TABS (mobile) ═══
 document.querySelectorAll('.bottom-tab-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.bottom-tab-btn').forEach(b => b.classList.remove('on'));
@@ -623,56 +869,76 @@ document.querySelectorAll('.bottom-tab-btn').forEach(btn => {
   };
 });
 
-// ── AVATAR ──
+// ═══ AVATAR ═══
 function handleAvatar(file) {
   const r = new FileReader();
   r.onload = ev => {
     $('cAvatarImg').src = ev.target.result;
     $('cAvatarImg').style.display = 'block';
     $('cAvatarPh').style.display = 'none';
-    const txt = '✓ ' + file.name;
-    $('avatarBox').textContent = txt;
-    $('avatarBox2').textContent = txt;
+    ['avatarBox','avatarBox2'].forEach(id => { if($(id)) $(id).textContent = '✓ ' + file.name; });
   };
   r.readAsDataURL(file);
 }
 $('avatarBox').onclick = () => $('avatarFile').click();
-$('avatarBox2').onclick = () => $('avatarFile').click();
+if($('avatarBox2')) $('avatarBox2').onclick = () => $('avatarFile').click();
 $('avatarFile').onchange = e => { if(e.target.files[0]) handleAvatar(e.target.files[0]); };
 
-// ── SYNC helpers ──
+// ═══ BG IMAGE ═══
+function handleBgImg(file) {
+  const r = new FileReader();
+  r.onload = ev => {
+    $('cBgImg').style.backgroundImage = `url(${ev.target.result})`;
+    $('cBgImg').style.opacity = '1';
+    ['bgImgBox','bgImgBox2'].forEach(id => { if($(id)) $(id).textContent = '✓ ' + file.name; });
+  };
+  r.readAsDataURL(file);
+}
+$('bgImgBox').onclick = () => $('bgImgFile').click();
+if($('bgImgBox2')) $('bgImgBox2').onclick = () => $('bgImgFile').click();
+$('bgImgFile').onchange = e => { if(e.target.files[0]) handleBgImg(e.target.files[0]); };
+$('clearBgImg').onclick = () => {
+  $('cBgImg').style.backgroundImage = '';
+  $('cBgImg').style.opacity = '0';
+  ['bgImgBox','bgImgBox2'].forEach(id => { if($(id)) $(id).textContent = '↑ Upload background image'; });
+};
+
+// ═══ SYNC HELPERS ═══
 function syncText(id1, id2, fn) {
-  const a = $(id1), b = $(id2);
-  if(!a||!b) return;
-  a.addEventListener('input', e => { if(b.value!==e.target.value) b.value=e.target.value; fn(e.target.value); });
-  b.addEventListener('input', e => { if(a.value!==e.target.value) a.value=e.target.value; fn(e.target.value); });
+  const a=$(id1), b=$(id2);
+  if(!a) return;
+  a.addEventListener('input', e => { if(b&&b.value!==e.target.value) b.value=e.target.value; fn(e.target.value); });
+  if(b) b.addEventListener('input', e => { if(a.value!==e.target.value) a.value=e.target.value; fn(e.target.value); });
 }
 function syncColor(id1, id2, fn) {
-  const a=$(id1),b=$(id2);
-  if(!a||!b) return;
-  a.oninput=e=>{b.value=e.target.value;fn(e.target.value);};
-  b.oninput=e=>{a.value=e.target.value;fn(e.target.value);};
+  const a=$(id1), b=$(id2);
+  if(!a) return;
+  a.oninput = e => { if(b) b.value=e.target.value; fn(e.target.value); };
+  if(b) b.oninput = e => { a.value=e.target.value; fn(e.target.value); };
 }
 function syncSlider(id1, id2, valId1, valId2, suffix, fn) {
-  const a=$(id1),b=$(id2);
+  const a=$(id1), b=$(id2);
   if(!a) return;
-  function apply(v){
+  function apply(v) {
     if(b) b.value=v;
     if(valId1&&$(valId1)) $(valId1).textContent=v+suffix;
     if(valId2&&$(valId2)) $(valId2).textContent=v+suffix;
     fn(v);
   }
-  a.oninput=e=>apply(e.target.value);
-  if(b) b.oninput=e=>apply(e.target.value);
+  a.oninput = e => apply(e.target.value);
+  if(b) b.oninput = e => apply(e.target.value);
 }
 
-// Name / handle
+// ═══ PROFILE ═══
 syncText('nameInput','nameInput2', v=>$('cName').textContent=v);
-syncText('handleInput','handleInput2', v=>$('cHandle').textContent=v);
+syncText('handleInput','handleInput2', v=>{ $('cHandle').textContent=v; if(!$('showWatermark').checked) $('cFooter').textContent=v; });
 syncColor('nameColor','nameColor2', v=>$('cName').style.color=v);
 syncColor('handleColor','handleColor2', v=>$('cHandle').style.color=v);
+syncSlider('nameFs',null,'nameFsVal',null,'px', v=>$('cName').style.fontSize=v+'px');
+syncSlider('handleFs',null,'handleFsVal',null,'px', v=>$('cHandle').style.fontSize=v+'px');
+syncColor('avatarBorder',null, v=>$('cAvatar').style.borderColor=v);
 
-// ── HEADER POSITION ──
+// ═══ HEADER POSITION ═══
 let currentHpos = 'pos-left';
 function applyHpos(cls) {
   currentHpos = cls;
@@ -688,19 +954,15 @@ function applyOffset(v) {
   if(currentHpos==='pos-center') { h.style.left='50%'; h.style.right='auto'; }
 }
 function getOffsetVal() {
-  const el = $('headerOff') || $('headerOff2');
+  const el = $('headerOff')||$('headerOff2');
   return el ? parseInt(el.value) : 44;
 }
-
 function bindHposGroup(attr) {
   document.querySelectorAll(`[${attr}]`).forEach(b => {
     b.onclick = () => {
-      document.querySelectorAll('[data-hpos]').forEach(x=>x.classList.remove('on'));
-      document.querySelectorAll('[data-hpos2]').forEach(x=>x.classList.remove('on'));
-      // data-hpos values are like "pos-left"; data-hpos2 values are also "pos-left"
-      const cls = b.dataset.hpos || b.dataset.hpos2;
-      document.querySelectorAll(`[data-hpos="${cls}"]`).forEach(x=>x.classList.add('on'));
-      document.querySelectorAll(`[data-hpos2="${cls}"]`).forEach(x=>x.classList.add('on'));
+      document.querySelectorAll('[data-hpos],[data-hpos2]').forEach(x=>x.classList.remove('on'));
+      const cls = b.dataset.hpos||b.dataset.hpos2;
+      document.querySelectorAll(`[data-hpos="${cls}"],[data-hpos2="${cls}"]`).forEach(x=>x.classList.add('on'));
       applyHpos(cls);
     };
   });
@@ -711,84 +973,189 @@ bindHposGroup('data-hpos2');
 syncSlider('headerTop','headerTop2','topVal','topVal2','px', v=>$('cHeader').style.top=v+'px');
 syncSlider('headerOff','headerOff2','hOffVal','hOffVal2','px', v=>applyOffset(parseInt(v)));
 syncSlider('avatarSz','avatarSz2','avatarSzVal','avatarSzVal2','px', v=>{ $('cAvatar').style.width=v+'px'; $('cAvatar').style.height=v+'px'; });
-syncSlider('nameFs','nameFs2','nameFsVal','nameFsVal2','px', v=>$('cName').style.fontSize=v+'px');
-syncSlider('handleFs','handleFs2','handleFsVal','handleFsVal2','px', v=>$('cHandle').style.fontSize=v+'px');
 syncSlider('headerGap',null,'gapVal',null,'px', v=>$('cHeader').style.gap=v+'px');
 
-// ── SHAYARI ──
+// ═══ TEXT ═══
 syncText('shayariInput','shayariInput2', v=>$('cShayari').textContent=v);
 syncSlider('fontSize','fontSize2','fsVal','fsVal2','px', v=>$('cShayari').style.fontSize=v+'px');
 syncSlider('lineH','lineH2','lhVal','lhVal2','', v=>$('cShayari').style.lineHeight=v);
 
+$('letterSpacing').oninput = e => {
+  $('cShayari').style.letterSpacing = e.target.value+'px';
+  $('lsVal').textContent = e.target.value+'px';
+};
+
+// text position
+$('textLeft').oninput = e => {
+  $('cBody').style.left = e.target.value+'px';
+  $('cBody').style.right = e.target.value+'px';
+  $('textLeftVal').textContent = e.target.value+'px';
+};
+$('textTop').oninput = e => {
+  $('cBody').style.top = e.target.value+'px';
+  $('textTopVal').textContent = e.target.value+'px';
+};
+
 function bindGroup(attr1, attr2, fn) {
   function handler(b, val) {
-    document.querySelectorAll(`[${attr1}]`).forEach(x=>x.classList.remove('on'));
-    document.querySelectorAll(`[${attr2}]`).forEach(x=>x.classList.remove('on'));
-    document.querySelectorAll(`[${attr1}="${val}"]`).forEach(x=>x.classList.add('on'));
-    document.querySelectorAll(`[${attr2}="${val}"]`).forEach(x=>x.classList.add('on'));
+    document.querySelectorAll(`[${attr1}],[${attr2}]`).forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll(`[${attr1}="${val}"],[${attr2}="${val}"]`).forEach(x=>x.classList.add('on'));
     fn(val);
   }
-  document.querySelectorAll(`[${attr1}]`).forEach(b=>{ b.onclick=()=>handler(b, b.getAttribute(attr1)); });
-  document.querySelectorAll(`[${attr2}]`).forEach(b=>{ b.onclick=()=>handler(b, b.getAttribute(attr2)); });
+  document.querySelectorAll(`[${attr1}]`).forEach(b=>{ b.onclick=()=>handler(b,b.getAttribute(attr1)); });
+  document.querySelectorAll(`[${attr2}]`).forEach(b=>{ b.onclick=()=>handler(b,b.getAttribute(attr2)); });
 }
 bindGroup('data-w','data-w2', v=>$('cShayari').style.fontWeight=v);
 bindGroup('data-align','data-align2', v=>$('cShayari').style.textAlign=v);
 bindGroup('data-vpos','data-vpos2', v=>$('cBody').style.alignItems=v);
-
 syncColor('textColor','textColor2', v=>$('cShayari').style.color=v);
 
-// ── BACKGROUND ──
-function applyBg(c) { $('cBg').style.background=c; }
-document.querySelectorAll('.bgswatch').forEach(s=>{
-  s.onclick=()=>{
-    document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on'));
-    document.querySelectorAll(`.bgswatch[data-c="${s.dataset.c}"]`).forEach(x=>x.classList.add('on'));
-    applyBg(s.dataset.c);
+// text shadow presets
+document.querySelectorAll('[data-shadow]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-shadow]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    $('cShayari').style.textShadow = b.dataset.shadow;
   };
 });
-syncColor('customBg','customBg2', v=>{ document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on')); applyBg(v); });
 
-// ═══════════════════════════════════════
-// DOWNLOAD — captures the actual 1080×1920
-// No resizing needed! Card is already full size.
-// ═══════════════════════════════════════
+// ═══ BACKGROUND GRADIENTS ═══
+const GRADIENTS = {
+  'fb-night':  'linear-gradient(135deg,#0d0d0d 0%,#1a1a2e 100%)',
+  'fb-blue':   'linear-gradient(135deg,#1a237e 0%,#1565c0 100%)',
+  'fb-warm':   'linear-gradient(135deg,#bf360c 0%,#e65100 100%)',
+  'fb-rose':   'linear-gradient(135deg,#880e4f 0%,#c62828 100%)',
+  'fb-forest': 'linear-gradient(135deg,#1b5e20 0%,#2e7d32 100%)',
+  'fb-purple': 'linear-gradient(135deg,#4a148c 0%,#6a1b9a 100%)',
+  'fb-teal':   'linear-gradient(135deg,#004d40 0%,#00695c 100%)',
+  'fb-gold':   'linear-gradient(135deg,#e65100 0%,#f9a825 100%)',
+  'fb-dawn':   'linear-gradient(135deg,#ff6f00 0%,#f57f17 100%)',
+  'fb-dusk':   'linear-gradient(135deg,#311b92 0%,#c2185b 100%)',
+  'fb-ocean':  'linear-gradient(135deg,#0d47a1 0%,#0097a7 100%)',
+  'fb-sakura': 'linear-gradient(135deg,#880e4f 0%,#ff8a65 100%)',
+};
+
+function applyBg(cssValue) {
+  $('cBg').style.background = cssValue;
+}
+
+// Apply default
+applyBg(GRADIENTS['fb-night']);
+
+document.querySelectorAll('.bgswatch').forEach(s => {
+  s.onclick = () => {
+    document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on'));
+    // mark all matching swatches
+    const grad = s.dataset.grad, col = s.dataset.c;
+    if(grad) {
+      document.querySelectorAll(`[data-grad="${grad}"]`).forEach(x=>x.classList.add('on'));
+      applyBg(GRADIENTS[grad]);
+    } else if(col) {
+      document.querySelectorAll(`[data-c="${col}"]`).forEach(x=>x.classList.add('on'));
+      applyBg(col);
+    }
+  };
+});
+
+syncColor('customBg','customBg2', v=>{
+  document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on'));
+  applyBg(v);
+});
+
+// overlay
+syncSlider('overlaySlider','overlaySlider2','overlayVal','overlayVal2','%', v=>{
+  $('cOverlay').style.background = `rgba(0,0,0,${v/100})`;
+});
+
+// custom gradient
+let gradDir = '135deg';
+document.querySelectorAll('[data-gdir]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('[data-gdir]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    gradDir = b.dataset.gdir;
+  };
+});
+$('applyGrad').onclick = () => {
+  const f = $('gradFrom').value, t = $('gradTo').value;
+  document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on'));
+  applyBg(`linear-gradient(${gradDir},${f} 0%,${t} 100%)`);
+};
+
+// ═══ EXTRAS ═══
+// Watermark
+function syncToggle(id1, id2, fn) {
+  const a=$(id1), b=$(id2);
+  if(!a) return;
+  a.onchange = e => { if(b) b.checked=e.target.checked; fn(e.target.checked); };
+  if(b) b.onchange = e => { a.checked=e.target.checked; fn(e.target.checked); };
+}
+syncToggle('showWatermark','showWatermark2', v=>{ $('cFooter').style.display = v?'block':'none'; });
+syncToggle('showAccentLine','showAccentLine2', v=>{ $('cAccentLine').style.display = v?'block':'none'; });
+
+syncText('watermarkText',null, v=>$('cFooter').textContent=v);
+
+// Accent color (avatar border + accent line)
+function applyAccent(v) {
+  $('cAvatar').style.borderColor = v;
+  $('cAccentLine').style.background = v;
+  $('cHandle').style.color = v; // also tint handle
+  $('card').style.setProperty('--card-accent', v);
+}
+syncColor('accentColor','accentColor2', applyAccent);
+
+// Avatar filter
+function bindAvfGroup(attr) {
+  document.querySelectorAll(`[${attr}]`).forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll(`[data-avf],[data-avf2]`).forEach(x=>x.classList.remove('on'));
+      const val = b.dataset.avf||b.dataset.avf2;
+      document.querySelectorAll(`[data-avf="${val}"],[data-avf2="${val}"]`).forEach(x=>x.classList.add('on'));
+      $('cAvatarImg').style.filter = val;
+      $('cAvatar').style.filter = val;
+    };
+  });
+}
+bindAvfGroup('data-avf');
+bindAvfGroup('data-avf2');
+
+// Avatar border width
+$('avBorderW').oninput = e => {
+  $('cAvatar').style.borderWidth = e.target.value+'px';
+  $('avBwVal').textContent = e.target.value+'px';
+};
+
+// Side padding
+$('sidePad').oninput = e => {
+  const v = e.target.value;
+  $('cBody').style.left = v+'px';
+  $('cBody').style.right = v+'px';
+  $('sidePadVal').textContent = v+'px';
+};
+
+// ═══ DOWNLOAD ═══
 $('dlBtn').onclick = async () => {
   const btn = $('dlBtn');
-  const orig = btn.textContent;
-  btn.textContent = '⏳ Please wait...';
+  btn.textContent = '⏳ Please wait…';
   btn.disabled = true;
-
   try {
-    // Temporarily remove the CSS scale so html2canvas captures at full 1080×1920
     const card = $('card');
     card.style.transform = 'none';
-
     const canvas = await html2canvas(card, {
-      scale: 1,          // 1:1 — card is already 1080×1920
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: null,
-      logging: false,
-      width: 1080,
-      height: 1920,
-      windowWidth: 1080,
-      windowHeight: 1920,
+      scale: 1, useCORS: true, allowTaint: true,
+      backgroundColor: null, logging: false,
+      width: 1080, height: 1920, windowWidth: 1080, windowHeight: 1920,
     });
-
-    // Restore scale
     scaleCard();
-
-    // Verify 9:16
     const a = document.createElement('a');
     a.download = 'shayari-card-1080x1920.png';
     a.href = canvas.toDataURL('image/png', 1.0);
     a.click();
   } catch(err) {
     scaleCard();
-    alert('Download failed. Try a screenshot instead.\n' + err.message);
+    alert('Download failed. Try a screenshot.\n' + err.message);
   }
-
-  btn.textContent = orig;
+  btn.textContent = '⬇ Download 9:16';
   btn.disabled = false;
 };
 </script>
