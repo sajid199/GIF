@@ -7,6 +7,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
+html{
+  background:#0c0c10;
+}
+
 :root{
   --bg:#0c0c10;
   --panel:#13131a;
@@ -28,8 +32,8 @@ body{
 }
 
 .topbar{
-  background:linear-gradient(90deg,#0e0e16,#1a1428,#0e0e16);
-  border-bottom:1px solid var(--border);
+  background:transparent;
+  border-bottom:none;
   padding:12px 16px;
   display:flex;
   align-items:center;
@@ -513,18 +517,18 @@ const blueTickImg  = new Image(); blueTickImg.src  = ASSET_BLUE_TICK;
 // THEMES
 // ═══════════════════════════════════════
 const THEMES = {
-  peace:    {name:'🕊️ Peace',   label:'PEACE & CALM', bg1:'#f5f0e8',bg2:'#ede5d0',qColor:'#1a0d00',nColor:'#5c2d00',acc:'#c9a96e',mark:'#c9a96e',ttl:'#8a6a40',brandBg:'#fff',brandTxt:'#1a0d00',brandAcc:'#c9a96e',bw:false,bar:'#c9a96e'},
-  mystic:   {name:'🌙 Mystic',  label:'WISDOM',       bg1:'#0a0f2c',bg2:'#141d3d',qColor:'#e0e7ff',nColor:'#a5b4fc',acc:'#4361ee',mark:'#4361ee',ttl:'#818cf8',brandBg:'#1e2a5e',brandTxt:'#fff',brandAcc:'#4361ee',bw:false,bar:'#4361ee'},
-  soulful:  {name:'🌿 Soulful', label:'LIFE',         bg1:'#f2efe6',bg2:'#e8e0cc',qColor:'#3d2b1f',nColor:'#7a5230',acc:'#8B6914',mark:'#8B6914',ttl:'#8a6a50',brandBg:'#fff',brandTxt:'#1a0d00',brandAcc:'#8B6914',bw:true, bar:'#a8956a'},
-  serene:   {name:'🌊 Serene',  label:'CALM',         bg1:'#e3f2fd',bg2:'#bbdefb',qColor:'#0d2137',nColor:'#1565c0',acc:'#1565c0',mark:'#1976d2',ttl:'#1976d2',brandBg:'#fff',brandTxt:'#0d2137',brandAcc:'#1565c0',bw:false,bar:'#1565c0'},
-  ethereal: {name:'✨ Ethereal',label:'SPIRIT',       bg1:'#1a0533',bg2:'#2d0a4e',qColor:'#f3e5f5',nColor:'#ce93d8',acc:'#9c27b0',mark:'#ab47bc',ttl:'#ba68c8',brandBg:'#2d0a4e',brandTxt:'#f3e5f5',brandAcc:'#9c27b0',bw:false,bar:'#9c27b0'},
-  grounded: {name:'🌲 Grounded',label:'NATURE',       bg1:'#e8f5e9',bg2:'#c8e6c9',qColor:'#1b3a1e',nColor:'#2e7d32',acc:'#2e7d32',mark:'#2e7d32',ttl:'#388e3c',brandBg:'#fff',brandTxt:'#1b3a1e',brandAcc:'#2e7d32',bw:false,bar:'#2e7d32'},
-  driven:   {name:'🔥 Driven',  label:'POWER',        bg1:'#fff8e1',bg2:'#ffecb3',qColor:'#3e2400',nColor:'#bf6c00',acc:'#f57f17',mark:'#f9a825',ttl:'#e65100',brandBg:'#fff',brandTxt:'#1a0d00',brandAcc:'#f57f17',bw:false,bar:'#f9a825'},
-  tender:   {name:'💗 Tender',  label:'LOVE',         bg1:'#fce4ec',bg2:'#f8bbd0',qColor:'#4a1527',nColor:'#7b2d3e',acc:'#c2185b',mark:'#c2185b',ttl:'#ad4762',brandBg:'#fff',brandTxt:'#1a0d00',brandAcc:'#c2185b',bw:false,bar:'#c2185b'},
-  bold:     {name:'⚡ Bold',    label:'STRENGTH',     bg1:'#1a1a1a',bg2:'#2d2d2d',qColor:'#f5f5f5',nColor:'#ff6b35',acc:'#ff4500',mark:'#ff4500',ttl:'#ff8c69',brandBg:'#2d2d2d',brandTxt:'#fff',brandAcc:'#ff4500',bw:true, bar:'#ff4500'},
-  stoic:    {name:'🖤 Stoic',   label:'DISCIPLINE',   bg1:'#212121',bg2:'#2d2d2d',qColor:'#eeeeee',nColor:'#bdbdbd',acc:'#9e9e9e',mark:'#757575',ttl:'#9e9e9e',brandBg:'#333',brandTxt:'#eee',brandAcc:'#9e9e9e',bw:true, bar:'#757575'},
-  hustle:   {name:'🏆 Hustle',  label:'SUCCESS',      bg1:'#fff8e1',bg2:'#fff3cd',qColor:'#2c1810',nColor:'#8b6914',acc:'#c6a84b',mark:'#d4a017',ttl:'#a0782a',brandBg:'#fff',brandTxt:'#2c1810',brandAcc:'#c6a84b',bw:false,bar:'#c6a84b'},
-  radiant:  {name:'🌸 Radiant', label:'SELF LOVE',    bg1:'#f3e5f5',bg2:'#e1bee7',qColor:'#2a0845',nColor:'#6a1b9a',acc:'#7b1fa2',mark:'#8e24aa',ttl:'#7b1fa2',brandBg:'#fff',brandTxt:'#2a0845',brandAcc:'#7b1fa2',bw:false,bar:'#7b1fa2'},
+  peace:    {name:'🕊️ Peace',   label:'PEACE & CALM', bg1:'#f5f0e8',bg2:'#ede5d0',qColor:'#1a0d00',nColor:'#5c2d00',acc:'#c9a96e',mark:'#c9a96e',ttl:'#8a6a40',brandBg:'transparent',brandTxt:'#1a0d00',brandAcc:'#c9a96e',bw:false,bar:'#c9a96e'},
+  mystic:   {name:'🌙 Mystic',  label:'WISDOM',       bg1:'#0a0f2c',bg2:'#141d3d',qColor:'#e0e7ff',nColor:'#a5b4fc',acc:'#4361ee',mark:'#4361ee',ttl:'#818cf8',brandBg:'transparent',brandTxt:'#fff',brandAcc:'#4361ee',bw:false,bar:'#4361ee'},
+  soulful:  {name:'🌿 Soulful', label:'LIFE',         bg1:'#f2efe6',bg2:'#e8e0cc',qColor:'#3d2b1f',nColor:'#7a5230',acc:'#8B6914',mark:'#8B6914',ttl:'#8a6a50',brandBg:'transparent',brandTxt:'#1a0d00',brandAcc:'#8B6914',bw:true, bar:'#a8956a'},
+  serene:   {name:'🌊 Serene',  label:'CALM',         bg1:'#e3f2fd',bg2:'#bbdefb',qColor:'#0d2137',nColor:'#1565c0',acc:'#1565c0',mark:'#1976d2',ttl:'#1976d2',brandBg:'transparent',brandTxt:'#0d2137',brandAcc:'#1565c0',bw:false,bar:'#1565c0'},
+  ethereal: {name:'✨ Ethereal',label:'SPIRIT',       bg1:'#1a0533',bg2:'#2d0a4e',qColor:'#f3e5f5',nColor:'#ce93d8',acc:'#9c27b0',mark:'#ab47bc',ttl:'#ba68c8',brandBg:'transparent',brandTxt:'#f3e5f5',brandAcc:'#9c27b0',bw:false,bar:'#9c27b0'},
+  grounded: {name:'🌲 Grounded',label:'NATURE',       bg1:'#e8f5e9',bg2:'#c8e6c9',qColor:'#1b3a1e',nColor:'#2e7d32',acc:'#2e7d32',mark:'#2e7d32',ttl:'#388e3c',brandBg:'transparent',brandTxt:'#1b3a1e',brandAcc:'#2e7d32',bw:false,bar:'#2e7d32'},
+  driven:   {name:'🔥 Driven',  label:'POWER',        bg1:'#fff8e1',bg2:'#ffecb3',qColor:'#3e2400',nColor:'#bf6c00',acc:'#f57f17',mark:'#f9a825',ttl:'#e65100',brandBg:'transparent',brandTxt:'#1a0d00',brandAcc:'#f57f17',bw:false,bar:'#f9a825'},
+  tender:   {name:'💗 Tender',  label:'LOVE',         bg1:'#fce4ec',bg2:'#f8bbd0',qColor:'#4a1527',nColor:'#7b2d3e',acc:'#c2185b',mark:'#c2185b',ttl:'#ad4762',brandBg:'transparent',brandTxt:'#1a0d00',brandAcc:'#c2185b',bw:false,bar:'#c2185b'},
+  bold:     {name:'⚡ Bold',    label:'STRENGTH',     bg1:'#1a1a1a',bg2:'#2d2d2d',qColor:'#f5f5f5',nColor:'#ff6b35',acc:'#ff4500',mark:'#ff4500',ttl:'#ff8c69',brandBg:'transparent',brandTxt:'#fff',brandAcc:'#ff4500',bw:true, bar:'#ff4500'},
+  stoic:    {name:'🖤 Stoic',   label:'DISCIPLINE',   bg1:'#212121',bg2:'#2d2d2d',qColor:'#eeeeee',nColor:'#bdbdbd',acc:'#9e9e9e',mark:'#757575',ttl:'#9e9e9e',brandBg:'transparent',brandTxt:'#eee',brandAcc:'#9e9e9e',bw:true, bar:'#757575'},
+  hustle:   {name:'🏆 Hustle',  label:'SUCCESS',      bg1:'#fff8e1',bg2:'#fff3cd',qColor:'#2c1810',nColor:'#8b6914',acc:'#c6a84b',mark:'#d4a017',ttl:'#a0782a',brandBg:'transparent',brandTxt:'#2c1810',brandAcc:'#c6a84b',bw:false,bar:'#c6a84b'},
+  radiant:  {name:'🌸 Radiant', label:'SELF LOVE',    bg1:'#f3e5f5',bg2:'#e1bee7',qColor:'#2a0845',nColor:'#6a1b9a',acc:'#7b1fa2',mark:'#8e24aa',ttl:'#7b1fa2',brandBg:'transparent',brandTxt:'#2a0845',brandAcc:'#7b1fa2',bw:false,bar:'#7b1fa2'},
 };
 
 const RANDOM_QUOTES=[
@@ -844,23 +848,27 @@ function lighten(hex,a){
 function drawBrandBox(T, bx, by, bw, bh, channelName, handle, showBadge){
   // Drop shadow behind box
   ctx.save();
-  ctx.shadowColor='rgba(0,0,0,0.28)';
-  ctx.shadowBlur=28;
-  ctx.shadowOffsetX=0;
-  ctx.shadowOffsetY=6;
-  ctx.fillStyle=T.brandBg;
-  ctx.globalAlpha=0.96;
-  rRect(ctx,bx,by,bw,bh,18);
-  ctx.fill();
+  if(T.brandBg !== 'transparent'){
+    ctx.shadowColor='rgba(0,0,0,0.28)';
+    ctx.shadowBlur=28;
+    ctx.shadowOffsetX=0;
+    ctx.shadowOffsetY=6;
+    ctx.fillStyle=T.brandBg;
+    ctx.globalAlpha=0.96;
+    rRect(ctx,bx,by,bw,bh,18);
+    ctx.fill();
+  }
   ctx.restore();
 
   // Subtle border
   ctx.save();
-  ctx.strokeStyle=T.brandAcc;
-  ctx.lineWidth=2.5;
-  ctx.globalAlpha=0.35;
-  rRect(ctx,bx,by,bw,bh,18);
-  ctx.stroke();
+  if(T.brandBg !== 'transparent'){
+    ctx.strokeStyle=T.brandAcc;
+    ctx.lineWidth=2.5;
+    ctx.globalAlpha=0.35;
+    rRect(ctx,bx,by,bw,bh,18);
+    ctx.stroke();
+  }
   ctx.restore();
 
   // ── Avatar circle (left side) — like the reference image
