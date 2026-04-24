@@ -1,1163 +1,1550 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Shayari Card Maker</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,600;1,700&family=Cinzel:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Quote Card Studio</title>
 <style>
-:root {
-  --bg: #0f0f0f;
-  --panel: #161616;
-  --surface: #1e1e1e;
-  --border: #282828;
-  --accent: #e0e0e0;
-  --muted: #4a4a4a;
-  --highlight: #f5c842;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--accent);
-  display: flex;
-  flex-direction: column;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #0a0a0f;
+  color: #fff;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* ── TOP BAR ── */
-.topbar {
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 16px;
+/* ── Header */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-  flex-shrink: 0;
-}
-.topbar-title { font-size: 12px; font-weight: 600; letter-spacing: 2px; color: #aaa; text-transform: uppercase; }
-.topbar-title span { color: var(--highlight); }
-.dl-btn-top {
-  background: linear-gradient(135deg, #f5c842, #e8a020);
-  color: #111;
-  border: none; padding: 8px 18px;
-  border-radius: 6px; font-size: 11px; font-weight: 700;
-  letter-spacing: 1px; cursor: pointer; transition: all .2s; white-space: nowrap;
-}
-.dl-btn-top:hover { opacity: .9; transform: translateY(-1px); }
-
-/* ── MAIN ── */
-.main { display: flex; flex: 1; overflow: hidden; }
-
-/* ── PREVIEW AREA ── */
-.preview-area {
-  flex: 1;
-  display: flex; align-items: center; justify-content: center;
-  background: #0a0a0a;
-  background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 70%);
-  padding: 20px;
-  min-height: 0; overflow: hidden;
+  border-bottom: 1px solid #ffffff10;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.card-scaler {
-  position: relative;
-  flex-shrink: 0;
+.header h1 {
+  font-size: 18px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-#card {
-  width: 1080px;
-  height: 1920px;
-  position: relative;
-  overflow: hidden;
-  transform-origin: top left;
-  background: #1a1a2e;
-}
-
-.card-scaler-shadow {
-  position: absolute; inset: 0;
-  box-shadow: 0 24px 80px rgba(0,0,0,.9);
-  pointer-events: none;
-  z-index: 10;
-}
-
-/* BG LAYER */
-.c-bg {
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  z-index: 0;
-  transition: background .3s;
-}
-/* Optional BG image layer */
-.c-bg-img {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity .3s;
-}
-/* Overlay for text legibility */
-.c-overlay {
-  position: absolute; inset: 0;
-  z-index: 2;
-  background: rgba(0,0,0,0);
-  transition: background .3s;
-  pointer-events: none;
-}
-
-/* DECORATIVE ACCENT LINE */
-.c-accent-line {
-  position: absolute;
-  z-index: 4;
-  top: 200px;
-  left: 44px;
-  width: 80px;
-  height: 5px;
-  background: var(--card-accent, #f5c842);
-  border-radius: 3px;
-  display: none;
-}
-
-/* HEADER */
-.c-header {
-  position: absolute; z-index: 5;
-  display: flex; align-items: center; gap: 20px;
-  top: 52px; left: 44px;
-}
-.c-header.pos-left  { left: 44px; right: auto; transform: none; }
-.c-header.pos-center { left: 50%; transform: translateX(-50%); right: auto; }
-.c-header.pos-right { right: 44px; left: auto; transform: none; }
-
-.c-avatar {
-  border-radius: 50%; overflow: hidden; flex-shrink: 0;
-  background: #333;
-  display: flex; align-items: center; justify-content: center;
-  border: 4px solid rgba(245,200,66,.5);
-  width: 110px; height: 110px;
-  box-shadow: 0 0 0 2px rgba(245,200,66,.15);
-}
-.c-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.c-avatar-ph { font-size: 44px; }
-
-.c-info { display: flex; flex-direction: column; gap: 4px; }
-.c-name {
-  font-family: 'Playfair Display', serif;
-  font-style: italic; font-weight: 700;
-  font-size: 38px; color: #fff; line-height: 1.2;
-  text-shadow: 0 2px 12px rgba(0,0,0,.5);
-  white-space: nowrap;
-}
-.c-handle {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 500;
-  font-size: 24px;
-  color: rgba(245,200,66,.85);
-  line-height: 1.3;
-  white-space: nowrap;
-  letter-spacing: 0.5px;
-}
-
-/* SHAYARI */
-.c-body {
-  position: absolute; z-index: 4;
+.ratio-tabs {
   display: flex;
-  left: 44px; right: 44px;
-  top: 260px; bottom: 100px;
-  align-items: flex-start;
+  gap: 6px;
 }
-.c-shayari {
-  font-family: 'Noto Serif Devanagari', serif;
+
+.ratio-tab {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 12px;
   font-weight: 700;
-  font-size: 48px;
-  line-height: 1.85;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ratio-tab.active {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border-color: transparent;
   color: #fff;
-  white-space: pre-wrap;
-  word-break: break-word;
-  width: 100%;
-  text-shadow: 0 2px 20px rgba(0,0,0,.6);
 }
 
-/* FOOTER WATERMARK */
-.c-footer {
-  position: absolute; z-index: 5;
-  bottom: 44px; right: 60px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 22px; color: rgba(255,255,255,.35);
+/* ── Main Layout */
+.studio {
+  display: flex;
+  height: calc(100vh - 62px);
+}
+
+/* ── Left Panel */
+.left-panel {
+  width: 280px;
+  min-width: 260px;
+  background: #111827;
+  border-right: 1px solid #1f2937;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.left-panel::-webkit-scrollbar { width: 4px; }
+.left-panel::-webkit-scrollbar-track { background: #0a0a0f; }
+.left-panel::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+
+.sec {
+  background: #1f2937;
+  border: 1px solid #2d3748;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.sec-title {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
   letter-spacing: 2px;
+  color: #818cf8;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sec-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #374151;
+}
+
+label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+input[type="text"], textarea, select {
+  width: 100%;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  color: #f9fafb;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 10px;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.15);
+}
+
+textarea { resize: vertical; min-height: 70px; }
+
+.upload-zone {
+  border: 2px dashed #374151;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  background: #111827;
+  margin-bottom: 10px;
+}
+
+.upload-zone:hover { border-color: #6366f1; }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-zone .ui { font-size: 22px; }
+.upload-zone p { font-size: 11px; color: #6b7280; margin-top: 4px; }
+
+#imgThumb {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
   display: none;
+  margin: 0 auto 6px;
+  border: 2px solid #6366f1;
 }
 
-/* ── RIGHT PANEL ── */
-.right-panel {
-  width: 310px; min-width: 310px;
-  background: var(--panel);
-  border-left: 1px solid var(--border);
-  display: flex; flex-direction: column; overflow: hidden;
+/* Sliders */
+.sl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
-.tab-nav {
-  display: flex; background: var(--bg);
-  border-bottom: 1px solid var(--border); flex-shrink: 0;
-  overflow-x: auto; scrollbar-width: none;
+
+input[type="range"] {
+  flex: 1;
+  appearance: none;
+  height: 3px;
+  background: #374151;
+  border-radius: 2px;
+  outline: none;
+  margin: 0; border: none; padding: 0;
 }
-.tab-nav::-webkit-scrollbar { display: none; }
-.tab-nav-btn {
-  flex: 1; padding: 11px 4px; min-width: 52px;
-  background: transparent; border: none; color: var(--muted);
-  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-  cursor: pointer; border-bottom: 2px solid transparent;
-  transition: all .2s; font-family: 'DM Sans', sans-serif; white-space: nowrap;
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px; height: 14px;
+  background: #6366f1;
+  border-radius: 50%;
+  cursor: pointer;
 }
-.tab-nav-btn.on { color: var(--highlight); border-bottom-color: var(--highlight); }
 
-.tab-content {
-  flex: 1; overflow-y: auto; padding: 16px 14px;
-  display: none; flex-direction: column; gap: 14px;
+.sv {
+  font-size: 11px;
+  color: #818cf8;
+  min-width: 28px;
+  text-align: right;
+  font-weight: 700;
 }
-.tab-content.on { display: flex; }
-.tab-content::-webkit-scrollbar { width: 3px; }
-.tab-content::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
-/* ── CONTROLS ── */
-.lbl { font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-.field { display: flex; flex-direction: column; }
-
-textarea, input[type="text"] {
-  background: var(--surface); border: 1px solid var(--border);
-  color: #ccc; padding: 9px 11px; border-radius: 5px;
-  font-family: 'Noto Serif Devanagari', serif;
-  font-size: 14px; line-height: 1.7;
-  resize: vertical; width: 100%; transition: border-color .2s;
+/* Theme Grid */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  max-height: 300px;
+  overflow-y: auto;
 }
-textarea:focus, input[type="text"]:focus { outline: none; border-color: #555; }
-#shayariInput { min-height: 120px; }
 
-.upload-box {
-  background: var(--surface); border: 1px dashed #333;
-  border-radius: 5px; padding: 12px 10px; text-align: center;
-  cursor: pointer; color: #555; font-size: 10px;
-  letter-spacing: 1.5px; text-transform: uppercase; transition: all .2s;
-}
-.upload-box:hover { border-color: var(--highlight); color: var(--highlight); }
+.theme-grid::-webkit-scrollbar { width: 3px; }
+.theme-grid::-webkit-scrollbar-thumb { background: #374151; }
 
-.slider-row { display: flex; align-items: center; gap: 8px; }
-input[type="range"] { flex: 1; accent-color: var(--highlight); height: 4px; cursor: pointer; }
-.val { font-size: 10px; color: #555; min-width: 40px; text-align: right; }
-
-/* SWATCHES */
-.swatch-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-.bgswatch {
-  width: 28px; height: 28px; border-radius: 6px;
-  cursor: pointer; border: 2px solid transparent;
-  transition: all .15s; flex-shrink: 0;
+.t-btn {
+  border: 2px solid transparent;
+  border-radius: 9px;
+  padding: 8px 6px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
+  transition: all 0.18s;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  line-height: 1.3;
   position: relative;
 }
-.bgswatch:hover, .bgswatch.on { border-color: var(--highlight); transform: scale(1.12); }
-.bgswatch[data-grad] {
-  border-radius: 6px;
+
+.t-btn:hover { transform: scale(1.04); }
+.t-btn.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+.t-chk { position: absolute; top: 3px; right: 3px; width: 12px; height: 12px; background: #fff; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 7px; color: #111; }
+.t-btn.active .t-chk { display: flex; }
+
+/* Action Buttons */
+.btn-primary {
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border: none;
+  border-radius: 9px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-/* GRADIENT PREVIEW SWATCHES */
-.bgswatch[data-grad="fb-blue"] { background: linear-gradient(135deg,#1a237e,#1565c0); }
-.bgswatch[data-grad="fb-warm"] { background: linear-gradient(135deg,#bf360c,#e65100); }
-.bgswatch[data-grad="fb-rose"] { background: linear-gradient(135deg,#880e4f,#c62828); }
-.bgswatch[data-grad="fb-forest"] { background: linear-gradient(135deg,#1b5e20,#2e7d32); }
-.bgswatch[data-grad="fb-purple"] { background: linear-gradient(135deg,#4a148c,#6a1b9a); }
-.bgswatch[data-grad="fb-teal"] { background: linear-gradient(135deg,#004d40,#00695c); }
-.bgswatch[data-grad="fb-gold"] { background: linear-gradient(135deg,#e65100,#f9a825); }
-.bgswatch[data-grad="fb-night"] { background: linear-gradient(135deg,#0d0d0d,#1a1a2e); }
-.bgswatch[data-grad="fb-dawn"] { background: linear-gradient(135deg,#ff6f00,#ff8f00,#f57f17); }
-.bgswatch[data-grad="fb-dusk"] { background: linear-gradient(135deg,#311b92,#4527a0,#c2185b); }
-.bgswatch[data-grad="fb-ocean"] { background: linear-gradient(135deg,#0d47a1,#1565c0,#0097a7); }
-.bgswatch[data-grad="fb-sakura"] { background: linear-gradient(135deg,#880e4f,#e91e63,#ff8a65); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,70,229,0.45); }
 
-.btn-row { display: flex; gap: 5px; flex-wrap: wrap; }
-.xbtn {
-  flex: 1; padding: 8px 6px;
-  background: var(--surface); border: 1px solid var(--border);
-  color: #555; border-radius: 5px; cursor: pointer;
-  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-  transition: all .2s; font-family: 'DM Sans', sans-serif; white-space: nowrap;
-  min-width: 0;
+.btn-sec {
+  width: 100%;
+  padding: 9px;
+  background: transparent;
+  border: 1px solid #374151;
+  border-radius: 9px;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 6px;
 }
-.xbtn.on, .xbtn:hover { border-color: var(--highlight); color: var(--highlight); background: rgba(245,200,66,.08); }
 
-.color-pair { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-.cp { display: flex; align-items: center; gap: 6px; }
-.cp span { font-size: 9px; color: #555; letter-spacing: 1px; text-transform: uppercase; }
+.btn-sec:hover { border-color: #6366f1; color: #a5b4fc; }
+
+/* ── Center Canvas Area */
+.canvas-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0d0d14;
+  background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0f 70%);
+  gap: 16px;
+  padding: 20px;
+  overflow: auto;
+  position: relative;
+}
+
+.canvas-hint {
+  font-size: 11px;
+  color: #374151;
+  text-align: center;
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+#canvasContainer {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 30px 80px rgba(0,0,0,0.7);
+}
+
+#qCanvas {
+  display: block;
+  cursor: default;
+  user-select: none;
+}
+
+/* ── Right Panel */
+.right-panel {
+  width: 240px;
+  min-width: 220px;
+  background: #111827;
+  border-left: 1px solid #1f2937;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.right-panel::-webkit-scrollbar { width: 4px; }
+.right-panel::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+
+.elem-btn {
+  width: 100%;
+  padding: 10px 12px;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 9px;
+  color: #d1d5db;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.elem-btn:hover, .elem-btn.selected {
+  border-color: #6366f1;
+  background: rgba(99,102,241,0.1);
+  color: #a5b4fc;
+}
+
+.elem-btn .e-icon { font-size: 16px; }
+.elem-btn .e-info { display: flex; flex-direction: column; }
+.elem-btn .e-name { font-size: 11px; font-weight: 700; }
+.elem-btn .e-desc { font-size: 9px; color: #6b7280; margin-top: 1px; }
+
+.prop-panel {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.prop-title {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #34d399;
+  margin-bottom: 12px;
+}
+
+.dl-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-dl {
+  width: 100%;
+  padding: 10px;
+  border-radius: 9px;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-green { background: linear-gradient(135deg, #059669, #10b981); color: #fff; }
+.btn-green:hover { box-shadow: 0 4px 14px rgba(16,185,129,0.4); transform: translateY(-1px); }
+.btn-amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; }
+.btn-amber:hover { box-shadow: 0 4px 14px rgba(245,158,11,0.4); transform: translateY(-1px); }
+.btn-blue { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #fff; }
+.btn-blue:hover { box-shadow: 0 4px 14px rgba(59,130,246,0.4); transform: translateY(-1px); }
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #f9fafb;
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: transform 0.3s;
+  z-index: 999;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Selected element highlight */
+.handle-info {
+  background: #1f2937;
+  border: 1px solid #4f46e5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #a5b4fc;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .studio { flex-direction: column; height: auto; }
+  .left-panel, .right-panel { width: 100%; min-width: unset; max-height: 280px; }
+  .canvas-area { min-height: 50vh; }
+}
+
+/* Color picker inline */
 input[type="color"] {
-  width: 32px; height: 28px; padding: 2px;
-  border: 1px solid #333; border-radius: 4px;
-  background: var(--surface); cursor: pointer;
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: none; padding: 0;
+  cursor: pointer;
+  background: none;
+  margin: 0;
 }
 
-hr { border: none; border-top: 1px solid var(--border); }
-
-/* SECTION HEADER */
-.sec-hd {
-  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
-  color: #383838; padding: 4px 0; border-bottom: 1px solid #222;
-  margin-bottom: 2px;
+.color-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-/* ── BOTTOM SHEET (mobile) ── */
-.bottom-sheet { display: none; flex-direction: column; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
-.bottom-tab-nav {
-  display: flex; background: var(--bg); border-bottom: 1px solid var(--border);
-  overflow-x: auto; scrollbar-width: none;
+.c-dot {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s;
+  flex-shrink: 0;
 }
-.bottom-tab-nav::-webkit-scrollbar { display: none; }
-.bottom-tab-btn {
-  flex-shrink: 0; padding: 10px 12px;
-  background: transparent; border: none; color: var(--muted);
-  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-  cursor: pointer; border-bottom: 2px solid transparent;
-  transition: all .2s; font-family: 'DM Sans', sans-serif; white-space: nowrap;
-}
-.bottom-tab-btn.on { color: var(--highlight); border-bottom-color: var(--highlight); }
-.bottom-tab-content {
-  display: none; flex-direction: column; gap: 12px;
-  padding: 14px; max-height: 44vh; overflow-y: auto;
-}
-.bottom-tab-content.on { display: flex; }
-.bottom-tab-content::-webkit-scrollbar { width: 2px; }
-.bottom-tab-content::-webkit-scrollbar-thumb { background: #333; }
 
-/* TOGGLE SWITCH */
-.toggle-row { display: flex; align-items: center; justify-content: space-between; }
-.toggle-row .lbl { margin: 0; }
-.toggle { position: relative; display: inline-block; width: 36px; height: 20px; }
-.toggle input { opacity: 0; width: 0; height: 0; }
-.toggle-slider {
-  position: absolute; inset: 0; background: #2a2a2a;
-  border-radius: 20px; cursor: pointer; transition: .2s; border: 1px solid #333;
-}
-.toggle-slider:before {
-  content: ''; position: absolute;
-  height: 14px; width: 14px;
-  left: 2px; top: 2px;
-  background: #555; border-radius: 50%; transition: .2s;
-}
-.toggle input:checked + .toggle-slider { background: rgba(245,200,66,.2); border-color: var(--highlight); }
-.toggle input:checked + .toggle-slider:before { background: var(--highlight); transform: translateX(16px); }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 700px) {
-  .main { flex-direction: column; overflow: visible; }
-  .right-panel { display: none; }
-  .bottom-sheet { display: flex; }
-  .preview-area { padding: 12px; min-height: 0; flex-shrink: 0; }
-}
-@media (min-width: 701px) and (max-width: 960px) {
-  .right-panel { width: 270px; min-width: 270px; }
-}
+.c-dot:hover, .c-dot.active { border-color: #fff; transform: scale(1.2); }
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
-<div class="topbar">
-  <div class="topbar-title">Shayari <span>Card</span> Maker</div>
-  <button class="dl-btn-top" id="dlBtn">⬇ Download 9:16</button>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-
-  <!-- PREVIEW -->
-  <div class="preview-area" id="previewArea">
-    <div class="card-scaler" id="cardScaler">
-      <div id="card">
-        <!-- BG layers -->
-        <div class="c-bg" id="cBg"></div>
-        <div class="c-bg-img" id="cBgImg"></div>
-        <div class="c-overlay" id="cOverlay"></div>
-
-        <!-- Accent line -->
-        <div class="c-accent-line" id="cAccentLine"></div>
-
-        <!-- Header -->
-        <div class="c-header pos-left" id="cHeader">
-          <div class="c-avatar" id="cAvatar">
-            <span id="cAvatarPh">👤</span>
-            <img id="cAvatarImg" src="" style="display:none" alt="">
-          </div>
-          <div class="c-info">
-            <div class="c-name" id="cName">Classical Author</div>
-            <div class="c-handle" id="cHandle">@classicalauthor</div>
-          </div>
-        </div>
-
-        <!-- Shayari body -->
-        <div class="c-body" id="cBody">
-          <div class="c-shayari" id="cShayari">उजड़ी हुई दुनिया को
-तू आबाद न कर, बीते
-हुए लम्हों को तू याद
-न कर, एक कैद परिंदे
-ने ये कहा हम से.. मैं
-भुल चुका हूं उड़ना मुझे
-आजाद न कर!</div>
-        </div>
-
-        <!-- Footer watermark -->
-        <div class="c-footer" id="cFooter">@classicalauthor</div>
-      </div>
-      <div class="card-scaler-shadow"></div>
-    </div>
-  </div>
-
-  <!-- RIGHT PANEL -->
-  <div class="right-panel">
-    <div class="tab-nav">
-      <button class="tab-nav-btn on" data-tab="profile">Profile</button>
-      <button class="tab-nav-btn" data-tab="header">Header</button>
-      <button class="tab-nav-btn" data-tab="text">Text</button>
-      <button class="tab-nav-btn" data-tab="bg">BG</button>
-      <button class="tab-nav-btn" data-tab="extras">Extra</button>
-    </div>
-
-    <!-- Profile -->
-    <div class="tab-content on" id="tab-profile">
-      <div class="field">
-        <div class="lbl">Profile Photo</div>
-        <div class="upload-box" id="avatarBox">↑ Upload photo</div>
-        <input type="file" id="avatarFile" accept="image/*" style="display:none">
-      </div>
-      <div class="field">
-        <div class="lbl">Avatar Border Color</div>
-        <div class="cp"><input type="color" id="avatarBorder" value="#f5c842"><span>Border</span></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Display Name</div>
-        <input type="text" id="nameInput" value="Classical Author">
-      </div>
-      <div class="field">
-        <div class="lbl">Handle / Page Name</div>
-        <input type="text" id="handleInput" value="@classicalauthor">
-      </div>
-      <div class="field">
-        <div class="lbl">Name Font Size &nbsp;<span class="val" id="nameFsVal" style="display:inline">38px</span></div>
-        <div class="slider-row"><input type="range" id="nameFs" min="16" max="72" value="38"></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Handle Font Size &nbsp;<span class="val" id="handleFsVal" style="display:inline">24px</span></div>
-        <div class="slider-row"><input type="range" id="handleFs" min="12" max="56" value="24"></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Text Colors</div>
-        <div class="color-pair">
-          <div class="cp"><input type="color" id="nameColor" value="#ffffff"><span>Name</span></div>
-          <div class="cp"><input type="color" id="handleColor" value="#f5c842"><span>Handle</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Header Position -->
-    <div class="tab-content" id="tab-header">
-      <div class="field">
-        <div class="lbl">Horizontal Position</div>
-        <div class="btn-row">
-          <button class="xbtn on" data-hpos="pos-left">Left</button>
-          <button class="xbtn" data-hpos="pos-center">Center</button>
-          <button class="xbtn" data-hpos="pos-right">Right</button>
-        </div>
-      </div>
-      <div class="field">
-        <div class="lbl">Top Offset &nbsp;<span class="val" id="topVal" style="display:inline">52px</span></div>
-        <div class="slider-row"><input type="range" id="headerTop" min="0" max="400" value="52"></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Side Offset &nbsp;<span class="val" id="hOffVal" style="display:inline">44px</span></div>
-        <div class="slider-row"><input type="range" id="headerOff" min="0" max="200" value="44"></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Avatar Size &nbsp;<span class="val" id="avatarSzVal" style="display:inline">110px</span></div>
-        <div class="slider-row"><input type="range" id="avatarSz" min="50" max="220" value="110"></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Gap &nbsp;<span class="val" id="gapVal" style="display:inline">20px</span></div>
-        <div class="slider-row"><input type="range" id="headerGap" min="4" max="80" value="20"></div>
-      </div>
-    </div>
-
-    <!-- Text -->
-    <div class="tab-content" id="tab-text">
-      <div class="field">
-        <div class="lbl">Shayari Text</div>
-        <textarea id="shayariInput">उजड़ी हुई दुनिया को
-तू आबाद न कर, बीते
-हुए लम्हों को तू याद
-न कर, एक कैद परिंदे
-ने ये कहा हम से.. मैं
-भुल चुका हूं उड़ना मुझे
-आजाद न कर!</textarea>
-      </div>
-      <div class="field">
-        <div class="lbl">Font Size &nbsp;<span class="val" id="fsVal">48px</span></div>
-        <div class="slider-row"><input type="range" id="fontSize" min="20" max="90" value="48"><span class="val" id="fsValHide" style="display:none"></span></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Line Height &nbsp;<span class="val" id="lhVal">1.85</span></div>
-        <div class="slider-row"><input type="range" id="lineH" min="1.2" max="3.0" step="0.05" value="1.85"></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Letter Spacing &nbsp;<span class="val" id="lsVal">0px</span></div>
-        <div class="slider-row"><input type="range" id="letterSpacing" min="-2" max="10" step="0.5" value="0"></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Font Weight</div>
-        <div class="btn-row">
-          <button class="xbtn" data-w="400">Light</button>
-          <button class="xbtn" data-w="600">Semi</button>
-          <button class="xbtn on" data-w="700">Bold</button>
-          <button class="xbtn" data-w="900">Black</button>
-        </div>
-      </div>
-      <div class="field">
-        <div class="lbl">Alignment</div>
-        <div class="btn-row">
-          <button class="xbtn on" data-align="left">Left</button>
-          <button class="xbtn" data-align="center">Center</button>
-          <button class="xbtn" data-align="right">Right</button>
-        </div>
-      </div>
-      <div class="field">
-        <div class="lbl">Vertical Position</div>
-        <div class="btn-row">
-          <button class="xbtn on" data-vpos="flex-start">Top</button>
-          <button class="xbtn" data-vpos="center">Middle</button>
-          <button class="xbtn" data-vpos="flex-end">Bottom</button>
-        </div>
-      </div>
-      <div class="field">
-        <div class="lbl">Text Color</div>
-        <div class="cp"><input type="color" id="textColor" value="#ffffff"><span>Shayari</span></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Text Shadow</div>
-        <div class="btn-row">
-          <button class="xbtn on" data-shadow="0 2px 20px rgba(0,0,0,.6)">Soft</button>
-          <button class="xbtn" data-shadow="0 4px 40px rgba(0,0,0,.9)">Strong</button>
-          <button class="xbtn" data-shadow="2px 2px 0 rgba(0,0,0,.8)">Hard</button>
-          <button class="xbtn" data-shadow="none">None</button>
-        </div>
-      </div>
-      <div class="field">
-        <div class="lbl">Text Left Margin &nbsp;<span class="val" id="textLeftVal">44px</span></div>
-        <div class="slider-row"><input type="range" id="textLeft" min="0" max="200" value="44"></div>
-      </div>
-      <div class="field">
-        <div class="lbl">Text Top Offset &nbsp;<span class="val" id="textTopVal">260px</span></div>
-        <div class="slider-row"><input type="range" id="textTop" min="100" max="800" value="260"></div>
-      </div>
-    </div>
-
-    <!-- Background -->
-    <div class="tab-content" id="tab-bg">
-      <div class="sec-hd">🎨 Gradient Presets (Facebook-Optimized)</div>
-      <div class="swatch-row">
-        <div class="bgswatch on" data-grad="fb-night" title="Classic Night"></div>
-        <div class="bgswatch" data-grad="fb-blue" title="Deep Blue"></div>
-        <div class="bgswatch" data-grad="fb-warm" title="Warm Fire"></div>
-        <div class="bgswatch" data-grad="fb-rose" title="Rose Red"></div>
-        <div class="bgswatch" data-grad="fb-forest" title="Forest"></div>
-        <div class="bgswatch" data-grad="fb-purple" title="Royal Purple"></div>
-        <div class="bgswatch" data-grad="fb-teal" title="Teal Dark"></div>
-        <div class="bgswatch" data-grad="fb-gold" title="Sunset Gold"></div>
-        <div class="bgswatch" data-grad="fb-dawn" title="Dawn"></div>
-        <div class="bgswatch" data-grad="fb-dusk" title="Dusk"></div>
-        <div class="bgswatch" data-grad="fb-ocean" title="Ocean"></div>
-        <div class="bgswatch" data-grad="fb-sakura" title="Sakura"></div>
-      </div>
-
-      <div class="sec-hd" style="margin-top:4px">🖤 Solid Colors</div>
-      <div class="swatch-row">
-        <div class="bgswatch" data-c="#0d0d0d" style="background:#0d0d0d"></div>
-        <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
-        <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
-        <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd"></div>
-        <div class="bgswatch" data-c="#f5f5f0" style="background:#f5f5f0;border:1px solid #ddd"></div>
-        <div class="bgswatch" data-c="#c9c9c9" style="background:#c9c9c9"></div>
-        <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
-        <div class="bgswatch" data-c="#0f1a00" style="background:#0f1a00"></div>
-      </div>
-
-      <div class="field">
-        <div class="lbl">Custom Background Color</div>
-        <input type="color" id="customBg" value="#1a1a2e" style="width:100%;height:36px;padding:2px;border:1px solid #333;border-radius:5px;background:var(--surface);cursor:pointer">
-      </div>
-
-      <hr>
-
-      <div class="field">
-        <div class="lbl">Background Image Upload</div>
-        <div class="upload-box" id="bgImgBox">↑ Upload background image</div>
-        <input type="file" id="bgImgFile" accept="image/*" style="display:none">
-        <button class="xbtn" id="clearBgImg" style="margin-top:5px;flex:none">✕ Clear Image</button>
-      </div>
-
-      <div class="field">
-        <div class="lbl">Dark Overlay &nbsp;<span class="val" id="overlayVal">0%</span></div>
-        <div class="slider-row"><input type="range" id="overlaySlider" min="0" max="90" value="0"></div>
-      </div>
-
-      <hr>
-
-      <div class="field">
-        <div class="lbl">Custom Gradient</div>
-        <div class="color-pair">
-          <div class="cp"><input type="color" id="gradFrom" value="#1a1a2e"><span>From</span></div>
-          <div class="cp"><input type="color" id="gradTo" value="#0f3460"><span>To</span></div>
-        </div>
-        <div style="margin-top:8px">
-          <div class="lbl">Direction</div>
-          <div class="btn-row">
-            <button class="xbtn on" data-gdir="135deg">↘ Diag</button>
-            <button class="xbtn" data-gdir="180deg">↓ Down</button>
-            <button class="xbtn" data-gdir="90deg">→ Right</button>
-            <button class="xbtn" data-gdir="45deg">↗ Up</button>
-          </div>
-        </div>
-        <button class="xbtn" id="applyGrad" style="margin-top:8px;flex:none">Apply Custom Gradient</button>
-      </div>
-    </div>
-
-    <!-- Extras -->
-    <div class="tab-content" id="tab-extras">
-      <div class="sec-hd">Card Extras</div>
-
-      <div class="toggle-row field">
-        <div class="lbl" style="margin:0">Show Watermark</div>
-        <label class="toggle">
-          <input type="checkbox" id="showWatermark">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-
-      <div class="field">
-        <div class="lbl">Watermark Text</div>
-        <input type="text" id="watermarkText" value="@classicalauthor" style="font-family:'DM Sans',sans-serif">
-      </div>
-
-      <div class="toggle-row field">
-        <div class="lbl" style="margin:0">Accent Line</div>
-        <label class="toggle">
-          <input type="checkbox" id="showAccentLine">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-
-      <div class="field">
-        <div class="lbl">Accent / Avatar Border Color</div>
-        <input type="color" id="accentColor" value="#f5c842" style="width:100%;height:36px;padding:2px;border:1px solid #333;border-radius:5px;background:var(--surface);cursor:pointer">
-      </div>
-
-      <hr>
-
-      <div class="sec-hd" style="margin-top:4px">Avatar Style</div>
-      <div class="field">
-        <div class="lbl">Filter</div>
-        <div class="btn-row">
-          <button class="xbtn on" data-avf="none">Color</button>
-          <button class="xbtn" data-avf="grayscale(1)">B&W</button>
-          <button class="xbtn" data-avf="sepia(0.8)">Sepia</button>
-          <button class="xbtn" data-avf="contrast(1.3) saturate(1.3)">Vivid</button>
-        </div>
-      </div>
-      <div class="field">
-        <div class="lbl">Avatar Border Width &nbsp;<span class="val" id="avBwVal">4px</span></div>
-        <div class="slider-row"><input type="range" id="avBorderW" min="0" max="16" value="4"></div>
-      </div>
-
-      <hr>
-      <div class="sec-hd" style="margin-top:4px">Card Padding</div>
-      <div class="field">
-        <div class="lbl">Side Padding &nbsp;<span class="val" id="sidePadVal">44px</span></div>
-        <div class="slider-row"><input type="range" id="sidePad" min="20" max="160" value="44"></div>
-      </div>
-    </div>
-
-  </div>
-</div><!-- /main -->
-
-<!-- BOTTOM SHEET (mobile) -->
-<div class="bottom-sheet">
-  <div class="bottom-tab-nav">
-    <button class="bottom-tab-btn on" data-btab="b-profile">Profile</button>
-    <button class="bottom-tab-btn" data-btab="b-header">Header</button>
-    <button class="bottom-tab-btn" data-btab="b-text">Text</button>
-    <button class="bottom-tab-btn" data-btab="b-bg">BG</button>
-    <button class="bottom-tab-btn" data-btab="b-extras">Extra</button>
-  </div>
-
-  <!-- B-Profile -->
-  <div class="bottom-tab-content on" id="b-profile">
-    <div class="field">
-      <div class="lbl">Profile Photo</div>
-      <div class="upload-box" id="avatarBox2">↑ Upload photo</div>
-    </div>
-    <div class="field"><div class="lbl">Display Name</div><input type="text" id="nameInput2" value="Classical Author"></div>
-    <div class="field"><div class="lbl">Handle</div><input type="text" id="handleInput2" value="@classicalauthor"></div>
-    <div class="field">
-      <div class="lbl">Colors</div>
-      <div class="color-pair">
-        <div class="cp"><input type="color" id="nameColor2" value="#ffffff"><span>Name</span></div>
-        <div class="cp"><input type="color" id="handleColor2" value="#f5c842"><span>Handle</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- B-Header -->
-  <div class="bottom-tab-content" id="b-header">
-    <div class="field">
-      <div class="lbl">Position</div>
-      <div class="btn-row">
-        <button class="xbtn on" data-hpos2="pos-left">Left</button>
-        <button class="xbtn" data-hpos2="pos-center">Center</button>
-        <button class="xbtn" data-hpos2="pos-right">Right</button>
-      </div>
-    </div>
-    <div class="field"><div class="lbl">Top &nbsp;<span class="val" id="topVal2" style="display:inline">52px</span></div><input type="range" id="headerTop2" min="0" max="400" value="52"></div>
-    <div class="field"><div class="lbl">Side Offset &nbsp;<span class="val" id="hOffVal2" style="display:inline">44px</span></div><input type="range" id="headerOff2" min="0" max="200" value="44"></div>
-    <div class="field"><div class="lbl">Avatar Size &nbsp;<span class="val" id="avatarSzVal2" style="display:inline">110px</span></div><input type="range" id="avatarSz2" min="50" max="220" value="110"></div>
-  </div>
-
-  <!-- B-Text -->
-  <div class="bottom-tab-content" id="b-text">
-    <div class="field"><div class="lbl">Shayari</div>
-      <textarea id="shayariInput2" style="min-height:90px">उजड़ी हुई दुनिया को
-तू आबाद न कर, बीते
-हुए लम्हों को तू याद
-न कर, एक कैद परिंदे
-ने ये कहा हम से.. मैं
-भुल चुका हूं उड़ना मुझे
-आजाद न कर!</textarea>
-    </div>
-    <div class="field"><div class="lbl">Font Size &nbsp;<span class="val" id="fsVal2" style="display:inline">48px</span></div><input type="range" id="fontSize2" min="20" max="90" value="48"></div>
-    <div class="field"><div class="lbl">Line Height &nbsp;<span class="val" id="lhVal2" style="display:inline">1.85</span></div><input type="range" id="lineH2" min="1.2" max="3.0" step="0.05" value="1.85"></div>
-    <div class="field">
-      <div class="lbl">Weight</div>
-      <div class="btn-row">
-        <button class="xbtn" data-w2="400">Light</button>
-        <button class="xbtn" data-w2="600">Semi</button>
-        <button class="xbtn on" data-w2="700">Bold</button>
-        <button class="xbtn" data-w2="900">Black</button>
-      </div>
-    </div>
-    <div class="field">
-      <div class="lbl">Align</div>
-      <div class="btn-row">
-        <button class="xbtn on" data-align2="left">Left</button>
-        <button class="xbtn" data-align2="center">Center</button>
-        <button class="xbtn" data-align2="right">Right</button>
-      </div>
-    </div>
-    <div class="field"><div class="cp"><input type="color" id="textColor2" value="#ffffff"><span style="font-size:9px;color:#555;letter-spacing:1px;text-transform:uppercase">Text Color</span></div></div>
-  </div>
-
-  <!-- B-BG -->
-  <div class="bottom-tab-content" id="b-bg">
-    <div class="lbl">Gradient Presets</div>
-    <div class="swatch-row">
-      <div class="bgswatch on" data-grad="fb-night"></div>
-      <div class="bgswatch" data-grad="fb-blue"></div>
-      <div class="bgswatch" data-grad="fb-warm"></div>
-      <div class="bgswatch" data-grad="fb-rose"></div>
-      <div class="bgswatch" data-grad="fb-forest"></div>
-      <div class="bgswatch" data-grad="fb-purple"></div>
-      <div class="bgswatch" data-grad="fb-teal"></div>
-      <div class="bgswatch" data-grad="fb-gold"></div>
-      <div class="bgswatch" data-grad="fb-dawn"></div>
-      <div class="bgswatch" data-grad="fb-dusk"></div>
-      <div class="bgswatch" data-grad="fb-ocean"></div>
-      <div class="bgswatch" data-grad="fb-sakura"></div>
-    </div>
-    <div class="lbl" style="margin-top:8px">Solid Colors</div>
-    <div class="swatch-row">
-      <div class="bgswatch" data-c="#0d0d0d" style="background:#0d0d0d"></div>
-      <div class="bgswatch" data-c="#1a1a1a" style="background:#1a1a1a"></div>
-      <div class="bgswatch" data-c="#ffffff" style="background:#fff;border:1px solid #ddd"></div>
-      <div class="bgswatch" data-c="#c9c9c9" style="background:#c9c9c9"></div>
-      <div class="bgswatch" data-c="#0d1520" style="background:#0d1520"></div>
-      <div class="bgswatch" data-c="#1a0f00" style="background:#1a0f00"></div>
-    </div>
-    <div class="field"><div class="lbl">Custom Color</div>
-      <input type="color" id="customBg2" value="#1a1a2e" style="width:100%;height:36px;padding:2px;border:1px solid #333;border-radius:5px;background:var(--surface);cursor:pointer">
-    </div>
-    <div class="field">
-      <div class="lbl">BG Image Upload</div>
-      <div class="upload-box" id="bgImgBox2">↑ Upload background</div>
-    </div>
-    <div class="field"><div class="lbl">Overlay &nbsp;<span class="val" id="overlayVal2">0%</span></div><input type="range" id="overlaySlider2" min="0" max="90" value="0"></div>
-  </div>
-
-  <!-- B-Extras -->
-  <div class="bottom-tab-content" id="b-extras">
-    <div class="toggle-row field">
-      <div class="lbl" style="margin:0">Watermark</div>
-      <label class="toggle">
-        <input type="checkbox" id="showWatermark2">
-        <span class="toggle-slider"></span>
-      </label>
-    </div>
-    <div class="toggle-row field">
-      <div class="lbl" style="margin:0">Accent Line</div>
-      <label class="toggle">
-        <input type="checkbox" id="showAccentLine2">
-        <span class="toggle-slider"></span>
-      </label>
-    </div>
-    <div class="field">
-      <div class="lbl">Accent Color</div>
-      <input type="color" id="accentColor2" value="#f5c842" style="width:100%;height:36px;padding:2px;border:1px solid #333;border-radius:5px;background:var(--surface);cursor:pointer">
-    </div>
-    <div class="field">
-      <div class="lbl">Avatar Filter</div>
-      <div class="btn-row">
-        <button class="xbtn on" data-avf2="none">Color</button>
-        <button class="xbtn" data-avf2="grayscale(1)">B&W</button>
-        <button class="xbtn" data-avf2="sepia(0.8)">Sepia</button>
-      </div>
+<!-- Header -->
+<div class="header">
+  <h1>✦ Quote Card Studio Pro</h1>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="ratio-tabs">
+      <button class="ratio-tab active" onclick="setRatio('4:5')" id="tab45">4:5 Instagram</button>
+      <button class="ratio-tab" onclick="setRatio('9:16')" id="tab916">9:16 Stories</button>
     </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<div class="studio">
+
+<!-- ══ LEFT PANEL ══ -->
+<div class="left-panel">
+
+  <!-- Upload -->
+  <div class="sec">
+    <div class="sec-title">📸 Photo</div>
+    <div class="upload-zone">
+      <input type="file" id="photoInput" accept="image/*">
+      <img id="imgThumb" src="" alt="">
+      <div id="uploadHint">
+        <div class="ui">🖼️</div>
+        <p>Upload portrait photo</p>
+      </div>
+    </div>
+    <label>Person Name</label>
+    <input type="text" id="nameInput" value="Albert Einstein" placeholder="Full Name">
+    <label>Title / Profession</label>
+    <input type="text" id="titleInput" value="Theoretical Physicist" placeholder="Title or role">
+    <label>Brand Name</label>
+    <input type="text" id="brandInput" value="QuoteStudio" placeholder="Your brand">
+  </div>
+
+  <!-- Quote -->
+  <div class="sec">
+    <div class="sec-title">✍️ Quote</div>
+    <label>Quote Text</label>
+    <textarea id="quoteInput">Life is like riding a bicycle. To keep your balance you must keep moving.</textarea>
+    <label>Quote Font Size</label>
+    <div class="sl-row">
+      <input type="range" id="qSize" min="10" max="48" value="26">
+      <span class="sv" id="qSizeV">26</span>
+    </div>
+    <label>Name Font Size</label>
+    <div class="sl-row">
+      <input type="range" id="nSize" min="10" max="40" value="22">
+      <span class="sv" id="nSizeV">22</span>
+    </div>
+    <label>Font Style</label>
+    <select id="fontStyle">
+      <option value="georgia">Georgia Serif</option>
+      <option value="italic-georgia">Italic Serif</option>
+      <option value="segoe">Clean Sans</option>
+      <option value="bold-segoe">Bold Sans</option>
+    </select>
+  </div>
+
+  <!-- Themes -->
+  <div class="sec">
+    <div class="sec-title">🎨 Mood Themes</div>
+    <div class="theme-grid" id="themeGrid"></div>
+  </div>
+
+  <button class="btn-primary" onclick="draw()">✨ Refresh Card</button>
+  <button class="btn-sec" onclick="randomFill()">🎲 Random Quote</button>
+</div>
+
+<!-- ══ CANVAS AREA ══ -->
+<div class="canvas-area">
+  <div id="canvasContainer">
+    <canvas id="qCanvas"></canvas>
+  </div>
+  <div class="canvas-hint">🖱️ Drag any element to reposition · Scroll handles to resize</div>
+</div>
+
+<!-- ══ RIGHT PANEL ══ -->
+<div class="right-panel">
+
+  <div class="sec-title" style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#818cf8;padding:0 2px">
+    🎛️ Elements
+  </div>
+
+  <!-- Element list -->
+  <button class="elem-btn" onclick="selectElem('photo')" id="ebPhoto">
+    <span class="e-icon">🖼️</span>
+    <div class="e-info">
+      <span class="e-name">Photo Circle</span>
+      <span class="e-desc">Drag · Resize circle</span>
+    </div>
+  </button>
+
+  <button class="elem-btn" onclick="selectElem('quote')" id="ebQuote">
+    <span class="e-icon">💬</span>
+    <div class="e-info">
+      <span class="e-name">Quote Text</span>
+      <span class="e-desc">Drag · Resize area</span>
+    </div>
+  </button>
+
+  <button class="elem-btn" onclick="selectElem('name')" id="ebName">
+    <span class="e-icon">👤</span>
+    <div class="e-info">
+      <span class="e-name">Name & Title</span>
+      <span class="e-desc">Drag · Reposition</span>
+    </div>
+  </button>
+
+  <button class="elem-btn" onclick="selectElem('brand')" id="ebBrand">
+    <span class="e-icon">🏷️</span>
+    <div class="e-info">
+      <span class="e-name">Brand Logo</span>
+      <span class="e-desc">Drag · Reposition</span>
+    </div>
+  </button>
+
+  <button class="elem-btn" onclick="selectElem('quotemark')" id="ebQmark">
+    <span class="e-icon">❝</span>
+    <div class="e-info">
+      <span class="e-name">Quote Mark</span>
+      <span class="e-desc">Drag · Resize</span>
+    </div>
+  </button>
+
+  <!-- Selected Element Properties -->
+  <div class="prop-panel" id="propPanel">
+    <div class="prop-title">⚙️ Properties</div>
+    <div id="propContent">
+      <p style="font-size:11px;color:#6b7280">Click an element above then drag it on the canvas to reposition, or use sliders below.</p>
+    </div>
+  </div>
+
+  <!-- Photo Circle Size -->
+  <div class="prop-panel">
+    <div class="prop-title">🔵 Circle Size</div>
+    <div class="sl-row">
+      <input type="range" id="circleSize" min="80" max="480" value="200">
+      <span class="sv" id="circleSizeV">200</span>
+    </div>
+    <label style="margin-top:4px">Photo Scale</label>
+    <div class="sl-row">
+      <input type="range" id="photoScale" min="50" max="200" value="100">
+      <span class="sv" id="photoScaleV">100%</span>
+    </div>
+  </div>
+
+  <!-- Text Colors -->
+  <div class="prop-panel">
+    <div class="prop-title">🎨 Text Colors</div>
+    <label>Quote Color</label>
+    <div class="color-row" id="qColorRow">
+      <div class="c-dot active" data-target="qColor" data-color="#3d2b1f" style="background:#3d2b1f"></div>
+      <div class="c-dot" data-target="qColor" data-color="#1a1a2e" style="background:#1a1a2e"></div>
+      <div class="c-dot" data-target="qColor" data-color="#ffffff" style="background:#ffffff"></div>
+      <div class="c-dot" data-target="qColor" data-color="#f3e5f5" style="background:#f3e5f5"></div>
+      <input type="color" id="qColorCustom" value="#3d2b1f" title="Custom">
+    </div>
+    <label>Name Color</label>
+    <div class="color-row" id="nColorRow">
+      <div class="c-dot active" data-target="nColor" data-color="#5c3d2e" style="background:#5c3d2e"></div>
+      <div class="c-dot" data-target="nColor" data-color="#4f46e5" style="background:#4f46e5"></div>
+      <div class="c-dot" data-target="nColor" data-color="#ffffff" style="background:#ffffff"></div>
+      <div class="c-dot" data-target="nColor" data-color="#ffd700" style="background:#ffd700"></div>
+      <input type="color" id="nColorCustom" value="#5c3d2e" title="Custom">
+    </div>
+  </div>
+
+  <!-- Opacity -->
+  <div class="prop-panel">
+    <div class="prop-title">✨ Ring Opacity</div>
+    <div class="sl-row">
+      <input type="range" id="ringOpacity" min="0" max="100" value="30">
+      <span class="sv" id="ringOpacityV">30%</span>
+    </div>
+    <label style="margin-top:4px">BG Overlay</label>
+    <div class="sl-row">
+      <input type="range" id="bgOverlay" min="0" max="80" value="12">
+      <span class="sv" id="bgOverlayV">12%</span>
+    </div>
+  </div>
+
+  <!-- Downloads -->
+  <div class="prop-panel">
+    <div class="prop-title">⬇️ Export</div>
+    <div class="dl-row">
+      <button class="btn-dl btn-green" onclick="dlCard('png')">⬇ Download PNG</button>
+      <button class="btn-dl btn-amber" onclick="copyCard()">📋 Copy Image</button>
+      <button class="btn-dl btn-blue" onclick="dlCard('jpg')">⬇ Download JPG</button>
+    </div>
+  </div>
+
+</div><!-- /right-panel -->
+</div><!-- /studio -->
+
+<div id="toast">✅ Done!</div>
+
 <script>
-const $ = id => document.getElementById(id);
-
-// ═══ SCALE CARD ═══
-const CARD_W = 1080, CARD_H = 1920;
-function scaleCard() {
-  const area = $('previewArea');
-  const pad = 24;
-  const availW = area.clientWidth - pad * 2;
-  const availH = area.clientHeight - pad * 2;
-  const scale = Math.min(availW / CARD_W, availH / CARD_H);
-  const scaler = $('cardScaler');
-  scaler.style.width = (CARD_W * scale) + 'px';
-  scaler.style.height = (CARD_H * scale) + 'px';
-  scaler.style.overflow = 'hidden';
-  scaler.style.position = 'relative';
-  scaler.style.flexShrink = '0';
-  $('card').style.transform = `scale(${scale})`;
-  $('card').style.transformOrigin = 'top left';
-}
-window.addEventListener('resize', scaleCard);
-document.fonts.ready.then(scaleCard);
-scaleCard();
-
-// ═══ TABS (desktop) ═══
-document.querySelectorAll('.tab-nav-btn').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('on'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('on'));
-    btn.classList.add('on');
-    $('tab-' + btn.dataset.tab).classList.add('on');
-  };
-});
-
-// ═══ TABS (mobile) ═══
-document.querySelectorAll('.bottom-tab-btn').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.bottom-tab-btn').forEach(b => b.classList.remove('on'));
-    document.querySelectorAll('.bottom-tab-content').forEach(c => c.classList.remove('on'));
-    btn.classList.add('on');
-    $(btn.dataset.btab).classList.add('on');
-  };
-});
-
-// ═══ AVATAR ═══
-function handleAvatar(file) {
-  const r = new FileReader();
-  r.onload = ev => {
-    $('cAvatarImg').src = ev.target.result;
-    $('cAvatarImg').style.display = 'block';
-    $('cAvatarPh').style.display = 'none';
-    ['avatarBox','avatarBox2'].forEach(id => { if($(id)) $(id).textContent = '✓ ' + file.name; });
-  };
-  r.readAsDataURL(file);
-}
-$('avatarBox').onclick = () => $('avatarFile').click();
-if($('avatarBox2')) $('avatarBox2').onclick = () => $('avatarFile').click();
-$('avatarFile').onchange = e => { if(e.target.files[0]) handleAvatar(e.target.files[0]); };
-
-// ═══ BG IMAGE ═══
-function handleBgImg(file) {
-  const r = new FileReader();
-  r.onload = ev => {
-    $('cBgImg').style.backgroundImage = `url(${ev.target.result})`;
-    $('cBgImg').style.opacity = '1';
-    ['bgImgBox','bgImgBox2'].forEach(id => { if($(id)) $(id).textContent = '✓ ' + file.name; });
-  };
-  r.readAsDataURL(file);
-}
-$('bgImgBox').onclick = () => $('bgImgFile').click();
-if($('bgImgBox2')) $('bgImgBox2').onclick = () => $('bgImgFile').click();
-$('bgImgFile').onchange = e => { if(e.target.files[0]) handleBgImg(e.target.files[0]); };
-$('clearBgImg').onclick = () => {
-  $('cBgImg').style.backgroundImage = '';
-  $('cBgImg').style.opacity = '0';
-  ['bgImgBox','bgImgBox2'].forEach(id => { if($(id)) $(id).textContent = '↑ Upload background image'; });
+// ═══════════════════════════════════════════════════════════════════
+// THEMES — Named by MOOD/VIBE (not color)
+// ═══════════════════════════════════════════════════════════════════
+const THEMES = {
+  soulful: {
+    name:'🌿 Soulful', label:'LIFE LESSON',
+    bg1:'#f5f0e1', bg2:'#ede8d5', blobStroke:'#c8b89a',
+    quoteColor:'#3d2b1f', nameColor:'#5c3d2e', accentColor:'#8B4513',
+    markColor:'#8B4513', titleColor:'#8a6a50', brandBg:'#ffffff',
+    brandText:'#1a1a1a', brandAccent:'#8B4513', photoBW:true,
+    silhouette:true, silColor:'rgba(180,160,120,0.15)',
+    divColor:'#c8b89a', bottomBar:'#c8b89a',
+  },
+  driven: {
+    name:'🔥 Driven', label:'MOTIVATIONAL',
+    bg1:'#fff8e1', bg2:'#ffecb3', blobStroke:'#f9a825',
+    quoteColor:'#3e2400', nameColor:'#bf6c00', accentColor:'#f57f17',
+    markColor:'#f9a825', titleColor:'#e65100', brandBg:'#ffffff',
+    brandText:'#1a1a1a', brandAccent:'#f57f17', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#ffd54f', bottomBar:'#f9a825',
+  },
+  tender: {
+    name:'💗 Tender', label:'EMOTIONAL',
+    bg1:'#fce4ec', bg2:'#f8bbd0', blobStroke:'#d4788a',
+    quoteColor:'#4a1527', nameColor:'#7b2d3e', accentColor:'#c2185b',
+    markColor:'#c2185b', titleColor:'#ad4762', brandBg:'#ffffff',
+    brandText:'#1a1a1a', brandAccent:'#c2185b', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#e88fa0', bottomBar:'#c2185b',
+  },
+  serene: {
+    name:'🌊 Serene', label:'PEACE & CALM',
+    bg1:'#e3f2fd', bg2:'#bbdefb', blobStroke:'#1565c0',
+    quoteColor:'#0d2137', nameColor:'#1565c0', accentColor:'#1565c0',
+    markColor:'#1976d2', titleColor:'#1976d2', brandBg:'#ffffff',
+    brandText:'#1a1a1a', brandAccent:'#1565c0', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#64b5f6', bottomBar:'#1565c0',
+  },
+  mystic: {
+    name:'🌙 Mystic', label:'WISDOM',
+    bg1:'#0a0f2c', bg2:'#141d3d', blobStroke:'#4361ee',
+    quoteColor:'#e0e7ff', nameColor:'#a5b4fc', accentColor:'#4361ee',
+    markColor:'#4361ee', titleColor:'#818cf8', brandBg:'#1e2a5e',
+    brandText:'#ffffff', brandAccent:'#4361ee', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#4361ee', bottomBar:'#4361ee',
+  },
+  bold: {
+    name:'⚡ Bold', label:'STRENGTH',
+    bg1:'#1a1a1a', bg2:'#2d2d2d', blobStroke:'#ff4500',
+    quoteColor:'#f5f5f5', nameColor:'#ff6b35', accentColor:'#ff4500',
+    markColor:'#ff4500', titleColor:'#ff8c69', brandBg:'#2d2d2d',
+    brandText:'#ffffff', brandAccent:'#ff4500', photoBW:true,
+    silhouette:false, silColor:null,
+    divColor:'#ff4500', bottomBar:'#ff4500',
+  },
+  ethereal: {
+    name:'✨ Ethereal', label:'SPIRITUAL',
+    bg1:'#1a0533', bg2:'#2d0a4e', blobStroke:'#9c27b0',
+    quoteColor:'#f3e5f5', nameColor:'#ce93d8', accentColor:'#9c27b0',
+    markColor:'#ab47bc', titleColor:'#ba68c8', brandBg:'#2d0a4e',
+    brandText:'#f3e5f5', brandAccent:'#9c27b0', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#9c27b0', bottomBar:'#9c27b0',
+  },
+  grounded: {
+    name:'🌲 Grounded', label:'NATURE',
+    bg1:'#e8f5e9', bg2:'#c8e6c9', blobStroke:'#388e3c',
+    quoteColor:'#1b3a1e', nameColor:'#2e7d32', accentColor:'#2e7d32',
+    markColor:'#2e7d32', titleColor:'#388e3c', brandBg:'#ffffff',
+    brandText:'#1b3a1e', brandAccent:'#2e7d32', photoBW:false,
+    silhouette:true, silColor:'rgba(46,125,50,0.1)',
+    divColor:'#66bb6a', bottomBar:'#2e7d32',
+  },
+  radiant: {
+    name:'🌸 Radiant', label:'SELF LOVE',
+    bg1:'#f3e5f5', bg2:'#e1bee7', blobStroke:'#7b1fa2',
+    quoteColor:'#2a0845', nameColor:'#6a1b9a', accentColor:'#7b1fa2',
+    markColor:'#8e24aa', titleColor:'#7b1fa2', brandBg:'#ffffff',
+    brandText:'#2a0845', brandAccent:'#7b1fa2', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#ba68c8', bottomBar:'#7b1fa2',
+  },
+  hustle: {
+    name:'🏆 Hustle', label:'SUCCESS',
+    bg1:'#fff8e1', bg2:'#fff3cd', blobStroke:'#d4a017',
+    quoteColor:'#2c1810', nameColor:'#8b6914', accentColor:'#c6a84b',
+    markColor:'#d4a017', titleColor:'#a0782a', brandBg:'#ffffff',
+    brandText:'#2c1810', brandAccent:'#c6a84b', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#ffd700', bottomBar:'#c6a84b',
+  },
+  chill: {
+    name:'🍃 Chill', label:'MINDFULNESS',
+    bg1:'#e0f7fa', bg2:'#b2ebf2', blobStroke:'#00695c',
+    quoteColor:'#00251a', nameColor:'#00695c', accentColor:'#00796b',
+    markColor:'#009688', titleColor:'#00796b', brandBg:'#ffffff',
+    brandText:'#00251a', brandAccent:'#00796b', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#4db6ac', bottomBar:'#00796b',
+  },
+  fierce: {
+    name:'🦋 Fierce', label:'EMPOWERMENT',
+    bg1:'#fff0f5', bg2:'#ffe4f0', blobStroke:'#e91e8c',
+    quoteColor:'#2d0017', nameColor:'#880e4f', accentColor:'#e91e8c',
+    markColor:'#e91e8c', titleColor:'#ad1457', brandBg:'#ffffff',
+    brandText:'#2d0017', brandAccent:'#e91e8c', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#f48fb1', bottomBar:'#e91e8c',
+  },
+  crisp: {
+    name:'❄️ Crisp', label:'CLARITY',
+    bg1:'#f0f4f8', bg2:'#dde8f0', blobStroke:'#2980b9',
+    quoteColor:'#1a2a3a', nameColor:'#1a5276', accentColor:'#2980b9',
+    markColor:'#3498db', titleColor:'#2471a3', brandBg:'#ffffff',
+    brandText:'#1a2a3a', brandAccent:'#2980b9', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#85c1e9', bottomBar:'#2980b9',
+  },
+  warrior: {
+    name:'⚔️ Warrior', label:'RESILIENCE',
+    bg1:'#ffebee', bg2:'#ffcdd2', blobStroke:'#b71c1c',
+    quoteColor:'#2c0000', nameColor:'#b71c1c', accentColor:'#c62828',
+    markColor:'#d32f2f', titleColor:'#c62828', brandBg:'#ffffff',
+    brandText:'#2c0000', brandAccent:'#c62828', photoBW:false,
+    silhouette:false, silColor:null,
+    divColor:'#ef9a9a', bottomBar:'#b71c1c',
+  },
+  dream: {
+    name:'🌅 Dream', label:'HOPE',
+    bg1:'#fff3e0', bg2:'#ffe0b2', blobStroke:'#e64a19',
+    quoteColor:'#3e1000', nameColor:'#bf360c', accentColor:'#e64a19',
+    markColor:'#ff5722', titleColor:'#d84315', brandBg:'#ffffff',
+    brandText:'#3e1000', brandAccent:'#e64a19', photoBW:false,
+    silhouette:true, silColor:'rgba(230,74,25,0.08)',
+    divColor:'#ff8a65', bottomBar:'#e64a19',
+  },
+  stoic: {
+    name:'🖤 Stoic', label:'DISCIPLINE',
+    bg1:'#212121', bg2:'#2d2d2d', blobStroke:'#757575',
+    quoteColor:'#eeeeee', nameColor:'#bdbdbd', accentColor:'#9e9e9e',
+    markColor:'#757575', titleColor:'#9e9e9e', brandBg:'#333333',
+    brandText:'#eeeeee', brandAccent:'#9e9e9e', photoBW:true,
+    silhouette:false, silColor:null,
+    divColor:'#616161', bottomBar:'#757575',
+  },
 };
 
-// ═══ SYNC HELPERS ═══
-function syncText(id1, id2, fn) {
-  const a=$(id1), b=$(id2);
-  if(!a) return;
-  a.addEventListener('input', e => { if(b&&b.value!==e.target.value) b.value=e.target.value; fn(e.target.value); });
-  if(b) b.addEventListener('input', e => { if(a.value!==e.target.value) a.value=e.target.value; fn(e.target.value); });
-}
-function syncColor(id1, id2, fn) {
-  const a=$(id1), b=$(id2);
-  if(!a) return;
-  a.oninput = e => { if(b) b.value=e.target.value; fn(e.target.value); };
-  if(b) b.oninput = e => { a.value=e.target.value; fn(e.target.value); };
-}
-function syncSlider(id1, id2, valId1, valId2, suffix, fn) {
-  const a=$(id1), b=$(id2);
-  if(!a) return;
-  function apply(v) {
-    if(b) b.value=v;
-    if(valId1&&$(valId1)) $(valId1).textContent=v+suffix;
-    if(valId2&&$(valId2)) $(valId2).textContent=v+suffix;
-    fn(v);
-  }
-  a.oninput = e => apply(e.target.value);
-  if(b) b.oninput = e => apply(e.target.value);
+const RANDOM_QUOTES = [
+  { q:'Life is like riding a bicycle. To keep your balance you must keep moving.', n:'Albert Einstein', t:'Theoretical Physicist', theme:'soulful' },
+  { q:'The only way to do great work is to love what you do.', n:'Steve Jobs', t:'Co-founder, Apple', theme:'driven' },
+  { q:'The emotion that can break your heart is sometimes the very one that heals it.', n:'Nicholas Sparks', t:'Author & Storyteller', theme:'tender' },
+  { q:'The sea, once it casts its spell, holds one in its net of wonder forever.', n:'Jacques Cousteau', t:'Ocean Explorer', theme:'serene' },
+  { q:'Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.', n:'Rumi', t:'Poet & Mystic', theme:'mystic' },
+  { q:'Strength does not come from physical capacity. It comes from an indomitable will.', n:'Mahatma Gandhi', t:'Leader & Activist', theme:'bold' },
+  { q:'The universe is under no obligation to make sense to you.', n:'Neil deGrasse Tyson', t:'Astrophysicist', theme:'ethereal' },
+  { q:'The clearest way into the universe is through a forest wilderness.', n:'John Muir', t:'Naturalist & Author', theme:'grounded' },
+  { q:'She remembered who she was and the game changed.', n:'Lalah Delia', t:'Wellness Educator', theme:'radiant' },
+  { q:'Success is not final, failure is not fatal. It is the courage to continue that counts.', n:'Winston Churchill', t:'British Prime Minister', theme:'hustle' },
+  { q:'Almost everything will work again if you unplug it for a few minutes, including you.', n:'Anne Lamott', t:'Author & Speaker', theme:'chill' },
+  { q:'I am not afraid of storms, for I am learning how to sail my ship.', n:'Louisa May Alcott', t:'Author', theme:'fierce' },
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+let currentTheme = 'soulful';
+let uploadedImg  = null;
+let ratio        = '4:5'; // '4:5' or '9:16'
+let selectedElem = null;
+
+// Element positions (as fractions of canvas size, so ratio-independent)
+let elems = {
+  photo:     { xf:0.235, yf:0.42, r:200 },   // center x/y fraction, radius px
+  quote:     { xf:0.68,  yf:0.43 },
+  name:      { xf:0.60,  yf:0.78 },
+  brand:     { xf:0.88,  yf:0.068 },
+  quotemark: { xf:0.60,  yf:0.18 },
+};
+
+let customColors = { qColor:'#3d2b1f', nColor:'#5c3d2e' };
+
+// Canvas dimensions
+let CW = 1080, CH = 1350;
+
+function setDims() {
+  if (ratio === '9:16') { CW = 1080; CH = 1920; }
+  else                  { CW = 1080; CH = 1350; }
 }
 
-// ═══ PROFILE ═══
-syncText('nameInput','nameInput2', v=>$('cName').textContent=v);
-syncText('handleInput','handleInput2', v=>{ $('cHandle').textContent=v; if(!$('showWatermark').checked) $('cFooter').textContent=v; });
-syncColor('nameColor','nameColor2', v=>$('cName').style.color=v);
-syncColor('handleColor','handleColor2', v=>$('cHandle').style.color=v);
-syncSlider('nameFs',null,'nameFsVal',null,'px', v=>$('cName').style.fontSize=v+'px');
-syncSlider('handleFs',null,'handleFsVal',null,'px', v=>$('cHandle').style.fontSize=v+'px');
-syncColor('avatarBorder',null, v=>$('cAvatar').style.borderColor=v);
+// Scale factor for display
+function getScale() {
+  const maxH = window.innerHeight - 130;
+  const maxW = window.innerWidth - 580;
+  const scH  = maxH / CH;
+  const scW  = maxW / CW;
+  return Math.min(scH, scW, 0.55);
+}
 
-// ═══ HEADER POSITION ═══
-let currentHpos = 'pos-left';
-function applyHpos(cls) {
-  currentHpos = cls;
-  const h = $('cHeader');
-  h.classList.remove('pos-left','pos-center','pos-right');
-  h.classList.add(cls);
-  applyOffset(getOffsetVal());
-}
-function applyOffset(v) {
-  const h = $('cHeader');
-  if(currentHpos==='pos-left')   { h.style.left=v+'px'; h.style.right='auto'; }
-  if(currentHpos==='pos-right')  { h.style.right=v+'px'; h.style.left='auto'; }
-  if(currentHpos==='pos-center') { h.style.left='50%'; h.style.right='auto'; }
-}
-function getOffsetVal() {
-  const el = $('headerOff')||$('headerOff2');
-  return el ? parseInt(el.value) : 44;
-}
-function bindHposGroup(attr) {
-  document.querySelectorAll(`[${attr}]`).forEach(b => {
-    b.onclick = () => {
-      document.querySelectorAll('[data-hpos],[data-hpos2]').forEach(x=>x.classList.remove('on'));
-      const cls = b.dataset.hpos||b.dataset.hpos2;
-      document.querySelectorAll(`[data-hpos="${cls}"],[data-hpos2="${cls}"]`).forEach(x=>x.classList.add('on'));
-      applyHpos(cls);
-    };
+// Convert canvas coords to element fraction
+function toFrac(cx, cy) { return { xf: cx/CW, yf: cy/CH }; }
+function fromFrac(xf, yf) { return { x: xf*CW, y: yf*CH }; }
+
+// ═══════════════════════════════════════════════════════════════════
+// BUILD THEME BUTTONS
+// ═══════════════════════════════════════════════════════════════════
+const tGrid = document.getElementById('themeGrid');
+Object.entries(THEMES).forEach(([key, th]) => {
+  const btn = document.createElement('button');
+  btn.className = 't-btn' + (key===currentTheme?' active':'');
+  btn.dataset.theme = key;
+  const light = isLight(th.bg1);
+  btn.style.background = `linear-gradient(135deg,${th.bg1},${th.bg2})`;
+  if (light) { btn.style.color='#1a1a1a'; btn.style.textShadow='none'; }
+  btn.innerHTML = `<div class="t-chk">✓</div>${th.name}<div style="font-size:8px;opacity:0.65;margin-top:2px">${th.label}</div>`;
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.t-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTheme = key;
+    draw();
   });
-}
-bindHposGroup('data-hpos');
-bindHposGroup('data-hpos2');
-
-syncSlider('headerTop','headerTop2','topVal','topVal2','px', v=>$('cHeader').style.top=v+'px');
-syncSlider('headerOff','headerOff2','hOffVal','hOffVal2','px', v=>applyOffset(parseInt(v)));
-syncSlider('avatarSz','avatarSz2','avatarSzVal','avatarSzVal2','px', v=>{ $('cAvatar').style.width=v+'px'; $('cAvatar').style.height=v+'px'; });
-syncSlider('headerGap',null,'gapVal',null,'px', v=>$('cHeader').style.gap=v+'px');
-
-// ═══ TEXT ═══
-syncText('shayariInput','shayariInput2', v=>$('cShayari').textContent=v);
-syncSlider('fontSize','fontSize2','fsVal','fsVal2','px', v=>$('cShayari').style.fontSize=v+'px');
-syncSlider('lineH','lineH2','lhVal','lhVal2','', v=>$('cShayari').style.lineHeight=v);
-
-$('letterSpacing').oninput = e => {
-  $('cShayari').style.letterSpacing = e.target.value+'px';
-  $('lsVal').textContent = e.target.value+'px';
-};
-
-// text position
-$('textLeft').oninput = e => {
-  $('cBody').style.left = e.target.value+'px';
-  $('cBody').style.right = e.target.value+'px';
-  $('textLeftVal').textContent = e.target.value+'px';
-};
-$('textTop').oninput = e => {
-  $('cBody').style.top = e.target.value+'px';
-  $('textTopVal').textContent = e.target.value+'px';
-};
-
-function bindGroup(attr1, attr2, fn) {
-  function handler(b, val) {
-    document.querySelectorAll(`[${attr1}],[${attr2}]`).forEach(x=>x.classList.remove('on'));
-    document.querySelectorAll(`[${attr1}="${val}"],[${attr2}="${val}"]`).forEach(x=>x.classList.add('on'));
-    fn(val);
-  }
-  document.querySelectorAll(`[${attr1}]`).forEach(b=>{ b.onclick=()=>handler(b,b.getAttribute(attr1)); });
-  document.querySelectorAll(`[${attr2}]`).forEach(b=>{ b.onclick=()=>handler(b,b.getAttribute(attr2)); });
-}
-bindGroup('data-w','data-w2', v=>$('cShayari').style.fontWeight=v);
-bindGroup('data-align','data-align2', v=>$('cShayari').style.textAlign=v);
-bindGroup('data-vpos','data-vpos2', v=>$('cBody').style.alignItems=v);
-syncColor('textColor','textColor2', v=>$('cShayari').style.color=v);
-
-// text shadow presets
-document.querySelectorAll('[data-shadow]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-shadow]').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    $('cShayari').style.textShadow = b.dataset.shadow;
-  };
+  tGrid.appendChild(btn);
 });
 
-// ═══ BACKGROUND GRADIENTS ═══
-const GRADIENTS = {
-  'fb-night':  'linear-gradient(135deg,#0d0d0d 0%,#1a1a2e 100%)',
-  'fb-blue':   'linear-gradient(135deg,#1a237e 0%,#1565c0 100%)',
-  'fb-warm':   'linear-gradient(135deg,#bf360c 0%,#e65100 100%)',
-  'fb-rose':   'linear-gradient(135deg,#880e4f 0%,#c62828 100%)',
-  'fb-forest': 'linear-gradient(135deg,#1b5e20 0%,#2e7d32 100%)',
-  'fb-purple': 'linear-gradient(135deg,#4a148c 0%,#6a1b9a 100%)',
-  'fb-teal':   'linear-gradient(135deg,#004d40 0%,#00695c 100%)',
-  'fb-gold':   'linear-gradient(135deg,#e65100 0%,#f9a825 100%)',
-  'fb-dawn':   'linear-gradient(135deg,#ff6f00 0%,#f57f17 100%)',
-  'fb-dusk':   'linear-gradient(135deg,#311b92 0%,#c2185b 100%)',
-  'fb-ocean':  'linear-gradient(135deg,#0d47a1 0%,#0097a7 100%)',
-  'fb-sakura': 'linear-gradient(135deg,#880e4f 0%,#ff8a65 100%)',
-};
-
-function applyBg(cssValue) {
-  $('cBg').style.background = cssValue;
+function isLight(hex) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return (r*299+g*587+b*114)/1000 > 155;
 }
 
-// Apply default
-applyBg(GRADIENTS['fb-night']);
+// ═══════════════════════════════════════════════════════════════════
+// RATIO SWITCH
+// ═══════════════════════════════════════════════════════════════════
+function setRatio(r) {
+  ratio = r;
+  document.getElementById('tab45').classList.toggle('active', r==='4:5');
+  document.getElementById('tab916').classList.toggle('active', r==='9:16');
 
-document.querySelectorAll('.bgswatch').forEach(s => {
-  s.onclick = () => {
-    document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on'));
-    // mark all matching swatches
-    const grad = s.dataset.grad, col = s.dataset.c;
-    if(grad) {
-      document.querySelectorAll(`[data-grad="${grad}"]`).forEach(x=>x.classList.add('on'));
-      applyBg(GRADIENTS[grad]);
-    } else if(col) {
-      document.querySelectorAll(`[data-c="${col}"]`).forEach(x=>x.classList.add('on'));
-      applyBg(col);
+  // Adjust default positions for 9:16
+  if (r === '9:16') {
+    elems.photo     = { xf:0.235, yf:0.34, r:210 };
+    elems.quote     = { xf:0.65,  yf:0.40 };
+    elems.name      = { xf:0.55,  yf:0.65 };
+    elems.brand     = { xf:0.88,  yf:0.048 };
+    elems.quotemark = { xf:0.57,  yf:0.17 };
+  } else {
+    elems.photo     = { xf:0.235, yf:0.42, r:200 };
+    elems.quote     = { xf:0.68,  yf:0.43 };
+    elems.name      = { xf:0.60,  yf:0.78 };
+    elems.brand     = { xf:0.88,  yf:0.068 };
+    elems.quotemark = { xf:0.60,  yf:0.18 };
+  }
+  setDims();
+  resizeCanvas();
+  draw();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CANVAS SETUP
+// ═══════════════════════════════════════════════════════════════════
+const canvas = document.getElementById('qCanvas');
+const ctx    = canvas.getContext('2d');
+
+function resizeCanvas() {
+  setDims();
+  const sc = getScale();
+  canvas.width  = CW;
+  canvas.height = CH;
+  canvas.style.width  = Math.round(CW * sc) + 'px';
+  canvas.style.height = Math.round(CH * sc) + 'px';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DRAG & DROP ON CANVAS
+// ═══════════════════════════════════════════════════════════════════
+let dragging = null;
+let dragOffX = 0, dragOffY = 0;
+
+function canvasXY(e) {
+  const rect = canvas.getBoundingClientRect();
+  const sc   = CW / rect.width;
+  const pt   = e.touches ? e.touches[0] : e;
+  return {
+    x: (pt.clientX - rect.left) * sc,
+    y: (pt.clientY - rect.top)  * sc,
+  };
+}
+
+function hitTest(x, y) {
+  const T = THEMES[currentTheme];
+  const photoR = elems.photo.r;
+  const px = elems.photo.xf * CW, py = elems.photo.yf * CH;
+
+  // Photo hit test (circle)
+  if (Math.hypot(x-px, y-py) < photoR + 40) return 'photo';
+
+  // Brand hit (top-right box)
+  const bx = elems.brand.xf*CW - 85, by = elems.brand.yf*CH - 30;
+  if (x>=bx && x<=bx+170 && y>=by && y<=by+90) return 'brand';
+
+  // Quotemark hit
+  const qmx = elems.quotemark.xf*CW, qmy = elems.quotemark.yf*CH;
+  if (Math.abs(x-qmx)<100 && Math.abs(y-qmy)<100) return 'quotemark';
+
+  // Name hit
+  const nx = elems.name.xf*CW, ny = elems.name.yf*CH;
+  if (Math.abs(x-nx)<300 && Math.abs(y-ny)<60) return 'name';
+
+  // Quote text hit
+  const qx = elems.quote.xf*CW, qy = elems.quote.yf*CH;
+  if (Math.abs(x-qx)<300 && Math.abs(y-qy)<200) return 'quote';
+
+  return null;
+}
+
+function onDown(e) {
+  e.preventDefault();
+  const {x,y} = canvasXY(e);
+  const hit = hitTest(x, y);
+  if (hit) {
+    dragging = hit;
+    const el = elems[hit];
+    dragOffX = x - el.xf*CW;
+    dragOffY = y - el.yf*CH;
+    selectElem(hit);
+  }
+}
+
+function onMove(e) {
+  if (!dragging) return;
+  e.preventDefault();
+  const {x,y} = canvasXY(e);
+  elems[dragging].xf = Math.max(0.01, Math.min(0.99, (x - dragOffX) / CW));
+  elems[dragging].yf = Math.max(0.01, Math.min(0.99, (y - dragOffY) / CH));
+  draw();
+}
+
+function onUp() { dragging = null; }
+
+canvas.addEventListener('mousedown',  onDown);
+canvas.addEventListener('mousemove',  onMove);
+canvas.addEventListener('mouseup',    onUp);
+canvas.addEventListener('touchstart', onDown, { passive:false });
+canvas.addEventListener('touchmove',  onMove, { passive:false });
+canvas.addEventListener('touchend',   onUp);
+
+// ═══════════════════════════════════════════════════════════════════
+// ELEMENT SELECTION (right panel)
+// ═══════════════════════════════════════════════════════════════════
+function selectElem(name) {
+  selectedElem = name;
+  ['photo','quote','name','brand','quotemark'].forEach(k => {
+    document.getElementById('eb'+k.charAt(0).toUpperCase()+k.slice(1))
+      ?.classList.toggle('selected', k===name);
+  });
+  const info = {
+    photo:     '🔵 Drag to move · Use Circle Size slider',
+    quote:     '💬 Drag to reposition quote text',
+    name:      '👤 Drag to reposition name & title',
+    brand:     '🏷️ Drag to move brand logo',
+    quotemark: '❝ Drag to reposition the large quote mark',
+  };
+  document.getElementById('propContent').innerHTML =
+    `<div class="handle-info">${info[name]||''}</div>`;
+  draw();
+}
+
+// Element button ID map
+document.getElementById('ebQuote').id = 'ebQuote';
+document.getElementById('ebName').id  = 'ebName';
+document.getElementById('ebBrand').id = 'ebBrand';
+document.getElementById('ebQmark').id = 'ebQmark';
+
+// ═══════════════════════════════════════════════════════════════════
+// PHOTO UPLOAD
+// ═══════════════════════════════════════════════════════════════════
+document.getElementById('photoInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      uploadedImg = img;
+      const th = document.getElementById('imgThumb');
+      th.src = ev.target.result; th.style.display = 'block';
+      document.getElementById('uploadHint').style.display = 'none';
+      draw();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// LIVE LISTENERS
+// ═══════════════════════════════════════════════════════════════════
+['nameInput','titleInput','brandInput','quoteInput','fontStyle'].forEach(id =>
+  document.getElementById(id).addEventListener('input', draw));
+
+[['qSize','qSizeV'],['nSize','nSizeV'],
+ ['circleSize','circleSizeV'],['photoScale','photoScaleV'],
+ ['ringOpacity','ringOpacityV'],['bgOverlay','bgOverlayV']
+].forEach(([id,vid]) => {
+  document.getElementById(id).addEventListener('input', e => {
+    const v = e.target.value;
+    const vEl = document.getElementById(vid);
+    if (id==='photoScale') vEl.textContent = v + '%';
+    else if (id==='ringOpacity'||id==='bgOverlay') vEl.textContent = v + '%';
+    else vEl.textContent = v;
+    if (id==='circleSize') elems.photo.r = parseInt(v);
+    draw();
+  });
+});
+
+// Color dots
+document.querySelectorAll('.c-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const tgt = dot.dataset.target;
+    document.querySelectorAll(`.c-dot[data-target="${tgt}"]`).forEach(d=>d.classList.remove('active'));
+    dot.classList.add('active');
+    customColors[tgt] = dot.dataset.color;
+    draw();
+  });
+});
+
+document.getElementById('qColorCustom').addEventListener('input', e => {
+  customColors.qColor = e.target.value; draw();
+});
+document.getElementById('nColorCustom').addEventListener('input', e => {
+  customColors.nColor = e.target.value; draw();
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// BLOB PATH (organic circle)
+// ═══════════════════════════════════════════════════════════════════
+function blobPath(ctx, cx, cy, r, seed=0) {
+  const pts = 10;
+  const step = (Math.PI*2)/pts;
+  const jitters = [1.0,0.95,1.05,0.97,1.03,0.96,1.04,0.98,1.02,0.99];
+  ctx.beginPath();
+  for (let i=0; i<=pts; i++) {
+    const idx = i % pts;
+    const nxt = (i+1) % pts;
+    const a   = i*step - Math.PI/2;
+    const na  = (i+1)*step - Math.PI/2;
+    const cr  = r * jitters[(idx+seed)%pts];
+    const nr  = r * jitters[(nxt+seed)%pts];
+    const x1  = cx + Math.cos(a)*cr;
+    const y1  = cy + Math.sin(a)*cr;
+    const x2  = cx + Math.cos(na)*nr;
+    const y2  = cy + Math.sin(na)*nr;
+    const cpx = cx + Math.cos(a + step*0.5)*cr*1.06;
+    const cpy = cy + Math.sin(a + step*0.5)*cr*1.06;
+    if (i===0) ctx.moveTo(x1,y1); else ctx.quadraticCurveTo(cpx,cpy,x2,y2);
+  }
+  ctx.closePath();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// WRAP TEXT
+// ═══════════════════════════════════════════════════════════════════
+function wrapLines(ctx, text, maxW) {
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  for (const w of words) {
+    const t = line ? line+' '+w : w;
+    if (ctx.measureText(t).width > maxW && line) { lines.push(line); line=w; }
+    else line = t;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ROUND RECT
+// ═══════════════════════════════════════════════════════════════════
+function rRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DRAW SILHOUETTES
+// ═══════════════════════════════════════════════════════════════════
+function drawSilhouettes(ctx, W, H, color) {
+  ctx.save();
+  ctx.fillStyle = color;
+  // Figure right side
+  const x1=W*0.78, y1=H*0.52;
+  ctx.beginPath(); ctx.arc(x1,y1-55,45,0,Math.PI*2); ctx.fill();
+  ctx.fillRect(x1-25,y1-10,50,150);
+  ctx.fillRect(x1-22,y1+138,24,100); ctx.fillRect(x1+2,y1+138,24,100);
+  ctx.save(); ctx.translate(x1,y1+20); ctx.rotate(-0.3);
+  ctx.fillRect(-12,0,22,110); ctx.restore();
+  ctx.save(); ctx.translate(x1,y1+20); ctx.rotate(0.3);
+  ctx.fillRect(-10,0,22,110); ctx.restore();
+  // Smaller figure
+  const x2=W*0.91, y2=H*0.56;
+  ctx.beginPath(); ctx.arc(x2,y2-40,32,0,Math.PI*2); ctx.fill();
+  ctx.fillRect(x2-18,y2-8,36,110);
+  ctx.fillRect(x2-16,y2+100,18,75); ctx.fillRect(x2+2,y2+100,18,75);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MAIN DRAW
+// ═══════════════════════════════════════════════════════════════════
+function draw() {
+  setDims();
+  const W=CW, H=CH;
+  const T = THEMES[currentTheme];
+
+  const name    = document.getElementById('nameInput').value  || 'Person Name';
+  const title   = document.getElementById('titleInput').value || '';
+  const brand   = document.getElementById('brandInput').value || 'QuoteStudio';
+  const quote   = document.getElementById('quoteInput').value || 'Your quote here.';
+  const qSzBase = parseInt(document.getElementById('qSize').value);
+  const nSzBase = parseInt(document.getElementById('nSize').value);
+  const fStyle  = document.getElementById('fontStyle').value;
+  const photoR  = parseInt(document.getElementById('circleSize').value);
+  const photoSc = parseInt(document.getElementById('photoScale').value) / 100;
+  const ringOp  = parseInt(document.getElementById('ringOpacity').value) / 100;
+  const bgOvOp  = parseInt(document.getElementById('bgOverlay').value) / 100;
+
+  // Scale font sizes to canvas resolution
+  const qSz = qSzBase * 2.2;
+  const nSz = nSzBase * 2.0;
+  elems.photo.r = photoR;
+
+  // Positions
+  const photoCX = elems.photo.xf * W;
+  const photoCY = elems.photo.yf * H;
+  const quoteCX = elems.quote.xf * W;
+  const quoteCY = elems.quote.yf * H;
+  const nameCX  = elems.name.xf  * W;
+  const nameCY  = elems.name.yf  * H;
+  const brandCX = elems.brand.xf * W;
+  const brandCY = elems.brand.yf * H;
+  const qmarkCX = elems.quotemark.xf * W;
+  const qmarkCY = elems.quotemark.yf * H;
+
+  // Right-side text area width
+  const qAreaW  = W * 0.52;
+  const qAreaX  = quoteCX - qAreaW/2;
+
+  // ── Background
+  const bgG = ctx.createLinearGradient(0, 0, W*0.7, H);
+  bgG.addColorStop(0, T.bg1);
+  bgG.addColorStop(1, T.bg2);
+  ctx.fillStyle = bgG;
+  ctx.fillRect(0, 0, W, H);
+
+  // BG overlay
+  if (bgOvOp > 0) {
+    ctx.save();
+    const vign = ctx.createRadialGradient(W/2,H/2,H*0.2,W/2,H/2,H*0.9);
+    vign.addColorStop(0,'transparent');
+    vign.addColorStop(1,`rgba(0,0,0,${bgOvOp})`);
+    ctx.fillStyle = vign;
+    ctx.fillRect(0,0,W,H);
+    ctx.restore();
+  }
+
+  // Silhouettes
+  if (T.silhouette && T.silColor) drawSilhouettes(ctx, W, H, T.silColor);
+
+  // ── BLOB RINGS behind photo
+  [1.50, 1.35, 1.20].forEach((sc, i) => {
+    ctx.save();
+    ctx.globalAlpha = ringOp * (0.5 - i*0.12);
+    ctx.strokeStyle = T.blobStroke;
+    ctx.lineWidth   = 3;
+    blobPath(ctx, photoCX, photoCY, photoR * sc, i);
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  // ── PHOTO CIRCLE
+  ctx.save();
+  blobPath(ctx, photoCX, photoCY, photoR);
+  ctx.clip();
+
+  if (uploadedImg) {
+    if (T.photoBW) {
+      // BW via offscreen
+      const oc = document.createElement('canvas');
+      const pr2 = Math.round(photoR * 2 * photoSc);
+      oc.width = pr2; oc.height = pr2;
+      const ox = oc.getContext('2d');
+      ox.filter = 'grayscale(100%) contrast(1.08)';
+      const sz = Math.min(uploadedImg.width, uploadedImg.height);
+      const sx = (uploadedImg.width-sz)/2, sy=(uploadedImg.height-sz)/2;
+      ox.drawImage(uploadedImg, sx, sy, sz, sz, 0, 0, pr2, pr2);
+      ctx.drawImage(oc, photoCX-pr2/2, photoCY-pr2/2, pr2, pr2);
+    } else {
+      const sz = Math.min(uploadedImg.width, uploadedImg.height) * photoSc;
+      const sx = (uploadedImg.width - sz/photoSc) / 2 * photoSc;
+      const sy = (uploadedImg.height- sz/photoSc) / 2 * photoSc;
+      ctx.drawImage(uploadedImg, (uploadedImg.width-Math.min(uploadedImg.width,uploadedImg.height))/2,
+        (uploadedImg.height-Math.min(uploadedImg.width,uploadedImg.height))/2,
+        Math.min(uploadedImg.width,uploadedImg.height),
+        Math.min(uploadedImg.width,uploadedImg.height),
+        photoCX-photoR, photoCY-photoR, photoR*2, photoR*2);
     }
-  };
-});
-
-syncColor('customBg','customBg2', v=>{
-  document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on'));
-  applyBg(v);
-});
-
-// overlay
-syncSlider('overlaySlider','overlaySlider2','overlayVal','overlayVal2','%', v=>{
-  $('cOverlay').style.background = `rgba(0,0,0,${v/100})`;
-});
-
-// custom gradient
-let gradDir = '135deg';
-document.querySelectorAll('[data-gdir]').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('[data-gdir]').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    gradDir = b.dataset.gdir;
-  };
-});
-$('applyGrad').onclick = () => {
-  const f = $('gradFrom').value, t = $('gradTo').value;
-  document.querySelectorAll('.bgswatch').forEach(x=>x.classList.remove('on'));
-  applyBg(`linear-gradient(${gradDir},${f} 0%,${t} 100%)`);
-};
-
-// ═══ EXTRAS ═══
-// Watermark
-function syncToggle(id1, id2, fn) {
-  const a=$(id1), b=$(id2);
-  if(!a) return;
-  a.onchange = e => { if(b) b.checked=e.target.checked; fn(e.target.checked); };
-  if(b) b.onchange = e => { a.checked=e.target.checked; fn(e.target.checked); };
-}
-syncToggle('showWatermark','showWatermark2', v=>{ $('cFooter').style.display = v?'block':'none'; });
-syncToggle('showAccentLine','showAccentLine2', v=>{ $('cAccentLine').style.display = v?'block':'none'; });
-
-syncText('watermarkText',null, v=>$('cFooter').textContent=v);
-
-// Accent color (avatar border + accent line)
-function applyAccent(v) {
-  $('cAvatar').style.borderColor = v;
-  $('cAccentLine').style.background = v;
-  $('cHandle').style.color = v; // also tint handle
-  $('card').style.setProperty('--card-accent', v);
-}
-syncColor('accentColor','accentColor2', applyAccent);
-
-// Avatar filter
-function bindAvfGroup(attr) {
-  document.querySelectorAll(`[${attr}]`).forEach(b => {
-    b.onclick = () => {
-      document.querySelectorAll(`[data-avf],[data-avf2]`).forEach(x=>x.classList.remove('on'));
-      const val = b.dataset.avf||b.dataset.avf2;
-      document.querySelectorAll(`[data-avf="${val}"],[data-avf2="${val}"]`).forEach(x=>x.classList.add('on'));
-      $('cAvatarImg').style.filter = val;
-      $('cAvatar').style.filter = val;
-    };
-  });
-}
-bindAvfGroup('data-avf');
-bindAvfGroup('data-avf2');
-
-// Avatar border width
-$('avBorderW').oninput = e => {
-  $('cAvatar').style.borderWidth = e.target.value+'px';
-  $('avBwVal').textContent = e.target.value+'px';
-};
-
-// Side padding
-$('sidePad').oninput = e => {
-  const v = e.target.value;
-  $('cBody').style.left = v+'px';
-  $('cBody').style.right = v+'px';
-  $('sidePadVal').textContent = v+'px';
-};
-
-// ═══ DOWNLOAD ═══
-$('dlBtn').onclick = async () => {
-  const btn = $('dlBtn');
-  btn.textContent = '⏳ Please wait…';
-  btn.disabled = true;
-  try {
-    const card = $('card');
-    card.style.transform = 'none';
-    const canvas = await html2canvas(card, {
-      scale: 1, useCORS: true, allowTaint: true,
-      backgroundColor: null, logging: false,
-      width: 1080, height: 1920, windowWidth: 1080, windowHeight: 1920,
-    });
-    scaleCard();
-    const a = document.createElement('a');
-    a.download = 'shayari-card-1080x1920.png';
-    a.href = canvas.toDataURL('image/png', 1.0);
-    a.click();
-  } catch(err) {
-    scaleCard();
-    alert('Download failed. Try a screenshot.\n' + err.message);
+  } else {
+    // Placeholder
+    const pg = ctx.createRadialGradient(photoCX,photoCY-30,10,photoCX,photoCY,photoR);
+    pg.addColorStop(0, lighten(T.accentColor,50));
+    pg.addColorStop(1, T.accentColor);
+    ctx.fillStyle = pg;
+    ctx.fillRect(photoCX-photoR, photoCY-photoR, photoR*2, photoR*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.beginPath(); ctx.arc(photoCX, photoCY-photoR*0.18, photoR*0.38, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(photoCX, photoCY+photoR*0.55, photoR*0.5, photoR*0.42, 0, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = `bold ${Math.round(photoR*0.18)}px Segoe UI`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Upload Photo', photoCX, photoCY+photoR*0.82);
   }
-  btn.textContent = '⬇ Download 9:16';
-  btn.disabled = false;
-};
+  ctx.restore();
+
+  // Photo frame ring
+  ctx.save();
+  blobPath(ctx, photoCX, photoCY, photoR + 6);
+  ctx.strokeStyle = T.blobStroke;
+  ctx.lineWidth   = 7;
+  ctx.globalAlpha = 0.65;
+  ctx.stroke();
+  ctx.restore();
+
+  // ── SELECTED ELEMENT OUTLINE
+  if (selectedElem === 'photo') {
+    ctx.save();
+    blobPath(ctx, photoCX, photoCY, photoR+22);
+    ctx.strokeStyle = '#60a5fa';
+    ctx.lineWidth   = 4;
+    ctx.setLineDash([18,10]);
+    ctx.globalAlpha = 0.8;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── BIG QUOTE MARK ❝
+  const qmarkSize = Math.round(W * 0.26);
+  ctx.save();
+  ctx.font = `bold ${qmarkSize}px Georgia, serif`;
+  ctx.fillStyle = T.markColor;
+  ctx.globalAlpha = 0.82;
+  ctx.textAlign   = 'left';
+  ctx.textBaseline= 'top';
+  ctx.fillText('\u201C', qmarkCX - qmarkSize*0.48, qmarkCY - qmarkSize*0.72);
+  ctx.restore();
+
+  if (selectedElem==='quotemark') {
+    ctx.save();
+    ctx.strokeStyle='#60a5fa'; ctx.lineWidth=4; ctx.setLineDash([14,8]);
+    ctx.globalAlpha=0.7;
+    rRect(ctx, qmarkCX-qmarkSize*0.5, qmarkCY-qmarkSize*0.75, qmarkSize*0.95, qmarkSize*0.82, 16);
+    ctx.stroke(); ctx.restore();
+  }
+
+  // ── QUOTE TEXT
+  let fontStr;
+  if (fStyle==='italic-georgia') fontStr=`italic ${qSz}px Georgia,serif`;
+  else if (fStyle==='segoe')     fontStr=`${qSz}px 'Segoe UI',Arial,sans-serif`;
+  else if (fStyle==='bold-segoe')fontStr=`bold ${qSz}px 'Segoe UI',Arial,sans-serif`;
+  else                            fontStr=`${qSz}px Georgia,serif`;
+
+  ctx.save();
+  ctx.font         = fontStr;
+  ctx.fillStyle    = customColors.qColor || T.quoteColor;
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'top';
+  const lines   = wrapLines(ctx, quote, qAreaW - 60);
+  const lineH   = qSz * 1.48;
+  const totalQH = lines.length * lineH;
+  const qStartY = quoteCY - totalQH / 2;
+  lines.forEach((l, i) => ctx.fillText(l, quoteCX, qStartY + i*lineH));
+  ctx.restore();
+
+  if (selectedElem==='quote') {
+    ctx.save();
+    ctx.strokeStyle='#60a5fa'; ctx.lineWidth=4; ctx.setLineDash([14,8]);
+    ctx.globalAlpha=0.6;
+    rRect(ctx, quoteCX-qAreaW/2, qStartY-20, qAreaW, totalQH+40, 16);
+    ctx.stroke(); ctx.restore();
+  }
+
+  // ── DIVIDER
+  const divY = qStartY + totalQH + 55;
+  ctx.save();
+  ctx.strokeStyle = T.divColor;
+  ctx.lineWidth   = 3.5;
+  ctx.globalAlpha = 0.65;
+  ctx.beginPath();
+  ctx.moveTo(nameCX - 180, divY);
+  ctx.lineTo(nameCX + 180, divY);
+  ctx.stroke();
+  ctx.restore();
+
+  // ── NAME
+  const nFont = `${THEMES[currentTheme]?.nameFontW||'bold'} ${nSz}px 'Segoe UI',Georgia,serif`;
+  ctx.save();
+  ctx.font         = `bold ${nSz}px 'Segoe UI',Georgia,serif`;
+  ctx.fillStyle    = customColors.nColor || T.nameColor;
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('— '+name, nameCX, divY + 30);
+  ctx.restore();
+
+  // Title
+  if (title) {
+    ctx.save();
+    ctx.font         = `500 ${Math.round(nSz*0.65)}px 'Segoe UI',sans-serif`;
+    ctx.fillStyle    = T.titleColor;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(title, nameCX, divY + 30 + nSz + 12);
+    ctx.restore();
+  }
+
+  if (selectedElem==='name') {
+    ctx.save();
+    ctx.strokeStyle='#60a5fa'; ctx.lineWidth=4; ctx.setLineDash([14,8]);
+    ctx.globalAlpha=0.6;
+    rRect(ctx, nameCX-280, divY+20, 560, nSz + (title?nSz*0.9:0)+40, 12);
+    ctx.stroke(); ctx.restore();
+  }
+
+  // ── BRAND BOX (top-right, like "Readers Meet")
+  const bw=175, bh=95;
+  const bx = brandCX - bw/2, by = brandCY - bh/2;
+  ctx.save();
+  ctx.shadowColor='rgba(0,0,0,0.18)'; ctx.shadowBlur=20;
+  ctx.fillStyle = T.brandBg;
+  ctx.globalAlpha = 0.93;
+  rRect(ctx, bx, by, bw, bh, 14);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.strokeStyle = T.brandAccent;
+  ctx.lineWidth   = 3.5;
+  ctx.globalAlpha = 0.7;
+  rRect(ctx, bx, by, bw, bh, 14);
+  ctx.stroke();
+  ctx.restore();
+
+  const bWords = brand.split(' ');
+  ctx.save();
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  if (bWords.length >= 2) {
+    const half = Math.ceil(bWords.length/2);
+    ctx.font = `bold 28px 'Segoe UI',sans-serif`;
+    ctx.fillStyle = T.brandText;
+    ctx.fillText(bWords.slice(0,half).join(' '), bx+bw/2, by+28);
+    ctx.fillStyle = T.brandAccent;
+    ctx.fillText(bWords.slice(half).join(' '), bx+bw/2, by+55);
+  } else {
+    ctx.font = `bold 30px 'Segoe UI',sans-serif`;
+    ctx.fillStyle = T.brandAccent;
+    ctx.fillText(brand, bx+bw/2, by+bh/2-8);
+  }
+  ctx.font = `500 18px 'Segoe UI',sans-serif`;
+  ctx.fillStyle = '#888';
+  ctx.fillText('we promote art', bx+bw/2, by+bh-14);
+  ctx.restore();
+
+  if (selectedElem==='brand') {
+    ctx.save();
+    ctx.strokeStyle='#60a5fa'; ctx.lineWidth=4; ctx.setLineDash([10,6]);
+    ctx.globalAlpha=0.7;
+    rRect(ctx, bx-8, by-8, bw+16, bh+16, 18);
+    ctx.stroke(); ctx.restore();
+  }
+
+  // ── BOTTOM ACCENT BAR
+  ctx.save();
+  const barG = ctx.createLinearGradient(0,0,W,0);
+  barG.addColorStop(0, T.bottomBar+'00');
+  barG.addColorStop(0.4, T.bottomBar);
+  barG.addColorStop(0.6, T.bottomBar);
+  barG.addColorStop(1, T.bottomBar+'00');
+  ctx.fillStyle = barG;
+  ctx.globalAlpha = 0.55;
+  ctx.fillRect(0, H-14, W, 14);
+  ctx.restore();
+
+  // ── INSTAGRAM-SAFE ZONE INDICATOR (faint border)
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(3, 3, W-6, H-6);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RANDOM FILL
+// ═══════════════════════════════════════════════════════════════════
+function randomFill() {
+  const r = RANDOM_QUOTES[Math.floor(Math.random()*RANDOM_QUOTES.length)];
+  document.getElementById('quoteInput').value = r.q;
+  document.getElementById('nameInput').value  = r.n;
+  document.getElementById('titleInput').value = r.t;
+  document.querySelectorAll('.t-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.querySelector(`[data-theme="${r.theme}"]`);
+  if (btn) btn.classList.add('active');
+  currentTheme = r.theme;
+  draw();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════════════════
+function dlCard(fmt='png') {
+  const sel = selectedElem;
+  selectedElem = null;
+  draw();
+  setTimeout(() => {
+    const a = document.createElement('a');
+    const mime = fmt==='jpg' ? 'image/jpeg' : 'image/png';
+    a.download = `quotecard_${Date.now()}.${fmt}`;
+    a.href = canvas.toDataURL(mime, fmt==='jpg'?0.95:1.0);
+    a.click();
+    selectedElem = sel;
+    draw();
+    showToast('⬇️ Downloaded!');
+  }, 60);
+}
+
+async function copyCard() {
+  const sel = selectedElem;
+  selectedElem = null;
+  draw();
+  setTimeout(async () => {
+    try {
+      canvas.toBlob(async blob => {
+        await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+        showToast('✅ Copied to clipboard!');
+      });
+    } catch { showToast('⚠️ Use Download instead'); }
+    selectedElem = sel;
+    draw();
+  }, 60);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function lighten(hex, a) {
+  const n=parseInt(hex.replace('#',''),16);
+  return `rgb(${Math.min(255,(n>>16)+a)},${Math.min(255,((n>>8)&0xff)+a)},${Math.min(255,(n&0xff)+a)})`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  resizeCanvas();
+  draw();
+});
+
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  draw();
+});
 </script>
 </body>
 </html>
