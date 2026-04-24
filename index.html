@@ -980,6 +980,7 @@ function draw(){
   const nSzBase=parseInt(document.getElementById('nSize').value);
   const fStyle=document.getElementById('fontStyle').value;
   const photoR=parseInt(document.getElementById('circleSize').value);
+  const photoScale=parseInt(document.getElementById('photoScale').value)/100;
   const bgOvOp=parseInt(document.getElementById('bgOverlay').value)/100;
   const frameThick=parseInt(document.getElementById('frameThick').value);
   const shadowAlpha=parseInt(document.getElementById('shadowIntensity').value)/100;
@@ -1037,11 +1038,13 @@ function draw(){
       const sz=Math.min(uploadedImg.width,uploadedImg.height);
       const sx=(uploadedImg.width-sz)/2,sy=(uploadedImg.height-sz)/2;
       ox.drawImage(uploadedImg,sx,sy,sz,sz,0,0,pr2,pr2);
-      ctx.drawImage(oc,photoCX-pr2/2,photoCY-pr2/2,pr2,pr2);
+      const scaledPr2=pr2*photoScale;
+      ctx.drawImage(oc,photoCX-scaledPr2/2,photoCY-scaledPr2/2,scaledPr2,scaledPr2);
     } else {
       const sz=Math.min(uploadedImg.width,uploadedImg.height);
       const sx=(uploadedImg.width-sz)/2,sy=(uploadedImg.height-sz)/2;
-      ctx.drawImage(uploadedImg,sx,sy,sz,sz,photoCX-photoR,photoCY-photoR,photoR*2,photoR*2);
+      const scaledSize=photoR*2*photoScale;
+      ctx.drawImage(uploadedImg,sx,sy,sz,sz,photoCX-scaledSize/2,photoCY-scaledSize/2,scaledSize,scaledSize);
     }
   } else {
     const pg=ctx.createRadialGradient(photoCX,photoCY-30,10,photoCX,photoCY,photoR);
