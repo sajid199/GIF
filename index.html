@@ -222,17 +222,36 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
 
 @media(max-width:768px){
   .studio{display:flex;flex-direction:column;height:auto;}
-  .panel,.right-panel{width:100%;max-height:none;border-right:none;border-left:none;border-bottom:1px solid var(--border);}
-  .mob-collapse{overflow:hidden;transition:max-height .3s ease;}
-  .mob-collapse.closed{max-height:0!important;padding:0!important}
+  .panel,.right-panel{width:100%;max-height:none;border-right:none;border-left:none;border-bottom:1px solid var(--border);overflow:visible;}
+  /* Collapsible body: hidden state uses height:0, open state uses height:auto */
+  .mob-collapse{
+    overflow:hidden;
+    display:grid;
+    grid-template-rows:1fr;
+    transition:grid-template-rows .32s ease;
+  }
+  .mob-collapse.closed{
+    grid-template-rows:0fr;
+  }
+  .mob-collapse > .mob-inner{
+    overflow:hidden;
+    min-height:0;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
   .panel-toggle{
     display:flex;align-items:center;justify-content:space-between;
-    background:#0e0e16;border-bottom:1px solid var(--border);padding:12px 16px;
-    cursor:pointer;font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px;user-select:none;
+    background:#0e0e16;border-bottom:1px solid var(--border);padding:14px 16px;
+    cursor:pointer;font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.5px;
+    user-select:none;-webkit-user-select:none;
+    /* Prevent accidental toggle when scrolling */
+    touch-action:manipulation;
   }
-  .panel-toggle .arrow{transition:.3s;font-size:10px}
-  .panel-toggle.open .arrow{transform:rotate(180deg)}
-  .canvas-area{min-height:55vw;padding:12px 8px;}
+  .panel-toggle .arrow{transition:transform .3s;font-size:12px;display:inline-block;}
+  .panel-toggle.open .arrow{transform:rotate(180deg);}
+  .canvas-area{min-height:60vw;padding:12px 8px;}
   .topbar{padding:10px 12px;}
   .logo{font-size:13px}
   .rtab{padding:5px 9px;font-size:10px}
@@ -241,6 +260,11 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
   .elem-btn{padding:8px 6px;font-size:10px;flex-direction:column;align-items:center;text-align:center;gap:3px;}
   .e-desc{display:none}
   .shape-grid{grid-template-columns:repeat(5,1fr);}
+  /* Bigger touch targets for sliders on mobile */
+  input[type=range]{height:6px;}
+  input[type=range]::-webkit-slider-thumb{width:22px;height:22px;}
+  /* Theme grid full height – no clipping */
+  .theme-grid{max-height:none;}
 }
 </style>
 </head>
@@ -262,7 +286,7 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
   <div class="panel-toggle open" id="leftToggle" onclick="togglePanel('left')" style="display:none">
     ✍️ Content & Themes <span class="arrow">▼</span>
   </div>
-  <div class="mob-collapse" id="leftBody">
+  <div class="mob-collapse" id="leftBody"><div class="mob-inner">
 
   <!-- Asset paths info -->
   <div class="asset-info">
@@ -338,7 +362,7 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
   <button class="btn-primary" onclick="draw()">✨ Refresh</button>
   <button class="btn-sec" onclick="randomFill()">🎲 Random</button>
 
-  </div>
+  </div></div>
 </div>
 
 <!-- ══ CANVAS ══ -->
@@ -354,7 +378,7 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
   <div class="panel-toggle open" id="rightToggle" onclick="togglePanel('right')" style="display:none">
     🎛️ Controls <span class="arrow">▼</span>
   </div>
-  <div class="mob-collapse" id="rightBody">
+  <div class="mob-collapse" id="rightBody"><div class="mob-inner">
 
   <div class="sec-title" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--accent);padding:2px">🎛️ Elements</div>
 
@@ -493,7 +517,7 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
     <button class="btn-dl btn-amber" onclick="dlCard('jpg')">⬇ Download JPG</button>
   </div>
 
-  </div>
+  </div></div>
 </div>
 
 </div>
@@ -1256,25 +1280,45 @@ function togglePanel(side){
   const toggleId=side==='left'?'leftToggle':'rightToggle';
   const body=document.getElementById(bodyId);
   const toggle=document.getElementById(toggleId);
-  const closed=body.classList.contains('closed');
-  if(closed){body.classList.remove('closed');body.style.maxHeight=body.scrollHeight+'px';toggle.classList.add('open');}
-  else{body.style.maxHeight=body.scrollHeight+'px';requestAnimationFrame(()=>{body.classList.add('closed');body.style.maxHeight='0';});toggle.classList.remove('open');}
+  const isClosed=body.classList.contains('closed');
+  if(isClosed){
+    body.classList.remove('closed');
+    toggle.classList.add('open');
+  } else {
+    body.classList.add('closed');
+    toggle.classList.remove('open');
+  }
 }
 
 function applyMobileLayout(){
   const isMob=window.innerWidth<=768;
-  document.getElementById('leftToggle').style.display=isMob?'flex':'none';
-  document.getElementById('rightToggle').style.display=isMob?'flex':'none';
+  const leftToggle=document.getElementById('leftToggle');
+  const rightToggle=document.getElementById('rightToggle');
   const leftBody=document.getElementById('leftBody');
   const rightBody=document.getElementById('rightBody');
+  const elemRow=document.getElementById('elemRow');
+
+  leftToggle.style.display=isMob?'flex':'none';
+  rightToggle.style.display=isMob?'flex':'none';
+
   if(isMob){
-    if(!leftBody.classList.contains('closed')){leftBody.classList.add('closed');leftBody.style.maxHeight='0';document.getElementById('leftToggle').classList.remove('open');}
-    if(!rightBody.style.maxHeight||rightBody.classList.contains('closed')){rightBody.classList.remove('closed');rightBody.style.maxHeight=rightBody.scrollHeight+'px';document.getElementById('rightToggle').classList.add('open');}
-    document.getElementById('elemRow').classList.add('elem-row');
-  }else{
-    leftBody.classList.remove('closed');leftBody.style.maxHeight='';
-    rightBody.classList.remove('closed');rightBody.style.maxHeight='';
-    document.getElementById('elemRow').classList.remove('elem-row');
+    // On first switch to mobile: collapse left, expand right
+    if(!leftBody.dataset.mobileInit){
+      leftBody.classList.add('closed');
+      leftToggle.classList.remove('open');
+      rightBody.classList.remove('closed');
+      rightToggle.classList.add('open');
+      leftBody.dataset.mobileInit='1';
+    }
+    elemRow.classList.add('elem-row');
+  } else {
+    // Desktop: always show both panels fully, clear mobile state
+    leftBody.classList.remove('closed');
+    rightBody.classList.remove('closed');
+    leftBody.style.maxHeight='';
+    rightBody.style.maxHeight='';
+    delete leftBody.dataset.mobileInit;
+    elemRow.classList.remove('elem-row');
   }
 }
 
