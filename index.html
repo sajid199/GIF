@@ -837,6 +837,15 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
       <div class="c-dot" data-t="nColor" data-color="#7c5cbf" style="background:#7c5cbf"></div>
       <input type="color" id="nColorCustom" value="#5c2d00">
     </div>
+    <label>Quote Mark Color</label>
+    <div class="color-row" id="qMarkColorRow">
+      <div class="c-dot act" data-t="qMarkColor" data-color="#c9a96e" style="background:#c9a96e"></div>
+      <div class="c-dot" data-t="qMarkColor" data-color="#ffffff" style="background:#fff"></div>
+      <div class="c-dot" data-t="qMarkColor" data-color="#ff6b6b" style="background:#ff6b6b"></div>
+      <div class="c-dot" data-t="qMarkColor" data-color="#60a5fa" style="background:#60a5fa"></div>
+      <div class="c-dot" data-t="qMarkColor" data-color="#34d399" style="background:#34d399"></div>
+      <input type="color" id="qMarkColorCustom" value="#c9a96e">
+    </div>
   </div>
 
   <!-- Effects -->
@@ -921,7 +930,7 @@ let elems={
   quotemark:{xf:0.60,yf:0.19},
 };
 
-let colors={qColor:'#1a0d00',nColor:'#5c2d00',frameColor:'#c9a96e'};
+let colors={qColor:'#1a0d00',nColor:'#5c2d00',frameColor:'#c9a96e',qMarkColor:'#c9a96e'};
 let CW=1080,CH=1350;
 
 // ═══════════════════════════════════════
@@ -1319,6 +1328,7 @@ document.querySelectorAll('.c-dot').forEach(dot=>{
 document.getElementById('qColorCustom').addEventListener('input',e=>{colors.qColor=e.target.value;draw();});
 document.getElementById('nColorCustom').addEventListener('input',e=>{colors.nColor=e.target.value;draw();});
 document.getElementById('frameColorCustom').addEventListener('input',e=>{colors.frameColor=e.target.value;draw();});
+document.getElementById('qMarkColorCustom').addEventListener('input',e=>{colors.qMarkColor=e.target.value;draw();});
 
 // ═══════════════════════════════════════
 // HELPERS
@@ -1654,7 +1664,7 @@ function draw(){
   const qmarkSz=Math.round(W*.24);
   ctx.save();
   ctx.font=`bold ${qmarkSz}px Georgia,serif`;
-  ctx.fillStyle=T.mark;ctx.globalAlpha=0.75;
+  ctx.fillStyle=colors.qMarkColor;ctx.globalAlpha=0.75;
   ctx.textAlign='left';ctx.textBaseline='top';
   ctx.fillText('\u201C',qmarkCX-qmarkSz*.48,qmarkCY-qmarkSz*.7);
   ctx.restore();
