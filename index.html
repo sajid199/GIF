@@ -539,7 +539,9 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
   <!-- STYLE TAB -->
   <div class="mob-tab-pane" id="mob-pane-style">
     <div class="sec">
-      <div class="sec-title">🎨 Quote Color</div>
+      <div class="sec-title">🎨 Text Colors</div>
+
+      <label>Quote Color</label>
       <div class="color-row" id="qColorRowM">
         <div class="c-dot actM" data-tm="qColor" data-color="#1a0d00" style="background:#1a0d00;border:1px solid #555"></div>
         <div class="c-dot actM" data-tm="qColor" data-color="#ffffff" style="background:#fff"></div>
@@ -551,14 +553,27 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
         <div class="c-dot actM" data-tm="qColor" data-color="#1b3a1e" style="background:#1b3a1e"></div>
         <input type="color" id="qColorCustomM" value="#1a0d00">
       </div>
+
       <label>Name Color</label>
       <div class="color-row" id="nColorRowM">
         <div class="c-dot actM" data-tm="nColor" data-color="#5c2d00" style="background:#5c2d00"></div>
         <div class="c-dot actM" data-tm="nColor" data-color="#c9a96e" style="background:#c9a96e"></div>
         <div class="c-dot actM" data-tm="nColor" data-color="#ffffff" style="background:#fff"></div>
         <div class="c-dot actM" data-tm="nColor" data-color="#7c5cbf" style="background:#7c5cbf"></div>
+        <div class="c-dot actM" data-tm="nColor" data-color="#8B4513" style="background:#8B4513"></div>
         <div class="c-dot actM" data-tm="nColor" data-color="#000000" style="background:#000;border:1px solid #555"></div>
         <input type="color" id="nColorCustomM" value="#5c2d00">
+      </div>
+
+      <label>Quote Mark Color</label>
+      <div class="color-row" id="qMarkColorRowM">
+        <div class="c-dot actM" data-tm="qMarkColor" data-color="#c9a96e" style="background:#c9a96e"></div>
+        <div class="c-dot actM" data-tm="qMarkColor" data-color="#ffffff" style="background:#fff"></div>
+        <div class="c-dot actM" data-tm="qMarkColor" data-color="#ff6b6b" style="background:#ff6b6b"></div>
+        <div class="c-dot actM" data-tm="qMarkColor" data-color="#60a5fa" style="background:#60a5fa"></div>
+        <div class="c-dot actM" data-tm="qMarkColor" data-color="#34d399" style="background:#34d399"></div>
+        <div class="c-dot actM" data-tm="qMarkColor" data-color="#e8d5b0" style="background:#e8d5b0"></div>
+        <input type="color" id="qMarkColorCustomM" value="#c9a96e">
       </div>
     </div>
     <div class="sec">
@@ -1903,6 +1918,7 @@ function initMobileListeners(){
   document.getElementById('qColorCustomM').addEventListener('input',e=>{colors.qColor=e.target.value;draw();});
   document.getElementById('nColorCustomM').addEventListener('input',e=>{colors.nColor=e.target.value;draw();});
   document.getElementById('frameColorCustomM').addEventListener('input',e=>{colors.frameColor=e.target.value;draw();});
+  document.getElementById('qMarkColorCustomM').addEventListener('input',e=>{colors.qMarkColor=e.target.value;draw();});
 
   // Mobile word customizer
   document.getElementById('wordSizeMultM').addEventListener('input',e=>{
