@@ -112,27 +112,70 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
 .toggle input:checked+.slider-toggle{background:var(--accent);}
 .toggle input:checked+.slider-toggle:before{transform:translateX(16px);background:#000;}
 
+/* ── Mobile tabs (hidden on desktop) ── */
+.mob-tab-bar{display:none;}
+.mob-tab-content{display:none;}
+
 @media(max-width:768px){
+  /* Hide desktop side panels */
+  #leftPanelWrap,#rightPanelWrap{display:none!important;}
+
   .studio{display:flex;flex-direction:column;height:auto;}
-  .panel,.right-panel{width:100%;max-height:none;border-right:none;border-left:none;border-bottom:1px solid var(--border);overflow:visible;}
-  .mob-collapse{overflow:hidden;display:grid;grid-template-rows:1fr;transition:grid-template-rows .32s ease;}
-  .mob-collapse.closed{grid-template-rows:0fr;}
-  .mob-collapse>.mob-inner{overflow:hidden;min-height:0;padding:14px;display:flex;flex-direction:column;gap:12px;}
-  .panel-toggle{display:flex;align-items:center;justify-content:space-between;background:#0e0e16;border-bottom:1px solid var(--border);padding:14px 16px;cursor:pointer;font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.5px;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
-  .panel-toggle .arrow{transition:transform .3s;font-size:12px;display:inline-block;}
-  .panel-toggle.open .arrow{transform:rotate(180deg);}
-  .canvas-area{min-height:60vw;padding:12px 8px;}
-  .topbar{padding:10px 12px;}
-  .logo{font-size:13px}
-  .rtab{padding:5px 9px;font-size:10px}
-  .right-panel{display:flex;flex-direction:column;gap:10px;}
-  .elem-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
-  .elem-btn{padding:8px 6px;font-size:10px;flex-direction:column;align-items:center;text-align:center;gap:3px;}
-  .e-desc{display:none}
+
+  /* Canvas on top */
+  .canvas-area{
+    width:100%;order:-1;
+    padding:10px 8px 6px;
+    min-height:0;
+    background:#06060c;
+    background-image:radial-gradient(circle at 50% 40%,#13103a 0%,#06060c 65%);
+  }
+
+  .topbar{padding:8px 10px;}
+  .logo{font-size:12px}
+  .rtab{padding:4px 8px;font-size:10px}
+
+  /* Tab bar */
+  .mob-tab-bar{
+    display:flex;
+    width:100%;
+    background:#0e0e16;
+    border-top:2px solid var(--border);
+    border-bottom:1px solid var(--border);
+    position:sticky;top:0;z-index:100;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .mob-tab-bar::-webkit-scrollbar{display:none;}
+  .mob-tab-btn{
+    flex:1;min-width:68px;padding:12px 4px 10px;
+    border:none;background:transparent;
+    color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;
+    border-bottom:3px solid transparent;white-space:nowrap;
+    transition:.18s;letter-spacing:.2px;touch-action:manipulation;
+  }
+  .mob-tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(201,169,110,.05);}
+
+  /* Tab content */
+  .mob-tab-content{display:block;width:100%;background:var(--panel);}
+  .mob-tab-pane{display:none;padding:14px;flex-direction:column;gap:12px;}
+  .mob-tab-pane.active{display:flex;}
+
+  /* Component tweaks */
   .shape-grid{grid-template-columns:repeat(5,1fr);}
   input[type=range]{height:6px;}
   input[type=range]::-webkit-slider-thumb{width:22px;height:22px;}
-  .theme-grid{max-height:none;}
+  .theme-grid{max-height:none;grid-template-columns:repeat(3,1fr);}
+
+  /* Element picker row */
+  .mob-elem-row{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:4px;}
+  .mob-elem-btn{
+    padding:8px 2px 6px;background:#0e0e16;border:1px solid var(--border);
+    border-radius:8px;color:#c4bfdb;font-size:8px;font-weight:700;cursor:pointer;
+    text-align:center;transition:.18s;display:flex;flex-direction:column;
+    align-items:center;gap:2px;touch-action:manipulation;
+  }
+  .mob-elem-btn.selected,.mob-elem-btn:hover{border-color:var(--accent);background:rgba(201,169,110,.1);color:var(--accent);}
+  .mob-elem-btn .me-icon{font-size:16px;}
 }
 </style>
 </head>
@@ -299,6 +342,26 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
       <input type="range" id="lineHeight" min="100" max="250" value="155">
       <span class="sv" id="lineHeightV">1.55</span>
     </div>
+    <label>Quote Color</label>
+    <div class="color-row" id="qColorRow2">
+      <div class="c-dot act2" data-t2="qColor" data-color="#1a0d00" style="background:#1a0d00;border:1px solid #555"></div>
+      <div class="c-dot act2" data-t2="qColor" data-color="#ffffff" style="background:#fff"></div>
+      <div class="c-dot act2" data-t2="qColor" data-color="#e8d5b0" style="background:#e8d5b0"></div>
+      <div class="c-dot act2" data-t2="qColor" data-color="#c9a96e" style="background:#c9a96e"></div>
+      <div class="c-dot act2" data-t2="qColor" data-color="#2d1b4e" style="background:#2d1b4e"></div>
+      <div class="c-dot act2" data-t2="qColor" data-color="#0d2137" style="background:#0d2137"></div>
+      <div class="c-dot act2" data-t2="qColor" data-color="#1b3a1e" style="background:#1b3a1e"></div>
+      <input type="color" id="qColorCustom2" value="#1a0d00">
+    </div>
+    <label>Name Color</label>
+    <div class="color-row" id="nColorRow2">
+      <div class="c-dot act2" data-t2="nColor" data-color="#5c2d00" style="background:#5c2d00"></div>
+      <div class="c-dot act2" data-t2="nColor" data-color="#c9a96e" style="background:#c9a96e"></div>
+      <div class="c-dot act2" data-t2="nColor" data-color="#ffffff" style="background:#fff"></div>
+      <div class="c-dot act2" data-t2="nColor" data-color="#7c5cbf" style="background:#7c5cbf"></div>
+      <div class="c-dot act2" data-t2="nColor" data-color="#000000" style="background:#000;border:1px solid #555"></div>
+      <input type="color" id="nColorCustom2" value="#5c2d00">
+    </div>
   </div>
 
   <!-- Word Customizer -->
@@ -368,6 +431,279 @@ input[type=color]{width:26px;height:26px;border-radius:6px;border:none;padding:0
     <canvas id="qCanvas"></canvas>
   </div>
   <div class="canvas-hint">Drag elements on the card to reposition them</div>
+</div>
+
+<!-- ══ MOBILE TABS ══ -->
+<nav class="mob-tab-bar" id="mobTabBar">
+  <button class="mob-tab-btn active" onclick="mobTab('content')">✍️ Content</button>
+  <button class="mob-tab-btn" onclick="mobTab('style')">🎨 Style</button>
+  <button class="mob-tab-btn" onclick="mobTab('theme')">🌈 Theme</button>
+  <button class="mob-tab-btn" onclick="mobTab('position')">📐 Position</button>
+  <button class="mob-tab-btn" onclick="mobTab('export')">⬇️ Export</button>
+</nav>
+
+<div class="mob-tab-content" id="mobTabContent">
+
+  <!-- CONTENT TAB -->
+  <div class="mob-tab-pane active" id="mob-pane-content">
+    <div class="sec">
+      <div class="sec-title">📸 Photo</div>
+      <div class="upload-zone">
+        <input type="file" id="photoInputM" accept="image/*">
+        <img id="imgThumbM" src="" alt="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:none;margin:0 auto 6px;border:2px solid var(--accent);">
+        <div id="uploadHintM"><div style="font-size:24px">🖼️</div><p style="font-size:10px;color:var(--muted);margin-top:4px">Upload photo (PNG transparency supported)</p></div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Transparent PNG mode</span>
+        <label class="toggle"><input type="checkbox" id="transparentModeM"><span class="slider-toggle"></span></label>
+      </div>
+      <small style="font-size:9px;color:var(--muted);display:block;margin-bottom:8px">When ON: no shape clip, just shadow.</small>
+      <label>Person Name</label>
+      <input type="text" id="nameInputM" value="Mirza Ghalib" placeholder="Full Name">
+      <label>Title / Profession</label>
+      <input type="text" id="titleInputM" value="Poet & Philosopher" placeholder="Title or role">
+    </div>
+    <div class="sec">
+      <div class="sec-title">✍️ Quote</div>
+      <label>Quote Text</label>
+      <textarea id="quoteInputM" style="min-height:80px">Hazaaron khwahishen aisi ke har khwahish pe dam nikle, bahut nikle mere armaan lekin phir bhi kam nikle.</textarea>
+      <label>Quote Font</label>
+      <select id="fontStyleM" onchange="syncMobileToMain('fontStyle','fontStyleM');updateFontPreview();draw()">
+        <optgroup label="── Serif / Literary ──">
+          <option value="italic Playfair Display">Playfair Display – Italic</option>
+          <option value="Playfair Display">Playfair Display – Regular</option>
+          <option value="bold Playfair Display">Playfair Display – Bold</option>
+          <option value="italic Lora">Lora – Italic</option>
+          <option value="Lora">Lora – Regular</option>
+          <option value="italic Cormorant Garamond">Cormorant Garamond – Italic</option>
+          <option value="300 Cormorant Garamond">Cormorant Garamond – Light</option>
+          <option value="italic EB Garamond">EB Garamond – Italic</option>
+          <option value="EB Garamond">EB Garamond – Regular</option>
+          <option value="italic Merriweather">Merriweather – Italic</option>
+          <option value="italic Libre Baskerville">Libre Baskerville – Italic</option>
+          <option value="italic Crimson Pro">Crimson Pro – Italic</option>
+          <option value="italic Spectral">Spectral – Italic</option>
+          <option value="italic Bodoni Moda">Bodoni Moda – Italic</option>
+          <option value="Cinzel">Cinzel – Regular</option>
+          <option value="bold Cinzel">Cinzel – Bold</option>
+          <option value="Marcellus">Marcellus</option>
+        </optgroup>
+        <optgroup label="── Urdu / Arabic ──">
+          <option value="Noto Nastaliq Urdu">Noto Nastaliq Urdu</option>
+          <option value="bold Noto Nastaliq Urdu">Noto Nastaliq Urdu – Bold</option>
+          <option value="Amiri">Amiri – Regular</option>
+          <option value="italic Amiri">Amiri – Italic</option>
+          <option value="Scheherazade New">Scheherazade New</option>
+        </optgroup>
+        <optgroup label="── Calligraphy ──">
+          <option value="Great Vibes">Great Vibes</option>
+          <option value="Dancing Script">Dancing Script</option>
+          <option value="bold Dancing Script">Dancing Script – Bold</option>
+          <option value="Parisienne">Parisienne</option>
+          <option value="Satisfy">Satisfy</option>
+          <option value="Allura">Allura</option>
+          <option value="Sacramento">Sacramento</option>
+          <option value="Alex Brush">Alex Brush</option>
+          <option value="Tangerine">Tangerine</option>
+          <option value="bold Tangerine">Tangerine – Bold</option>
+        </optgroup>
+        <optgroup label="── Modern Sans ──">
+          <option value="Poppins">Poppins</option>
+          <option value="600 Poppins">Poppins – SemiBold</option>
+          <option value="italic Poppins">Poppins – Italic</option>
+          <option value="Nunito">Nunito</option>
+          <option value="Quicksand">Quicksand</option>
+          <option value="300 Raleway">Raleway – Light</option>
+          <option value="700 Raleway">Raleway – Bold</option>
+          <option value="DM Sans">DM Sans</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="sec">
+      <div class="sec-title">🕊️ Channel</div>
+      <label>Channel Name</label>
+      <input type="text" id="channelNameM" value="The Peace Lovers">
+      <label>Handle</label>
+      <input type="text" id="handleInputM" value="@the_peace_lovers">
+      <label>Watermark</label>
+      <input type="text" id="watermarkInputM" value="The Peace Lovers• Instagram">
+      <label>Verified Badge</label>
+      <select id="showBadgeM">
+        <option value="yes">Yes – Blue Tick</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+    <button class="btn-sec" onclick="randomFill()">🎲 Random Quote</button>
+  </div>
+
+  <!-- STYLE TAB -->
+  <div class="mob-tab-pane" id="mob-pane-style">
+    <div class="sec">
+      <div class="sec-title">🎨 Quote Color</div>
+      <div class="color-row" id="qColorRowM">
+        <div class="c-dot actM" data-tm="qColor" data-color="#1a0d00" style="background:#1a0d00;border:1px solid #555"></div>
+        <div class="c-dot actM" data-tm="qColor" data-color="#ffffff" style="background:#fff"></div>
+        <div class="c-dot actM" data-tm="qColor" data-color="#e8d5b0" style="background:#e8d5b0"></div>
+        <div class="c-dot actM" data-tm="qColor" data-color="#c9a96e" style="background:#c9a96e"></div>
+        <div class="c-dot actM" data-tm="qColor" data-color="#2d1b4e" style="background:#2d1b4e"></div>
+        <div class="c-dot actM" data-tm="qColor" data-color="#0d2137" style="background:#0d2137"></div>
+        <div class="c-dot actM" data-tm="qColor" data-color="#f3e5f5" style="background:#f3e5f5"></div>
+        <div class="c-dot actM" data-tm="qColor" data-color="#1b3a1e" style="background:#1b3a1e"></div>
+        <input type="color" id="qColorCustomM" value="#1a0d00">
+      </div>
+      <label>Name Color</label>
+      <div class="color-row" id="nColorRowM">
+        <div class="c-dot actM" data-tm="nColor" data-color="#5c2d00" style="background:#5c2d00"></div>
+        <div class="c-dot actM" data-tm="nColor" data-color="#c9a96e" style="background:#c9a96e"></div>
+        <div class="c-dot actM" data-tm="nColor" data-color="#ffffff" style="background:#fff"></div>
+        <div class="c-dot actM" data-tm="nColor" data-color="#7c5cbf" style="background:#7c5cbf"></div>
+        <div class="c-dot actM" data-tm="nColor" data-color="#000000" style="background:#000;border:1px solid #555"></div>
+        <input type="color" id="nColorCustomM" value="#5c2d00">
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-title">📐 Text Size</div>
+      <label>Quote Size</label>
+      <div class="sl-row">
+        <input type="range" id="qSizeM" min="10" max="46" value="26" oninput="syncSlider('qSize','qSizeM','qSizeV','qSizeVM','');draw()">
+        <span class="sv" id="qSizeVM">26</span>
+      </div>
+      <label>Name Size</label>
+      <div class="sl-row">
+        <input type="range" id="nSizeM" min="10" max="38" value="20" oninput="syncSlider('nSize','nSizeM','nSizeV','nSizeVM','');draw()">
+        <span class="sv" id="nSizeVM">20</span>
+      </div>
+      <label>Quote Width %</label>
+      <div class="sl-row">
+        <input type="range" id="quoteWidthM" min="30" max="90" value="52" oninput="syncSlider('quoteWidth','quoteWidthM','quoteWidthV','quoteWidthVM','%');draw()">
+        <span class="sv" id="quoteWidthVM">52%</span>
+      </div>
+      <label>Line Height</label>
+      <div class="sl-row">
+        <input type="range" id="lineHeightM" min="100" max="250" value="155" oninput="syncSlider('lineHeight','lineHeightM','lineHeightV','lineHeightVM','lh');draw()">
+        <span class="sv" id="lineHeightVM">1.55</span>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-title">⬡ Photo Frame</div>
+      <div class="shape-grid" id="shapeGridM">
+        <div><button class="sh-btn active" data-shape="circle" onclick="setShape('circle')"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13"/></svg></button><div class="sh-label">Circle</div></div>
+        <div><button class="sh-btn" data-shape="hexagon" onclick="setShape('hexagon')"><svg viewBox="0 0 32 32"><polygon points="16,3 28,9.5 28,22.5 16,29 4,22.5 4,9.5"/></svg></button><div class="sh-label">Hexagon</div></div>
+        <div><button class="sh-btn" data-shape="pentagon" onclick="setShape('pentagon')"><svg viewBox="0 0 32 32"><polygon points="16,2 30,12 25,28 7,28 2,12"/></svg></button><div class="sh-label">Pentagon</div></div>
+        <div><button class="sh-btn" data-shape="diamond" onclick="setShape('diamond')"><svg viewBox="0 0 32 32"><polygon points="16,2 30,16 16,30 2,16"/></svg></button><div class="sh-label">Diamond</div></div>
+        <div><button class="sh-btn" data-shape="square" onclick="setShape('square')"><svg viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="4"/></svg></button><div class="sh-label">Square</div></div>
+      </div>
+      <label>Frame Color</label>
+      <div class="color-row">
+        <div class="c-dot actM" data-tm="frameColor" data-color="#c9a96e" style="background:#c9a96e"></div>
+        <div class="c-dot actM" data-tm="frameColor" data-color="#ffffff" style="background:#fff"></div>
+        <div class="c-dot actM" data-tm="frameColor" data-color="#4361ee" style="background:#4361ee"></div>
+        <div class="c-dot actM" data-tm="frameColor" data-color="#9c27b0" style="background:#9c27b0"></div>
+        <input type="color" id="frameColorCustomM" value="#c9a96e">
+      </div>
+      <label>Frame Thickness</label>
+      <div class="sl-row">
+        <input type="range" id="frameThickM" min="0" max="24" value="8" oninput="syncSlider('frameThick','frameThickM','frameThickV','frameThickVM','');draw()">
+        <span class="sv" id="frameThickVM">8</span>
+      </div>
+      <label>Photo Size</label>
+      <div class="sl-row">
+        <input type="range" id="circleSizeM" min="60" max="450" value="190" oninput="syncSlider('circleSize','circleSizeM','circleSizeV','circleSizeVM','');elems.photo.r=parseInt(this.value);draw()">
+        <span class="sv" id="circleSizeVM">190</span>
+      </div>
+      <label>Photo Scale</label>
+      <div class="sl-row">
+        <input type="range" id="photoScaleM" min="60" max="200" value="100" oninput="syncSlider('photoScale','photoScaleM','photoScaleV','photoScaleVM','%');draw()">
+        <span class="sv" id="photoScaleVM">100%</span>
+      </div>
+      <label>Shadow Intensity</label>
+      <div class="sl-row">
+        <input type="range" id="shadowIntensityM" min="0" max="100" value="55" oninput="syncSlider('shadowIntensity','shadowIntensityM','shadowIntensityV','shadowIntensityVM','%');draw()">
+        <span class="sv" id="shadowIntensityVM">55%</span>
+      </div>
+      <label>Shadow Spread (transparent)</label>
+      <div class="sl-row">
+        <input type="range" id="shadowSpreadM" min="0" max="120" value="40" oninput="syncSlider('shadowSpread','shadowSpreadM','shadowSpreadV','shadowSpreadVM','');draw()">
+        <span class="sv" id="shadowSpreadVM">40</span>
+      </div>
+      <label>BG Overlay</label>
+      <div class="sl-row">
+        <input type="range" id="bgOverlayM" min="0" max="80" value="10" oninput="syncSlider('bgOverlay','bgOverlayM','bgOverlayV','bgOverlayVM','%');draw()">
+        <span class="sv" id="bgOverlayVM">10%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEME TAB -->
+  <div class="mob-tab-pane" id="mob-pane-theme">
+    <div class="sec">
+      <div class="sec-title">🎨 Themes</div>
+      <div class="theme-grid" id="themeGridM"></div>
+    </div>
+  </div>
+
+  <!-- POSITION TAB -->
+  <div class="mob-tab-pane" id="mob-pane-position">
+    <div class="sec">
+      <div class="sec-title">📐 Drag Elements</div>
+      <p style="font-size:10px;color:var(--muted);margin-bottom:10px">Select an element then drag it on the canvas above</p>
+      <div class="mob-elem-row">
+        <button class="mob-elem-btn" onclick="selectElem('photo')" id="mebphoto"><span class="me-icon">🖼️</span>Photo</button>
+        <button class="mob-elem-btn" onclick="selectElem('quote')" id="mebquote"><span class="me-icon">💬</span>Quote</button>
+        <button class="mob-elem-btn" onclick="selectElem('name')" id="mebname"><span class="me-icon">👤</span>Name</button>
+        <button class="mob-elem-btn" onclick="selectElem('brand')" id="mebbrand"><span class="me-icon">🏷️</span>Brand</button>
+        <button class="mob-elem-btn" onclick="selectElem('quotemark')" id="mebquotemark"><span class="me-icon">❝</span>Mark</button>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-title">✨ Word Customizer</div>
+      <p style="font-size:10px;color:var(--muted);margin-bottom:8px">Tap a word to style it</p>
+      <div class="word-customize-area">
+        <div class="word-list" id="wordListM"></div>
+        <div class="word-props" id="wordPropsM">
+          <div class="word-props-title" id="wordPropsTitleM">Editing: —</div>
+          <label>Color</label>
+          <div class="color-row" id="wordColorRowM">
+            <div class="c-dot wcM" data-color="#c9a96e" style="background:#c9a96e"></div>
+            <div class="c-dot wcM" data-color="#ff6b6b" style="background:#ff6b6b"></div>
+            <div class="c-dot wcM" data-color="#60a5fa" style="background:#60a5fa"></div>
+            <div class="c-dot wcM" data-color="#34d399" style="background:#34d399"></div>
+            <div class="c-dot wcM" data-color="#f9a825" style="background:#f9a825"></div>
+            <div class="c-dot wcM" data-color="#ffffff" style="background:#fff"></div>
+            <input type="color" id="wordColorCustomM2" value="#c9a96e">
+          </div>
+          <label>Size multiplier</label>
+          <div class="sl-row">
+            <input type="range" id="wordSizeMultM" min="60" max="200" value="100">
+            <span class="sv" id="wordSizeMultVM">100%</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:4px">
+            <button onclick="setWordStyle('bold')" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--border);background:#13131a;color:var(--text);font-size:12px;font-weight:700;cursor:pointer">B</button>
+            <button onclick="setWordStyle('italic')" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--border);background:#13131a;color:var(--text);font-size:12px;font-style:italic;cursor:pointer">I</button>
+            <button onclick="clearWordStyle()" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--border);background:#13131a;color:var(--muted);font-size:11px;cursor:pointer">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT TAB -->
+  <div class="mob-tab-pane" id="mob-pane-export">
+    <div class="sec">
+      <div class="sec-title">⬇️ Download</div>
+      <button class="btn-dl btn-green" onclick="dlCard('png')" style="padding:14px;font-size:14px;margin-bottom:10px">⬇ Download PNG</button>
+      <button class="btn-dl btn-amber" onclick="dlCard('jpg')" style="padding:14px;font-size:14px">⬇ Download JPG</button>
+    </div>
+    <div class="sec">
+      <div class="sec-title">🔄 Ratio</div>
+      <div style="display:flex;gap:8px;">
+        <button class="rtab active" onclick="setRatio('4:5')" id="tab45M" style="flex:1;padding:10px">4:5 Post</button>
+        <button class="rtab" onclick="setRatio('9:16')" id="tab916M" style="flex:1;padding:10px">9:16 Story</button>
+        <button class="rtab" onclick="setRatio('1:1')" id="tab11M" style="flex:1;padding:10px">1:1 Square</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ══ RIGHT PANEL ══ -->
@@ -1457,50 +1793,201 @@ function showToast(msg){
 }
 
 // ═══════════════════════════════════════
-// MOBILE
+// MOBILE TAB SYSTEM
 // ═══════════════════════════════════════
-function togglePanel(side){
-  const bodyId=side==='left'?'leftBody':'rightBody';
-  const toggleId=side==='left'?'leftToggle':'rightToggle';
-  const body=document.getElementById(bodyId);
-  const toggle=document.getElementById(toggleId);
-  const isClosed=body.classList.contains('closed');
-  if(isClosed){body.classList.remove('closed');toggle.classList.add('open');}
-  else{body.classList.add('closed');toggle.classList.remove('open');}
+function mobTab(tab){
+  document.querySelectorAll('.mob-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mob-tab-pane').forEach(p=>p.classList.remove('active'));
+  const btn=document.querySelector(`.mob-tab-btn[onclick="mobTab('${tab}')"]`);
+  if(btn)btn.classList.add('active');
+  const pane=document.getElementById('mob-pane-'+tab);
+  if(pane)pane.classList.add('active');
+}
+
+// Sync a slider from mobile mirror to desktop control
+function syncSlider(desktopId,mobileId,desktopValId,mobileValId,sfx){
+  const v=document.getElementById(mobileId).value;
+  document.getElementById(desktopId).value=v;
+  const display=sfx==='lh'?(v/100).toFixed(2):(sfx?v+sfx:v);
+  if(document.getElementById(desktopValId))document.getElementById(desktopValId).textContent=display;
+  if(document.getElementById(mobileValId))document.getElementById(mobileValId).textContent=display;
+}
+
+// Sync a select from mobile to desktop
+function syncMobileToMain(desktopId,mobileId){
+  document.getElementById(desktopId).value=document.getElementById(mobileId).value;
 }
 
 function applyMobileLayout(){
   const isMob=window.innerWidth<=768;
-  const leftToggle=document.getElementById('leftToggle');
-  const rightToggle=document.getElementById('rightToggle');
-  const leftBody=document.getElementById('leftBody');
-  const rightBody=document.getElementById('rightBody');
-  const elemRow=document.getElementById('elemRow');
-  leftToggle.style.display=isMob?'flex':'none';
-  rightToggle.style.display=isMob?'flex':'none';
-  if(isMob){
-    if(!leftBody.dataset.mobileInit){
-      leftBody.classList.add('closed');leftToggle.classList.remove('open');
-      rightBody.classList.remove('closed');rightToggle.classList.add('open');
-      leftBody.dataset.mobileInit='1';
+  const tabBar=document.getElementById('mobTabBar');
+  const tabContent=document.getElementById('mobTabContent');
+  if(tabBar)tabBar.style.display=isMob?'flex':'none';
+  if(tabContent)tabContent.style.display=isMob?'block':'none';
+}
+
+// ── Mobile-specific input sync listeners ──
+function initMobileListeners(){
+  // Text inputs — sync mobile→desktop on input
+  const pairs=[
+    ['nameInputM','nameInput'],['titleInputM','titleInput'],
+    ['quoteInputM','quoteInput'],['channelNameM','channelName'],
+    ['handleInputM','handleInput'],['watermarkInputM','watermarkInput'],
+  ];
+  pairs.forEach(([mid,did])=>{
+    const mel=document.getElementById(mid);
+    const del=document.getElementById(did);
+    if(mel&&del){
+      mel.addEventListener('input',()=>{del.value=mel.value;wordStyles={};selectedWordIdx=null;rebuildWordChips();rebuildWordChipsM();draw();});
     }
-    elemRow.classList.add('elem-row');
-  } else {
-    leftBody.classList.remove('closed');rightBody.classList.remove('closed');
-    leftBody.style.maxHeight='';rightBody.style.maxHeight='';
-    delete leftBody.dataset.mobileInit;
-    elemRow.classList.remove('elem-row');
+  });
+
+  // Selects
+  document.getElementById('showBadgeM').addEventListener('change',e=>{document.getElementById('showBadge').value=e.target.value;draw();});
+
+  // Photo upload mobile
+  document.getElementById('photoInputM').addEventListener('change',e=>{
+    const f=e.target.files[0];if(!f)return;
+    document.getElementById('photoInput').files; // mirror
+    const r=new FileReader();
+    r.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        uploadedImg=img;
+        const thM=document.getElementById('imgThumbM');
+        thM.src=ev.target.result;thM.style.display='block';
+        document.getElementById('uploadHintM').style.display='none';
+        const th=document.getElementById('imgThumb');
+        th.src=ev.target.result;th.style.display='block';
+        document.getElementById('uploadHint').style.display='none';
+        if(f.type==='image/png'){
+          document.getElementById('transparentMode').checked=true;
+          document.getElementById('transparentModeM').checked=true;
+        }
+        draw();
+      };
+      img.src=ev.target.result;
+    };
+    r.readAsDataURL(f);
+  });
+
+  document.getElementById('transparentModeM').addEventListener('change',e=>{
+    document.getElementById('transparentMode').checked=e.target.checked;draw();
+  });
+
+  // Mobile color dots
+  document.querySelectorAll('.actM').forEach(dot=>{
+    dot.addEventListener('click',()=>{
+      const t=dot.dataset.tm;
+      document.querySelectorAll(`.actM[data-tm="${t}"]`).forEach(d=>d.classList.remove('act'));
+      dot.classList.add('act');
+      colors[t]=dot.dataset.color;
+      // Sync desktop
+      document.querySelectorAll(`.c-dot[data-t="${t}"]`).forEach(d=>d.classList.remove('act'));
+      const deskMatch=document.querySelector(`.c-dot[data-t="${t}"][data-color="${dot.dataset.color}"]`);
+      if(deskMatch)deskMatch.classList.add('act');
+      draw();
+    });
+  });
+
+  document.getElementById('qColorCustomM').addEventListener('input',e=>{colors.qColor=e.target.value;draw();});
+  document.getElementById('nColorCustomM').addEventListener('input',e=>{colors.nColor=e.target.value;draw();});
+  document.getElementById('frameColorCustomM').addEventListener('input',e=>{colors.frameColor=e.target.value;draw();});
+
+  // Mobile word customizer
+  document.getElementById('wordSizeMultM').addEventListener('input',e=>{
+    document.getElementById('wordSizeMultVM').textContent=e.target.value+'%';
+    document.getElementById('wordSizeMult').value=e.target.value;
+    if(selectedWordIdx===null)return;
+    if(!wordStyles[selectedWordIdx])wordStyles[selectedWordIdx]={};
+    wordStyles[selectedWordIdx].sizeMult=parseInt(e.target.value);
+    draw();
+  });
+  document.querySelectorAll('.wcM').forEach(dot=>{
+    dot.addEventListener('click',()=>{
+      if(selectedWordIdx===null)return;
+      if(!wordStyles[selectedWordIdx])wordStyles[selectedWordIdx]={};
+      wordStyles[selectedWordIdx].color=dot.dataset.color;
+      draw();
+    });
+  });
+  document.getElementById('wordColorCustomM2').addEventListener('input',e=>{
+    if(selectedWordIdx===null)return;
+    if(!wordStyles[selectedWordIdx])wordStyles[selectedWordIdx]={};
+    wordStyles[selectedWordIdx].color=e.target.value;
+    draw();
+  });
+
+  // Build mobile theme grid
+  const tGridM=document.getElementById('themeGridM');
+  if(tGridM){
+    Object.entries(THEMES).forEach(([key,th])=>{
+      const btn=document.createElement('button');
+      btn.className='t-btn'+(key===currentTheme?' active':'');
+      btn.dataset.theme=key;
+      const light=isLight(th.bg1);
+      btn.style.background=`linear-gradient(135deg,${th.bg1},${th.bg2})`;
+      if(light){btn.style.color='#1a1a1a';btn.style.textShadow='none';}
+      btn.innerHTML=`${th.name}<div style="font-size:7px;opacity:.6;margin-top:1px">${th.label}</div>`;
+      btn.onclick=()=>{
+        document.querySelectorAll('.t-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTheme=key;draw();
+      };
+      tGridM.appendChild(btn);
+    });
   }
 }
 
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
+// ── Mobile word chips ──
+function rebuildWordChipsM(){
+  const txt=document.getElementById('quoteInputM')||document.getElementById('quoteInput');
+  const quote=(txt?txt.value:'')||'';
+  const words=quote.split(/(\s+)/).filter(t=>t.trim().length>0);
+  const listM=document.getElementById('wordListM');
+  if(!listM)return;
+  listM.innerHTML='';
+  words.forEach((word,i)=>{
+    const chip=document.createElement('button');
+    chip.className='word-chip'+(i===selectedWordIdx?' selected':'');
+    chip.textContent=word;
+    chip.onclick=()=>{
+      selectedWordIdx=i;
+      document.querySelectorAll('#wordListM .word-chip').forEach((c,j)=>c.classList.toggle('selected',j===i));
+      document.querySelectorAll('#wordList .word-chip').forEach((c,j)=>c.classList.toggle('selected',j===i));
+      const propM=document.getElementById('wordPropsM');
+      const titleM=document.getElementById('wordPropsTitleM');
+      if(propM)propM.classList.add('show');
+      if(titleM)titleM.textContent=`Editing: "${word}"`;
+      const ws=wordStyles[i]||{};
+      document.getElementById('wordSizeMultM').value=ws.sizeMult||100;
+      document.getElementById('wordSizeMultVM').textContent=(ws.sizeMult||100)+'%';
+      draw();
+    };
+    listM.appendChild(chip);
+  });
+}
+
+// Patch selectElem to also update mobile buttons
+const _origSelectElem=selectElem;
+window.selectElem=function(name){
+  _origSelectElem(name);
+  ['photo','quote','name','brand','quotemark'].forEach(k=>{
+    const el=document.getElementById('meb'+k);
+    if(el)el.classList.toggle('selected',k===name);
+  });
+};
+
 window.addEventListener('load',()=>{
   resizeCanvas();
   applyMobileLayout();
   rebuildWordChips();
+  rebuildWordChipsM();
   updateFontPreview();
+  initMobileListeners();
   draw();
 });
 window.addEventListener('resize',()=>{resizeCanvas();applyMobileLayout();draw();});
