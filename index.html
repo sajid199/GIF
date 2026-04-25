@@ -1219,17 +1219,23 @@ function draw(){
     const imgX=photoCX-imgW/2;
     const imgY=photoCY-imgH/2;
 
-    if(shadowSpread>0){
-      // Draw soft shadow using multiple blurred layers
+    if(shadowSpread>0&&shadowAlpha>0){
+      // Primary shadow — ctx.shadow* respects PNG alpha perfectly
       ctx.save();
-      for(let i=3;i>0;i--){
-        ctx.shadowColor=`rgba(0,0,0,${shadowAlpha*0.3})`;
-        ctx.shadowBlur=shadowSpread*i*2.5;
-        ctx.shadowOffsetX=0;
-        ctx.shadowOffsetY=shadowSpread*0.5;
-        ctx.globalAlpha=0.18;
-        ctx.drawImage(uploadedImg,imgX,imgY,imgW,imgH);
-      }
+      ctx.shadowColor=`rgba(0,0,0,${shadowAlpha})`;
+      ctx.shadowBlur=shadowSpread*3;
+      ctx.shadowOffsetX=0;
+      ctx.shadowOffsetY=shadowSpread*0.8;
+      ctx.drawImage(uploadedImg,imgX,imgY,imgW,imgH);
+      ctx.restore();
+      // Softer ambient pass
+      ctx.save();
+      ctx.shadowColor=`rgba(0,0,0,${Math.min(shadowAlpha*0.5,0.5)})`;
+      ctx.shadowBlur=shadowSpread*7;
+      ctx.shadowOffsetX=0;
+      ctx.shadowOffsetY=shadowSpread*0.3;
+      ctx.globalAlpha=0.65;
+      ctx.drawImage(uploadedImg,imgX,imgY,imgW,imgH);
       ctx.restore();
     }
 
@@ -1337,7 +1343,8 @@ function draw(){
   }
 
   // ─── DIVIDER ────────────────────────────
-  const divY=qStartY+totalQH+52;
+  // Divider is anchored near the name element's Y position, offset upward
+  const divY=nameCY-nSz*0.8;
   ctx.save();
   ctx.strokeStyle=T.acc;ctx.lineWidth=3.5;ctx.globalAlpha=.6;
   ctx.beginPath();ctx.moveTo(nameCX-200,divY);ctx.lineTo(nameCX+200,divY);ctx.stroke();
@@ -1349,21 +1356,21 @@ function draw(){
   ctx.save();
   ctx.font=`bold ${nSz}px 'Segoe UI',Georgia,serif`;
   ctx.fillStyle=colors.nColor;ctx.textAlign='center';ctx.textBaseline='top';
-  ctx.fillText('— '+name,nameCX,divY+32);
+  ctx.fillText('— '+name,nameCX,nameCY);
   ctx.restore();
 
   if(title){
     ctx.save();
     ctx.font=`500 ${Math.round(nSz*.65)}px 'Segoe UI',sans-serif`;
     ctx.fillStyle=T.ttl;ctx.textAlign='center';ctx.textBaseline='top';
-    ctx.fillText(title,nameCX,divY+32+nSz+14);
+    ctx.fillText(title,nameCX,nameCY+nSz+14);
     ctx.restore();
   }
 
   if(selectedElem==='name'){
     ctx.save();
     ctx.strokeStyle='#60a5fa';ctx.lineWidth=4;ctx.setLineDash([14,8]);ctx.globalAlpha=.6;
-    rRect(ctx,nameCX-290,divY+22,580,nSz+(title?nSz*.9:0)+50,12);
+    rRect(ctx,nameCX-290,nameCY-10,580,nSz+(title?nSz*.9:0)+50,12);
     ctx.stroke();ctx.restore();
   }
 
